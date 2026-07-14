@@ -52,9 +52,9 @@ export default function Testimonials() {
   };
 
   return (
-    <section className="py-24 bg-[#090909] relative overflow-hidden">
+    <section className="py-24 bg-slate-950 relative overflow-hidden text-slate-100">
       {/* Background ambient light */}
-      <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-blue-500/20 blur-[100px] rounded-full pointer-events-none" />
 
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
         
@@ -66,7 +66,7 @@ export default function Testimonials() {
         />
 
         {/* Carousel Container */}
-        <div className="relative min-h-[300px] flex items-center justify-center">
+        <div className="relative min-h-75 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
@@ -77,18 +77,18 @@ export default function Testimonials() {
               className="w-full"
             >
               <Card
-                glowColor="rgba(59, 130, 246, 0.2)"
-                className="p-8 md:p-12 border border-white/5 bg-[#181818]/60 flex flex-col items-center text-center gap-6"
+                glowColor="rgba(59, 130, 246, 0.08)"
+                className="p-8 md:p-12 border border-slate-800 bg-slate-900 flex flex-col items-center text-center gap-6"
               >
                 {/* 5-Stars */}
-                <div className="flex items-center gap-1 text-[#F6C453]">
+                <div className="flex items-center gap-1 text-accent-gold">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 fill-current" />
                   ))}
                 </div>
 
                 {/* Feedback content */}
-                <p className="text-base md:text-xl font-medium text-gray-200 leading-relaxed max-w-2xl">
+                <p className="text-base md:text-xl font-medium text-slate-300 leading-relaxed max-w-2xl">
                   &ldquo;{testimonials[activeIndex].text}&rdquo;
                 </p>
 
@@ -98,10 +98,10 @@ export default function Testimonials() {
                     {testimonials[activeIndex].avatar}
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-sm font-semibold text-white">
+                    <span className="text-sm font-semibold text-slate-100">
                       {testimonials[activeIndex].name}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-slate-400">
                       {testimonials[activeIndex].role}
                     </span>
                   </div>
@@ -115,14 +115,14 @@ export default function Testimonials() {
           <div className="absolute inset-y-0 -left-4 -right-4 flex items-center justify-between pointer-events-none">
             <button
               onClick={handlePrev}
-              className="h-10 w-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-400 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
+              className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
             >
               {isRtl ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
             </button>
             
             <button
               onClick={handleNext}
-              className="h-10 w-10 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 text-gray-400 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
+              className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
             >
               {isRtl ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
             </button>

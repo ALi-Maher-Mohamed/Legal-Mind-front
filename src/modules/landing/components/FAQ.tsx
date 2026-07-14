@@ -50,8 +50,8 @@ export default function FAQ() {
   };
 
   return (
-    <section id="faq" className="py-24 bg-[#090909] relative scroll-mt-20">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="faq" className="py-24 bg-white relative scroll-mt-20">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10 shadow-sm rounded-3xl border border-slate-200">
         
         <SectionTitle
           badge={isRtl ? "المساعدة والمعلومات" : "Questions & Answers"}
@@ -62,20 +62,20 @@ export default function FAQ() {
 
         {/* Search Bar */}
         <div className="relative mb-8 max-w-xl mx-auto">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
-            <Search className="h-4 w-4" />
+          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-slate-500">
+            <Search className="h-4 w-4 text-slate-500" />
           </div>
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.common.searchPlaceholder}
-            className="w-full rounded-xl bg-white/5 border border-white/10 pl-10 pr-4 py-3 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="w-full rounded-xl bg-white border border-slate-200 pl-10 pr-4 py-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
         </div>
 
         {/* FAQ List */}
-        <div className="space-y-4 mb-16 min-h-[100px]">
+        <div className="space-y-4 mb-16 min-h-25">
           <AnimatePresence mode="popLayout">
             {filteredFaqs.length > 0 ? (
               filteredFaqs.map((faq, idx) => (
@@ -94,10 +94,10 @@ export default function FAQ() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-10 text-gray-500 text-sm flex flex-col items-center justify-center gap-2"
+                className="text-center py-10 text-slate-600 text-sm flex flex-col items-center justify-center gap-2"
               >
-                <HelpCircle className="h-8 w-8 text-gray-600 animate-bounce" />
-                <span>
+                <HelpCircle className="h-8 w-8 text-slate-500 animate-bounce" />
+                <span className="text-slate-700">
                   {isRtl
                     ? "لم نعثر على نتائج مطابقة لبحثك. يرجى تجربة كلمات أخرى."
                     : "No matching questions found. Try searching for other terms."}
@@ -115,16 +115,16 @@ export default function FAQ() {
           transition={{ duration: 0.5 }}
         >
           <Card
-            glowColor="rgba(246, 196, 83, 0.15)"
-            className="p-8 border border-white/5 bg-gradient-to-br from-[#181818] to-[#131313] hover:border-white/10 text-center flex flex-col items-center gap-4 relative overflow-hidden"
+            glowColor="rgba(246, 196, 83, 0.05)"
+            className="p-8 border border-slate-800 bg-slate-900 hover:border-slate-700 text-center flex flex-col items-center gap-4 relative overflow-hidden"
           >
             {/* Soft gold backdrop decoration */}
-            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#F6C453]/5 blur-xl rounded-full" />
+            <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-accent-gold/5 blur-xl rounded-full" />
             
-            <h3 className="text-lg font-bold text-white md:text-xl relative z-10">
+            <h3 className="text-lg font-bold text-slate-100 md:text-xl relative z-10">
               {t.faq.ctaTitle}
             </h3>
-            <p className="text-xs sm:text-sm text-gray-400 max-w-lg leading-relaxed relative z-10">
+            <p className="text-xs sm:text-sm text-slate-400 max-w-lg leading-relaxed relative z-10">
               {t.faq.ctaDesc}
             </p>
             <Button variant="gold" size="md" className="relative z-10" onClick={scrollToChat}>

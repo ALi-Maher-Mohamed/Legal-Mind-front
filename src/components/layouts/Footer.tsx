@@ -42,20 +42,20 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-[#090909] border-t border-white/10 pt-16 pb-8 text-gray-400">
+    <footer className="bg-slate-950 border-t border-slate-800 pt-16 pb-8 text-slate-300">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand Info */}
           <div className="lg:col-span-2 flex flex-col gap-4">
             <a href={ROUTES.home} className="flex items-center gap-2">
-              <svg className="h-7 w-7" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z" stroke="#3B82F6" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="50" cy="35" r="5" fill="#F6C453" />
-                <path d="M35 52 L65 52" stroke="#3B82F6" strokeWidth="4" />
-                <path d="M50 35 L50 65" stroke="#3B82F6" strokeWidth="4" />
+              <svg className="h-7 w-7 text-accent-gold" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z" stroke="#60A5FA" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="50" cy="35" r="5" className="fill-current" />
+                <path d="M35 52 L65 52" stroke="#60A5FA" strokeWidth="4" />
+                <path d="M50 35 L50 65" stroke="#60A5FA" strokeWidth="4" />
               </svg>
-              <span className="font-sans text-base font-bold text-white">
-                LegalMind<span className="text-[#F6C453] ml-0.5">AI</span>
+              <span className="font-sans text-base font-bold text-slate-100">
+                LegalMind<span className="text-accent-gold ml-0.5">AI</span>
               </span>
             </a>
             <p className="text-xs sm:text-sm leading-relaxed max-w-md">
@@ -77,8 +77,8 @@ export default function Footer() {
 
           {/* Links columns */}
           <div>
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">{t.footer.product}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.product}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
               {productLinks.map((link, idx) => (
                 <li key={idx}>
                   <a href={link.href} className="hover:text-white transition">{link.name}</a>
@@ -88,9 +88,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">{t.footer.company}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
-              {companyLinks.map((link, idx) => (
+            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.legal}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
+              {legalLinks.map((link, idx) => (
                 <li key={idx}>
                   <a href={link.href} className="hover:text-white transition">{link.name}</a>
                 </li>
@@ -99,8 +99,8 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-white uppercase tracking-wider mb-4">{t.footer.legal}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.legal}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
               {legalLinks.map((link, idx) => (
                 <li key={idx}>
                   <a href={link.href} className="hover:text-white transition">{link.name}</a>
@@ -111,11 +111,9 @@ export default function Footer() {
         </div>
 
         {/* Newsletter Section */}
-        <div className="border-t border-white/5 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="border-t border-slate-800 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex flex-col gap-1 max-w-lg text-center lg:text-right">
-            <h4 className="text-sm font-semibold text-white">{t.footer.newsletterTitle}</h4>
-            <p className="text-xs text-gray-500">{t.footer.newsletterDesc}</p>
-          </div>
+            <h4 className="text-sm font-semibold text-slate-100">{t.footer.newsletterTitle}</h4>
 
           <form onSubmit={handleSubscribe} className="flex w-full max-w-sm gap-2">
             <input
@@ -124,7 +122,7 @@ export default function Footer() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.common.emailPlaceholder}
               required
-              className="w-full rounded-xl bg-white/5 border border-white/10 px-4 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-xl bg-slate-900 border border-slate-800 px-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             />
             <Button type="submit" variant="primary" size="sm" isLoading={loading}>
               {success ? (isRtl ? "تم الاشتراك!" : "Subscribed!") : t.footer.newsletterBtn}
@@ -133,11 +131,13 @@ export default function Footer() {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-white/5 pt-8 text-center text-xs text-gray-600 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-slate-800 pt-8 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-4">
           <span>{t.footer.copyright}</span>
-          <span className="text-[10px] text-gray-700">Powered by Advanced Agentic Neural Architectures</span>
+          <span className="text-[10px] text-slate-500">Powered by Advanced Agentic Neural Architectures</span>
         </div>
+      </div>
       </div>
     </footer>
   );
+  
 }

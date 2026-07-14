@@ -29,10 +29,10 @@ export function Button({
   };
 
   const variantStyles = {
-    primary: "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.3)] hover:shadow-[0_0_25px_rgba(59,130,246,0.5)] border border-blue-500/20",
-    secondary: "bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white border border-white/10 hover:border-white/20 backdrop-blur-md",
-    gold: "bg-[#F6C453]/10 hover:bg-[#F6C453]/20 text-[#F6C453] border border-[#F6C453]/30 hover:border-[#F6C453]/60 shadow-[0_0_15px_rgba(246,196,83,0.1)]",
-    ghost: "bg-transparent hover:bg-white/5 text-gray-400 hover:text-white"
+    primary: "bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_15px_rgba(59,130,246,0.2)] hover:shadow-[0_0_25px_rgba(59,130,246,0.25)] border border-blue-500/20 dark:border-blue-500/20",
+    secondary: "bg-white shadow-sm text-slate-700 hover:bg-slate-100 border border-slate-200 hover:border-slate-300 dark:bg-slate-900 dark:text-slate-100 dark:border-slate-800 dark:hover:bg-slate-800 dark:hover:text-white",
+    gold: "bg-amber-100 hover:bg-amber-200 text-amber-700 border border-amber-200 shadow-[0_0_15px_rgba(245,158,11,0.15)] dark:bg-slate-900 dark:text-amber-200 dark:border-slate-700 dark:hover:bg-slate-800",
+    ghost: "bg-transparent hover:bg-slate-100 text-slate-700 hover:text-slate-900 dark:text-slate-100 dark:hover:bg-slate-800 dark:hover:text-white"
   };
 
   return (

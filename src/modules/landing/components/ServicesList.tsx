@@ -65,9 +65,9 @@ export default function ServicesList() {
   };
 
   return (
-    <section id="services" className="py-24 bg-[#090909] relative scroll-mt-20">
+    <section id="services" className="py-24 bg-slate-950 relative scroll-mt-20 text-slate-100">
       {/* Background decoration */}
-      <div className="absolute top-1/3 right-10 w-96 h-96 bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 right-10 w-96 h-96 bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle
@@ -88,18 +88,18 @@ export default function ServicesList() {
             <motion.div key={idx} variants={cardVariants}>
               <Card
                 glowColor={svc.glow}
-                className="p-8 border border-white/5 bg-[#181818]/60 hover:border-white/10 flex flex-col items-start gap-4 transition duration-300 h-full group cursor-pointer"
+                className="p-8 border border-slate-800 bg-slate-900 shadow-sm hover:border-slate-700 flex flex-col items-start gap-4 transition duration-300 h-full group cursor-pointer"
               >
                 {/* Glowing Icon Frame */}
-                <div className="p-3.5 bg-white/5 rounded-2xl text-gray-300 group-hover:bg-white/10 group-hover:scale-110 transition-all duration-300">
+                <div className="p-3.5 bg-slate-800 rounded-2xl text-slate-100 group-hover:bg-slate-700 group-hover:scale-110 transition-all duration-300">
                   {svc.icon}
                 </div>
 
                 <div className="flex flex-col gap-2 mt-2 text-right">
-                  <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition duration-200">
+                  <h3 className="text-lg font-bold text-slate-100 group-hover:text-blue-300 transition duration-200">
                     {svc.title}
                   </h3>
-                  <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition duration-200">
+                  <p className="text-sm text-slate-300 leading-relaxed group-hover:text-slate-200 transition duration-200">
                     {svc.desc}
                   </p>
                 </div>

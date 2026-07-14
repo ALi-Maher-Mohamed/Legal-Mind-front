@@ -1,17 +1,20 @@
+
 // src/components/layouts/Navbar.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { useScroll } from '@/hooks/useScroll';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useThemeContext } from '@/lib/providers/ThemeProvider';
 import { ROUTES } from '@/config/routes';
 import { Button } from '@/components/ui';
-import { Menu, X, Globe, ChevronDown } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
   const scrolled = useScroll(20);
   const { locale, setLocale, t, isRtl } = useLanguage();
+  const { theme, toggleTheme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
 
@@ -28,20 +31,19 @@ export default function Navbar() {
     { name: t.nav.faq, href: ROUTES.faq },
   ];
 
-
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#090909]/80 border-b border-white/10 backdrop-blur-md py-3 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
-            : 'bg-transparent border-b border-transparent py-5'
+            ? 'bg-white/95 backdrop-blur-sm border-b border-slate-200 py-3 shadow-sm'
+            : 'bg-transparent border-b border-transparent py-5 dark:bg-transparent'
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Logo />
+            <Logo scrolled={scrolled} />
 
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-8">
@@ -49,7 +51,11 @@ export default function Navbar() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-gray-400 hover:text-white transition duration-200"
+                  className={`text-sm font-medium transition duration-200 ${
+                    scrolled
+                      ? 'text-slate-900 hover:text-blue-600 dark:text-slate-300 dark:hover:text-white'
+                      : 'text-slate-100 hover:text-white dark:text-slate-100 dark:hover:text-white'
+                  }`}
                 >
                   {link.name}
                 </a>
@@ -62,7 +68,7 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={toggleLangMenu}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white text-xs cursor-pointer transition select-none"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-100 hover:text-white text-xs cursor-pointer transition select-none dark:bg-slate-900 dark:border-slate-800"
                 >
                   <Globe className="h-3.5 w-3.5" />
                   <span>{locale === 'en' ? 'English' : 'العربية'}</span>
@@ -77,17 +83,17 @@ export default function Navbar() {
                       exit={{ opacity: 0, y: 5 }}
                       className={`absolute ${
                         isRtl ? 'left-0' : 'right-0'
-                      } mt-2 w-32 rounded-xl bg-[#181818] border border-white/10 p-1.5 shadow-xl`}
+                      } mt-2 w-32 rounded-xl bg-slate-950 border border-slate-800 p-1.5 shadow-xl`}
                     >
                       <button
                         onClick={() => handleLanguageChange('en')}
-                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
+                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-slate-100 hover:bg-slate-800 hover:text-white transition cursor-pointer"
                       >
                         English
                       </button>
                       <button
                         onClick={() => handleLanguageChange('ar')}
-                        className="w-full text-right px-3 py-2 rounded-lg text-xs text-gray-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
+                        className="w-full text-right px-3 py-2 rounded-lg text-xs text-slate-100 hover:bg-slate-800 hover:text-white transition cursor-pointer"
                       >
                         العربية
                       </button>
@@ -96,8 +102,28 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
 
-              <Button variant="ghost" size="sm">
+              {/* Login Button - بخلفية سوداء في اللايت مود */}
+              <Button 
+                size="sm" 
+                className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 border-none transition-colors"
+              >
                 {t.common.login}
+              </Button>
+
+              <Button variant="secondary" size="sm" onClick={toggleTheme}>
+                {theme === 'dark' ? (
+                  <div className="flex items-center gap-2">
+                    <Sun className="h-4 w-4 text-amber-400" />
+                    {isRtl ? 'الوضع الفاتح' : 'Light'}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Moon className="h-4 w-4 "
+                    style={{color:'white'}}
+                    />
+                    {isRtl ? 'الوضع الداكن' : 'Dark'}
+                  </div>
+                )}
               </Button>
               <Button variant="primary" size="sm">
                 {t.common.getStarted}
@@ -106,7 +132,6 @@ export default function Navbar() {
 
             {/* Mobile Hamburger menu icon */}
             <div className="flex md:hidden items-center gap-3">
-              {/* Mobile Language Switch Toggle */}
               <button
                 onClick={() => handleLanguageChange(locale === 'en' ? 'ar' : 'en')}
                 className="flex items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white"
@@ -133,7 +158,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-slate-950/60 backdrop-blur-sm md:hidden"
           >
             {/* Drawer menu content */}
             <motion.div
@@ -184,7 +209,7 @@ export default function Navbar() {
   );
 }
 
-function Logo() {
+function Logo({ scrolled = false }: { scrolled?: boolean }) {
   return (
     <a href={ROUTES.home} className="flex items-center gap-2 group cursor-pointer select-none">
       <svg className="h-8 w-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -203,10 +228,13 @@ function Logo() {
           </linearGradient>
         </defs>
       </svg>
-      <span className="font-sans text-lg font-bold tracking-tight text-white transition-all group-hover:text-blue-400">
-        LegalMind<span className="text-[#F6C453] ml-0.5">AI</span>
+      <span className={`font-sans text-lg font-bold tracking-tight transition-all ${
+        scrolled 
+          ? 'text-slate-900 group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-300' 
+          : 'text-slate-100 group-hover:text-blue-300 dark:text-slate-100'
+      }`}>
+        LegalMind<span className="text-accent-gold ml-0.5">AI</span>
       </span>
     </a>
   );
 }
-

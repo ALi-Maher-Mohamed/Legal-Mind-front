@@ -32,13 +32,13 @@ export default function Stats() {
       target: 98,
       suffix: '%',
       label: t.stats.satisfaction,
-      icon: <Award className="h-6 w-6 text-[#F6C453]" />,
+      icon: <Award className="h-6 w-6 text-accent-gold" />,
       glow: "rgba(246, 196, 83, 0.15)"
     }
   ];
 
   return (
-    <section className="py-16 bg-[#090909] relative">
+    <section className="py-16 bg-slate-950 relative">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {statItems.map((item, idx) => (
@@ -51,20 +51,20 @@ export default function Stats() {
             >
               <Card
                 glowColor={item.glow}
-                className="p-8 border border-white/5 bg-[#181818]/40 hover:border-white/10 flex flex-col items-center justify-center text-center gap-4 transition-all"
+                className="p-8 border border-slate-800 bg-slate-900 hover:border-slate-700 flex flex-col items-center justify-center text-center gap-4 transition-all"
               >
                 {/* Icon Container */}
-                <div className="p-3 bg-white/5 rounded-xl text-gray-300">
+                <div className="p-3 bg-slate-800 rounded-xl text-slate-100">
                   {item.icon}
                 </div>
 
                 {/* Counter */}
-                <div className="text-4xl font-extrabold tracking-tight text-white md:text-5xl mt-2 select-none">
+                <div className="text-4xl font-extrabold tracking-tight text-slate-100 md:text-5xl mt-2 select-none">
                   <Counter target={item.target} suffix={item.suffix} duration={2500} />
                 </div>
 
                 {/* Label */}
-                <p className="text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wider">
+                <p className="text-xs sm:text-sm font-medium text-slate-400 uppercase tracking-wider">
                   {item.label}
                 </p>
               </Card>

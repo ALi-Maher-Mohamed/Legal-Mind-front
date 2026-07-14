@@ -19,9 +19,9 @@ export default function Pricing() {
   }, []);
 
   return (
-    <section id="pricing" className="py-24 bg-[#090909] relative scroll-mt-20">
+    <section id="pricing" className="py-24 bg-slate-950 relative scroll-mt-20 text-slate-100">
       {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/4 -translate-x-1/2 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/4 -translate-x-1/2 w-96 h-96 bg-blue-500/20 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle
@@ -33,13 +33,13 @@ export default function Pricing() {
 
         {/* Monthly / Yearly Toggle Button */}
         <div className="flex items-center justify-center gap-4 mb-16 select-none">
-          <span className={`text-xs sm:text-sm font-medium ${!isYearly ? 'text-white' : 'text-gray-500'} transition`}>
+          <span className={`text-xs sm:text-sm font-medium ${!isYearly ? 'text-slate-100' : 'text-slate-400'} transition`}>
             {t.common.monthly}
           </span>
           
           <button
             onClick={() => setIsYearly(!isYearly)}
-            className="relative h-6 w-11 rounded-full bg-white/10 hover:bg-white/15 border border-white/5 transition duration-300 focus:outline-none cursor-pointer"
+            className="relative h-6 w-11 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-700 transition duration-300 focus:outline-none cursor-pointer"
           >
             <motion.div
               layout
@@ -50,7 +50,7 @@ export default function Pricing() {
             />
           </button>
 
-          <span className={`text-xs sm:text-sm font-medium flex items-center gap-1.5 ${isYearly ? 'text-white' : 'text-gray-500'} transition`}>
+          <span className={`text-xs sm:text-sm font-medium flex items-center gap-1.5 ${isYearly ? 'text-slate-100' : 'text-slate-400'} transition`}>
             <span>{t.common.yearly}</span>
             <span className="px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 text-[10px] font-semibold border border-blue-500/20">
               {t.common.save20}
@@ -84,11 +84,11 @@ export default function Pricing() {
                 className="h-full"
               >
                 <Card
-                  glowColor={plan.highlighted ? "rgba(59, 130, 246, 0.25)" : "rgba(255, 255, 255, 0.05)"}
+                  glowColor={plan.highlighted ? "rgba(59, 130, 246, 0.12)" : "rgba(255, 255, 255, 0.05)"}
                   className={`p-8 border h-full flex flex-col justify-between transition-all duration-300 ${
                     plan.highlighted
-                      ? 'border-blue-500/30 bg-[#121212] shadow-[0_10px_35px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/10'
-                      : 'border-white/5 bg-[#181818]/60'
+                      ? 'border-blue-500/20 bg-slate-900 shadow-[0_10px_25px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/10'
+                      : 'border-slate-800 bg-slate-900'
                   }`}
                 >
                   <div className="text-right">
@@ -100,29 +100,29 @@ export default function Pricing() {
                     )}
 
                     {/* Plan name */}
-                    <h3 className="text-lg font-bold text-white mb-2">
+                    <h3 className="text-lg font-bold text-slate-100 mb-2">
                       {t.pricing[plan.nameKey as keyof typeof t.pricing] as string}
                     </h3>
 
                     {/* Price and billing period details */}
                     <div className="flex items-baseline gap-1 mt-4 mb-6">
-                      <span className="text-3xl font-extrabold text-white tracking-tight">
+                      <span className="text-3xl font-extrabold text-slate-100 tracking-tight">
                         {priceText}
                       </span>
                       {!isEnterprise && (
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-slate-400">
                           {isYearly ? t.pricing.yearlyLabel : t.pricing.monthlyLabel}
                         </span>
                       )}
                     </div>
 
                     {/* Divider */}
-                    <div className="h-px bg-white/5 my-6" />
+                    <div className="h-px bg-slate-200 my-6" />
 
                     {/* Features list */}
                     <ul className="space-y-4">
                       {plan.featuresKeys.map((featKey) => (
-                        <li key={featKey} className="flex items-start gap-3 text-xs sm:text-sm text-gray-400">
+                        <li key={featKey} className="flex items-start gap-3 text-xs sm:text-sm text-slate-500">
                           <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                             <Check className="h-3 w-3" />
                           </div>

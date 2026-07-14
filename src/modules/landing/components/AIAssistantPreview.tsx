@@ -8,8 +8,10 @@ import { Button, Card, SectionTitle, ChatBubble } from '@/components/ui';
 import { Message, Attachment } from '@/types/chat.types';
 import { chatService } from '@/services/chat.service';
 import { Send, Paperclip, FileText, X } from 'lucide-react';
+import { useThemeContext } from '@/lib/providers/ThemeProvider';
 
 export default function AIAssistantPreview() {
+  const { theme } = useThemeContext();
   const { t, locale, isRtl } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
@@ -105,8 +107,8 @@ export default function AIAssistantPreview() {
   };
 
   return (
-    <section className="py-20 bg-[#090909] relative">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-blue-600/5 blur-[120px] pointer-events-none" />
+    <section className="py-20 bg-slate-950 relative">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -128,11 +130,11 @@ export default function AIAssistantPreview() {
           {/* Right Simulated Chat Interface */}
           <div className="lg:col-span-7 w-full">
             <Card
-              glowColor="rgba(59, 130, 246, 0.25)"
-              className="border border-white/10 shadow-[0_10px_40px_rgba(0,0,0,0.5)] overflow-hidden h-[500px] flex flex-col"
+              glowColor="rgba(59, 130, 246, 0.15)"
+              className="border border-slate-800 shadow-sm overflow-hidden h-125 flex flex-col bg-slate-900"
             >
               {/* Chat Header */}
-              <div className="px-5 py-4 border-b border-white/5 bg-[#181818]/80 flex items-center justify-between">
+              <div className="px-5 py-4 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="relative">
                     <div className="h-8.5 w-8.5 rounded-xl bg-blue-600/10 flex items-center justify-center border border-blue-500/20 text-blue-400">
@@ -145,7 +147,7 @@ export default function AIAssistantPreview() {
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-sm font-semibold text-white">{t.aiPreview.chatHeader}</span>
-                    <span className="text-[10px] text-gray-500">{t.aiPreview.onlineStatus}</span>
+                    <span className="text-[10px] text-slate-400">{t.aiPreview.onlineStatus}</span>
                   </div>
                 </div>
               </div>
@@ -197,14 +199,17 @@ export default function AIAssistantPreview() {
               {messages.length === 0 && !isTyping && (
                 <div className="px-5 pb-3 flex flex-wrap gap-2 justify-end">
                   <button
+               style={{ color: theme === 'light' ? 'black' : '' }}
                     onClick={() => handleSuggestionClick('lease')}
-                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[11px] text-gray-300 hover:bg-white/10 hover:border-white/20 transition cursor-pointer select-none"
+                    className="px-3 py-1.5 rounded-lg border border-slate-700 text-[11px] text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition cursor-pointer select-none"
                   >
                     {t.aiPreview.promptOne}
                   </button>
                   <button
+                               style={{ color: theme === 'light' ? 'black' : '' }}
+
                     onClick={() => handleSuggestionClick('developer')}
-                    className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[11px] text-gray-300 hover:bg-white/10 hover:border-white/20 transition cursor-pointer select-none"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition cursor-pointer select-none"
                   >
                     {t.aiPreview.promptTwo}
                   </button>
@@ -222,25 +227,25 @@ export default function AIAssistantPreview() {
 
               {/* Attached file status indicators */}
               {attachedFiles.length > 0 && (
-                <div className="px-5 py-2.5 bg-black/30 border-t border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-blue-400">
-                    <FileText className="h-4 w-4" />
-                    <span className="truncate max-w-[200px]">{attachedFiles[0].name}</span>
-                    <span className="text-[10px] text-gray-500">
+                <div className="px-5 py-2.5 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-xs text-slate-300">
+                    <FileText className="h-4 w-4 text-slate-300" />
+                    <span className="truncate max-w-50">{attachedFiles[0].name}</span>
+                    <span className="text-[10px] text-slate-500">
                       ({(attachedFiles[0].size / 1024).toFixed(1)} KB)
                     </span>
                   </div>
-                  <button onClick={removeAttachment} className="p-1 hover:bg-white/5 rounded-full text-gray-400 hover:text-white transition">
+                  <button onClick={removeAttachment} className="p-1 hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-100 transition">
                     <X className="h-3.5 w-3.5" />
                   </button>
                 </div>
               )}
 
               {/* Input Panel */}
-              <div className="px-5 py-4 border-t border-white/5 bg-[#181818]/60 flex items-center gap-3">
+              <div className="px-5 py-4 border-t border-slate-800 bg-slate-950 flex items-center gap-3">
                 <button
                   onClick={triggerFileUpload}
-                  className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/10 text-gray-400 hover:text-white transition cursor-pointer"
+                  className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 hover:bg-slate-800 hover:border-slate-700 transition cursor-pointer"
                   title={t.common.uploadFile}
                 >
                   <Paperclip className="h-4 w-4" />
@@ -258,7 +263,7 @@ export default function AIAssistantPreview() {
                       ? "اطرح سؤالك أو اكتب رسالتك هنا..."
                       : "Type a message or legal question..."
                   }
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
 
                 <button

@@ -38,7 +38,7 @@ export function Card({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl border border-white/5 bg-[#181818]/60 backdrop-blur-lg transition-all duration-300 ${onClick ? 'cursor-pointer hover:border-white/10' : ''} ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 backdrop-blur-lg transition-all duration-300 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-slate-700 ${onClick ? 'cursor-pointer hover:border-slate-300 dark:hover:border-slate-700' : ''} ${className}`}
     >
       {/* Radial Spot Light Hover Glow */}
       {hoverGlow && isHovered && (
