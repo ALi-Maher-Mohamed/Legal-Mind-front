@@ -1,26 +1,40 @@
 // src/components/layouts/Navbar.tsx
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useScroll } from '@/hooks/useScroll';
-import { useLanguage } from '@/hooks/useLanguage';
-import { ROUTES } from '@/config/routes';
-import { Button } from '@/components/ui';
-import { Menu, X, Globe, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useEffect, useState } from "react";
+import { useScroll } from "@/hooks/useScroll";
+import { useLanguage } from "@/hooks/useLanguage";
+import { ROUTES } from "@/config/routes";
+import { Button } from "@/components/ui";
+import { Menu, X, Globe } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const scrolled = useScroll(20);
-  const { locale, setLocale, t, isRtl } = useLanguage();
+  const { locale, t, isRtl, toggleLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [showLangMenu, setShowLangMenu] = useState(false);
 
-  const toggleLangMenu = () => setShowLangMenu(!showLangMenu);
+  useEffect(() => {
+    if (typeof window === "undefined" || window.innerWidth >= 768) {
+      return;
+    }
 
-  const handleLanguageChange = (lang: 'en' | 'ar') => {
-    setLocale(lang);
-    setShowLangMenu(false);
-  };
+    const originalOverflow = document.body.style.overflow;
+    const originalHeight = document.body.style.height;
+
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+    } else {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.height = originalHeight;
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+      document.body.style.height = originalHeight;
+    };
+  }, [isOpen]);
 
   const navLinks = [
     { name: t.nav.services, href: ROUTES.services },
@@ -28,14 +42,13 @@ export default function Navbar() {
     { name: t.nav.faq, href: ROUTES.faq },
   ];
 
-
   return (
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-[#090909]/80 border-b border-white/10 backdrop-blur-md py-3 shadow-[0_4px_30px_rgba(0,0,0,0.3)]'
-            : 'bg-transparent border-b border-transparent py-5'
+            ? "bg-[#090909]/85 border-b border-white/15 backdrop-blur-xl py-3 shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
+            : "bg-[#090909]/70 border-b border-white/10 backdrop-blur-md py-5 shadow-[0_4px_20px_rgba(0,0,0,0.18)]"
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -49,7 +62,7 @@ export default function Navbar() {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="text-sm font-medium text-gray-400 hover:text-white transition duration-200"
+                  className="text-sm font-medium text-gray-300 hover:text-white transition duration-200"
                 >
                   {link.name}
                 </a>
@@ -58,43 +71,16 @@ export default function Navbar() {
 
             {/* Language switch & Buttons */}
             <div className="hidden md:flex items-center gap-4">
-              {/* Language Picker Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={toggleLangMenu}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white text-xs cursor-pointer transition select-none"
-                >
-                  <Globe className="h-3.5 w-3.5" />
-                  <span>{locale === 'en' ? 'English' : 'العربية'}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-
-                <AnimatePresence>
-                  {showLangMenu && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 5 }}
-                      className={`absolute ${
-                        isRtl ? 'left-0' : 'right-0'
-                      } mt-2 w-32 rounded-xl bg-[#181818] border border-white/10 p-1.5 shadow-xl`}
-                    >
-                      <button
-                        onClick={() => handleLanguageChange('en')}
-                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
-                      >
-                        English
-                      </button>
-                      <button
-                        onClick={() => handleLanguageChange('ar')}
-                        className="w-full text-right px-3 py-2 rounded-lg text-xs text-gray-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
-                      >
-                        العربية
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 border border-white/15 text-gray-200 hover:text-white hover:bg-white/15 text-xs cursor-pointer transition select-none"
+                aria-label={
+                  locale === "en" ? "Switch to Arabic" : "Switch to English"
+                }
+              >
+                <Globe className="h-3.5 w-3.5" />
+                <span>{locale === "en" ? "العربية" : "English"}</span>
+              </button>
 
               <Button variant="ghost" size="sm">
                 {t.common.login}
@@ -106,10 +92,12 @@ export default function Navbar() {
 
             {/* Mobile Hamburger menu icon */}
             <div className="flex md:hidden items-center gap-3">
-              {/* Mobile Language Switch Toggle */}
               <button
-                onClick={() => handleLanguageChange(locale === 'en' ? 'ar' : 'en')}
-                className="flex items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white"
+                onClick={toggleLanguage}
+                className="flex items-center justify-center p-2 rounded-lg bg-white/10 border border-white/15 text-gray-200 hover:text-white"
+                aria-label={
+                  locale === "en" ? "Switch to Arabic" : "Switch to English"
+                }
               >
                 <Globe className="h-4 w-4" />
               </button>
@@ -118,7 +106,11 @@ export default function Navbar() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-2 text-gray-400 hover:text-white focus:outline-none"
               >
-                {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                {isOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
               </button>
             </div>
           </div>
@@ -137,19 +129,22 @@ export default function Navbar() {
           >
             {/* Drawer menu content */}
             <motion.div
-              initial={{ x: isRtl ? '100%' : '-100%' }}
+              initial={{ x: isRtl ? "100%" : "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: isRtl ? '100%' : '-100%' }}
-              transition={{ type: 'spring', bounce: 0.1, duration: 0.4 }}
+              exit={{ x: isRtl ? "100%" : "-100%" }}
+              transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
               onClick={(e) => e.stopPropagation()}
               className={`fixed top-0 bottom-0 ${
-                isRtl ? 'right-0' : 'left-0'
-              } w-72 bg-[#090909] border-l border-white/10 p-6 flex flex-col justify-between z-50`}
+                isRtl ? "right-0" : "left-0"
+              } w-72 max-w-[85vw] bg-[#090909]/95 border-l border-white/10 p-6 flex flex-col justify-between z-50 backdrop-blur-xl`}
             >
               <div className="flex flex-col gap-8">
                 <div className="flex justify-between items-center">
                   <Logo />
-                  <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-white">
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="text-gray-400 hover:text-white"
+                  >
                     <X className="h-5 w-5" />
                   </button>
                 </div>
@@ -169,10 +164,18 @@ export default function Navbar() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <Button variant="secondary" fullWidth onClick={() => setIsOpen(false)}>
+                <Button
+                  variant="secondary"
+                  fullWidth
+                  onClick={() => setIsOpen(false)}
+                >
                   {t.common.login}
                 </Button>
-                <Button variant="primary" fullWidth onClick={() => setIsOpen(false)}>
+                <Button
+                  variant="primary"
+                  fullWidth
+                  onClick={() => setIsOpen(false)}
+                >
                   {t.common.getStarted}
                 </Button>
               </div>
@@ -186,15 +189,45 @@ export default function Navbar() {
 
 function Logo() {
   return (
-    <a href={ROUTES.home} className="flex items-center gap-2 group cursor-pointer select-none">
-      <svg className="h-8 w-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <a
+      href={ROUTES.home}
+      className="flex items-center gap-2 group cursor-pointer select-none"
+    >
+      <svg
+        className="h-8 w-8"
+        viewBox="0 0 100 100"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         {/* Shield outline */}
-        <path d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z" stroke="url(#logo-grad)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
+        <path
+          d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z"
+          stroke="url(#logo-grad)"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
         {/* Inner neural connection / scale bars */}
-        <circle cx="50" cy="35" r="5" fill="#F6C453" className="animate-pulse" />
-        <path d="M35 52 L65 52" stroke="#3B82F6" strokeWidth="4" strokeLinecap="round" />
+        <circle
+          cx="50"
+          cy="35"
+          r="5"
+          fill="#F6C453"
+          className="animate-pulse"
+        />
+        <path
+          d="M35 52 L65 52"
+          stroke="#3B82F6"
+          strokeWidth="4"
+          strokeLinecap="round"
+        />
         <path d="M50 35 L50 65" stroke="url(#logo-grad)" strokeWidth="4" />
-        <path d="M42 65 L58 65" stroke="#F6C453" strokeWidth="5" strokeLinecap="round" />
+        <path
+          d="M42 65 L58 65"
+          stroke="#F6C453"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
         {/* Gradients */}
         <defs>
           <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100">
@@ -203,10 +236,9 @@ function Logo() {
           </linearGradient>
         </defs>
       </svg>
-      <span className="font-sans text-lg font-bold tracking-tight text-white transition-all group-hover:text-blue-400">
+      <span className="font-sans text-lg font-bold tracking-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)] transition-all group-hover:text-blue-400">
         LegalMind<span className="text-[#F6C453] ml-0.5">AI</span>
       </span>
     </a>
   );
 }
-
