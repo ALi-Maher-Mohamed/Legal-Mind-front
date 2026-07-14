@@ -4,7 +4,7 @@
 import React from 'react';
 import { Message } from '@/types/chat.types';
 import { Bot, User, FileText } from 'lucide-react';
-
+import { useThemeContext } from '@/lib/providers/ThemeProvider';
 interface ChatBubbleProps {
   message: Message;
   isTyping?: boolean;
@@ -12,7 +12,7 @@ interface ChatBubbleProps {
 
 export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
   const isAssistant = message.role === 'assistant';
-
+const { theme } = useThemeContext();
   return (
     <div className={`flex w-full items-start gap-3.5 mb-4 ${isAssistant ? 'justify-start' : 'justify-end'}`}>
       {/* Bot Icon */}
@@ -25,7 +25,7 @@ export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
       {/* Message Bubble Container */}
       <div className={`max-w-[85%] sm:max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
         isAssistant
-          ? 'bg-[#181818] border border-white/5 text-gray-200'
+          ? 'bg-slate-100 border border-slate-200 text-slate-900 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-100'
           : 'bg-blue-600 text-white shadow-[0_4px_12px_rgba(59,130,246,0.2)]'
       }`}>
         {/* Attachment Pill (if any) */}
@@ -34,7 +34,7 @@ export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
             {message.attachments.map((file, idx) => (
               <div
                 key={idx}
-                className="inline-flex items-center gap-2 rounded-lg bg-black/20 px-2.5 py-1.5 text-xs text-blue-100 border border-white/10"
+                className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs text-slate-700 border border-slate-200"
               >
                 <FileText className="h-3 w-3" />
                 <span className="truncate max-w-[150px] font-medium">{file.name}</span>
@@ -47,19 +47,21 @@ export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
         {/* Typing indicator */}
         {isTyping ? (
           <div className="flex items-center gap-1 py-1.5 px-0.5">
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '0ms' }} />
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '150ms' }} />
-            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: '300ms' }} />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: '0ms' }} />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: '150ms' }} />
+            <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: '300ms' }} />
           </div>
         ) : (
-          <div className="whitespace-pre-line text-xs sm:text-sm prose prose-invert max-w-none">
+          <div 
+          style={{ color: theme === 'light' ? 'white' : '' }}
+          className="whitespace-pre-line text-xs sm:text-sm prose max-w-none ">
             {message.content}
           </div>
         )}
 
         {/* Timestamp */}
         {!isTyping && (
-          <div className={`mt-1.5 text-[9px] ${isAssistant ? 'text-gray-500' : 'text-blue-200'} text-right`}>
+          <div className={`mt-1.5 text-[9px] ${isAssistant ? 'text-slate-500' : 'text-blue-600'} text-right`}>
             {message.timestamp}
           </div>
         )}
@@ -67,7 +69,7 @@ export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
 
       {/* User Icon */}
       {!isAssistant && (
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/5 text-gray-300 border border-white/10">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 border border-slate-200">
           <User className="h-4 w-4" />
         </div>
       )}

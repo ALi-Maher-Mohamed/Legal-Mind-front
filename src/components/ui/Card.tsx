@@ -14,9 +14,9 @@ interface CardProps {
 export function Card({
   children,
   className = '',
-  glowColor = 'rgba(59,130,246,0.15)', // Default subtle blue glow
+  glowColor = 'rgba(59,130,246,0.15)',
   onClick,
-  hoverGlow = true
+  hoverGlow = true,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [coords, setCoords] = useState({ x: 0, y: 0 });
@@ -38,9 +38,8 @@ export function Card({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl border border-white/5 bg-[#181818]/60 backdrop-blur-lg transition-all duration-300 ${onClick ? 'cursor-pointer hover:border-white/10' : ''} ${className}`}
+      className={`relative overflow-hidden rounded-2xl border border-slate-200/70 bg-white/95 backdrop-blur-lg transition-all duration-300 dark:border-slate-800 dark:bg-slate-950/80 dark:hover:border-slate-700 ${onClick ? 'cursor-pointer hover:border-slate-300 dark:hover:border-slate-700' : ''} ${className}`}
     >
-      {/* Radial Spot Light Hover Glow */}
       {hoverGlow && isHovered && (
         <div
           className="pointer-events-none absolute -inset-px transition-opacity duration-300"
@@ -49,9 +48,7 @@ export function Card({
           }}
         />
       )}
-      <div className="relative z-10 h-full w-full">
-        {children}
-      </div>
+      <div className="relative z-10 h-full w-full">{children}</div>
     </div>
   );
 }
