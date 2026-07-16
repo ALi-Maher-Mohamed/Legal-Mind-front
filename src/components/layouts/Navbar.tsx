@@ -3,6 +3,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useScroll } from '@/hooks/useScroll';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
@@ -102,13 +103,14 @@ export default function Navbar() {
                 </AnimatePresence>
               </div>
 
-              {/* Login Button - بخلفية سوداء في اللايت مود */}
-              <Button 
-                size="sm" 
-                className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 border-none transition-colors"
-              >
-                {t.common.login}
-              </Button>
+              <Link href={ROUTES.login}>
+                <Button
+                  size="sm"
+                  className="bg-slate-900 text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 border-none transition-colors"
+                >
+                  {t.common.login}
+                </Button>
+              </Link>
 
               <Button variant="secondary" size="sm" onClick={toggleTheme}>
                 {theme === 'dark' ? (
@@ -118,16 +120,16 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <Moon className="h-4 w-4 "
-                    style={{color:'white'}}
-                    />
+                    <Moon className="h-4 w-4" style={{ color: 'white' }} />
                     {isRtl ? 'الوضع الداكن' : 'Dark'}
                   </div>
                 )}
               </Button>
-              <Button variant="primary" size="sm">
-                {t.common.getStarted}
-              </Button>
+              <Link href={ROUTES.login}>
+                <Button variant="primary" size="sm">
+                  {t.common.getStarted}
+                </Button>
+              </Link>
             </div>
 
             {/* Mobile Hamburger menu icon */}
@@ -194,12 +196,16 @@ export default function Navbar() {
               </div>
 
               <div className="flex flex-col gap-3">
-                <Button variant="secondary" fullWidth onClick={() => setIsOpen(false)}>
-                  {t.common.login}
-                </Button>
-                <Button variant="primary" fullWidth onClick={() => setIsOpen(false)}>
-                  {t.common.getStarted}
-                </Button>
+                <Link href={ROUTES.login} onClick={() => setIsOpen(false)}>
+                  <Button variant="secondary" fullWidth>
+                    {t.common.login}
+                  </Button>
+                </Link>
+                <Link href={ROUTES.login} onClick={() => setIsOpen(false)}>
+                  <Button variant="primary" fullWidth>
+                    {t.common.getStarted}
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           </motion.div>

@@ -166,6 +166,59 @@ export const translations = {
       newsletterDesc: "Get monthly summaries of AI legal compliance trends directly in your inbox.",
       newsletterBtn: "Subscribe",
       copyright: "© 2026 LegalMind AI. All rights reserved."
+    },
+    auth: {
+      backHome: "Back to home",
+      welcome: "Welcome back",
+      subtitle: "Sign in to your LegalMind workspace",
+      emailPlaceholder: "Professional email...",
+      passwordPlaceholder: "Password...",
+      rememberMe: "Keep me signed in",
+      forgotPassword: "Forgot password?",
+      forgotAlert: "Password recovery must be initiated from your admin panel.",
+      loginBtn: "Sign in",
+      noAccount: "New to LegalMind? ",
+      registerBtn: "Create account",
+      registerTitle: "Create your account",
+      stepOf: "Step {step} of 3",
+      namePlaceholder: "Full name...",
+      regEmailPlaceholder: "Work email...",
+      regPasswordPlaceholder: "Create a password...",
+      firmPlaceholder: "Firm or legal department...",
+      barIdPlaceholder: "Bar license ID (optional)...",
+      teamSizeLabel: "Team size",
+      teamSolo: "Solo practice (1)",
+      teamBoutique: "Boutique (2–10)",
+      teamRegional: "Regional firm (11–50)",
+      teamCorporate: "Large firm (50+)",
+      practicesLabel: "Primary practice areas",
+      priorStep: "Back",
+      loginInstead: "Sign in instead",
+      nextStep: "Continue",
+      enrollBtn: "Enroll & continue",
+      onboardBadge: "Getting started",
+      onboardTitle: "Welcome to LegalMind",
+      continue: "Continue",
+      enterApp: "Enter workspace",
+      secureFooter: "Secure attorney-client environment · AES-256 encrypted",
+      brandQuote: "Automate the drafting so counsel can master the argument.",
+      brandCite: "LegalMind AI",
+      brandCiteSub: "Precision legal intelligence",
+      portalVer: "PORTAL VER. 1.0",
+      slides: {
+        aiCounsel: {
+          title: "Your AI Legal Counsel",
+          desc: "Grounded in statutory authority and case indexes. Converse on complex doctrines, obtain citations, and draft legal work instantly."
+        },
+        docAudit: {
+          title: "Secure Document Audits",
+          desc: "Uploads stay in your encrypted session. Inspect agreements, map deadlines, and surface liabilities with confidence."
+        },
+        firmBrand: {
+          title: "Configure Your Workspace",
+          desc: "Set disclaimers, citation preferences, custom templates, and switch seamlessly between Arabic and English."
+        }
+      }
     }
   },
   ar: {
@@ -331,6 +384,59 @@ export const translations = {
       newsletterDesc: "احصل على ملخص شهري لأبرز توجهات القوانين والامتثال بالذكاء الاصطناعي في بريدك.",
       newsletterBtn: "اشترك",
       copyright: "© ٢٠٢٦ ليجال مايند. جميع الحقوق محفوظة."
+    },
+    auth: {
+      backHome: "العودة للرئيسية",
+      welcome: "مرحباً بعودتك",
+      subtitle: "سجّل الدخول إلى مساحة عمل ليجال مايند",
+      emailPlaceholder: "البريد الإلكتروني المهني...",
+      passwordPlaceholder: "كلمة المرور...",
+      rememberMe: "البقاء متصلاً",
+      forgotPassword: "نسيت كلمة المرور؟",
+      forgotAlert: "يجب استعادة كلمة المرور عبر لوحة الإدارة.",
+      loginBtn: "تسجيل الدخول",
+      noAccount: "جديد على ليجال مايند؟ ",
+      registerBtn: "إنشاء حساب",
+      registerTitle: "إنشاء حسابك",
+      stepOf: "الخطوة {step} من ٣",
+      namePlaceholder: "الاسم الكامل...",
+      regEmailPlaceholder: "البريد الإلكتروني للعمل...",
+      regPasswordPlaceholder: "إنشاء كلمة مرور...",
+      firmPlaceholder: "اسم المكتب أو القسم القانوني...",
+      barIdPlaceholder: "رقم قيد النقابة (اختياري)...",
+      teamSizeLabel: "حجم الفريق",
+      teamSolo: "مكتب مستقل (١)",
+      teamBoutique: "شركاء متخصصون (٢–١٠)",
+      teamRegional: "شركة إقليمية (١١–٥٠)",
+      teamCorporate: "مؤسسة كبرى (+٥٠)",
+      practicesLabel: "مجالات التركيز الرئيسية",
+      priorStep: "السابق",
+      loginInstead: "تسجيل الدخول بدلاً من ذلك",
+      nextStep: "التالي",
+      enrollBtn: "التسجيل والمتابعة",
+      onboardBadge: "البدء",
+      onboardTitle: "أهلاً بك في ليجال مايند",
+      continue: "متابعة",
+      enterApp: "الدخول للمساحة",
+      secureFooter: "بيئة آمنة للمحامي والموكل · تشفير AES-256",
+      brandQuote: "دعنا نؤتمت الصياغة ليتفرغ المستشار لإتقان الحجة.",
+      brandCite: "ليجال مايند",
+      brandCiteSub: "ذكاء قانوني دقيق",
+      portalVer: "PORTAL VER. 1.0",
+      slides: {
+        aiCounsel: {
+          title: "مستشارك القانوني بالذكاء الاصطناعي",
+          desc: "مربوط بالنصوص التشريعية والأحكام. حاور حول النظريات المعقدة، واحصل على استشهادات، وصغ مذكراتك فوراً."
+        },
+        docAudit: {
+          title: "تدقيق المستندات الآمن",
+          desc: "تبقى الملفات داخل جلستك المشفرة. دقق العقود، وتتبع المواعيد، واكشف الالتزامات بثقة."
+        },
+        firmBrand: {
+          title: "اضبط مساحة عملك",
+          desc: "حدد إخلاء المسؤولية، بروتوكول الاقتباس، القوالب المخصصة، والتبديل السلس بين العربية والإنجليزية."
+        }
+      }
     }
   }
 };
