@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function RegisterStepFirm({ draft, onChange }: Props) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-4 pt-2">
@@ -21,7 +21,6 @@ export default function RegisterStepFirm({ draft, onChange }: Props) {
         onChange={(e) => onChange('firmName', e.target.value)}
         placeholder={t.auth.firmPlaceholder}
         required
-        isRtl={isRtl}
         icon={<Briefcase className="h-4 w-4" />}
       />
       <AuthInput
@@ -29,22 +28,27 @@ export default function RegisterStepFirm({ draft, onChange }: Props) {
         value={draft.barId}
         onChange={(e) => onChange('barId', e.target.value)}
         placeholder={t.auth.barIdPlaceholder}
-        isRtl={isRtl}
         icon={<Scale className="h-4 w-4" />}
       />
       <div>
-        <label className="text-xs text-gray-500 block mb-2 text-start">
-          {t.auth.teamSizeLabel}
-        </label>
+        <label className="text-xs text-muted block mb-2 text-start">{t.auth.teamSizeLabel}</label>
         <select
           value={draft.teamSize}
           onChange={(e) => onChange('teamSize', e.target.value)}
-          className="w-full rounded-xl bg-white/5 border border-white/10 py-3 px-4 text-sm text-white text-start focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className="w-full rounded-lg border border-brand/15 bg-white py-3 px-4 text-sm text-foreground text-start shadow-[0_1px_2px_rgba(0,62,199,0.04)] focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition dark:border-white/10 dark:bg-white/5 dark:text-[#dae2fd] dark:shadow-none"
         >
-          <option value="1" className="bg-[#181818]">{t.auth.teamSolo}</option>
-          <option value="2-10" className="bg-[#181818]">{t.auth.teamBoutique}</option>
-          <option value="11-50" className="bg-[#181818]">{t.auth.teamRegional}</option>
-          <option value="51+" className="bg-[#181818]">{t.auth.teamCorporate}</option>
+          <option value="1" className="bg-white text-foreground dark:bg-[#0b1326] dark:text-[#dae2fd]">
+            {t.auth.teamSolo}
+          </option>
+          <option value="2-10" className="bg-white text-foreground dark:bg-[#0b1326] dark:text-[#dae2fd]">
+            {t.auth.teamBoutique}
+          </option>
+          <option value="11-50" className="bg-white text-foreground dark:bg-[#0b1326] dark:text-[#dae2fd]">
+            {t.auth.teamRegional}
+          </option>
+          <option value="51+" className="bg-white text-foreground dark:bg-[#0b1326] dark:text-[#dae2fd]">
+            {t.auth.teamCorporate}
+          </option>
         </select>
       </div>
     </div>

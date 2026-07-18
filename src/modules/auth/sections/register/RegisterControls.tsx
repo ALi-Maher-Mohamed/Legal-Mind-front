@@ -23,13 +23,17 @@ export default function RegisterControls({ step, isLoading, onBack, onNext, onLo
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition"
+          className="flex items-center gap-1 text-xs text-muted hover:text-foreground transition"
         >
           <BackIcon className="h-4 w-4" />
           {t.auth.priorStep}
         </button>
       ) : (
-        <button type="button" onClick={onLoginInstead} className="text-xs text-blue-400 hover:text-blue-300 transition">
+        <button
+          type="button"
+          onClick={onLoginInstead}
+          className="text-xs text-brand hover:opacity-80 transition"
+        >
           {t.auth.loginInstead}
         </button>
       )}

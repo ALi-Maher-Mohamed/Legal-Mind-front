@@ -1,24 +1,24 @@
-type StepProgressProps = {
+'use client';
+
+type Props = {
   step: number;
-  total?: number;
   label: string;
+  total?: number;
 };
 
-export default function StepProgress({ step, total = 3, label }: StepProgressProps) {
+export default function StepProgress({ step, label, total = 3 }: Props) {
   return (
-    <div>
-      <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 block">{label}</span>
-      <div
-        className="h-1 bg-white/10 w-full mt-4 rounded-full overflow-hidden"
-        role="progressbar"
-        aria-valuenow={step}
-        aria-valuemin={1}
-        aria-valuemax={total}
-      >
-        <div
-          className="h-full bg-gradient-to-r from-blue-500 to-[#F6C453] transition-all duration-300 rounded-full"
-          style={{ width: `${(step / total) * 100}%` }}
-        />
+    <div className="space-y-2">
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-brand">{label}</span>
+      <div className="flex items-center gap-1.5" aria-hidden>
+        {Array.from({ length: total }, (_, i) => (
+          <div
+            key={i}
+            className={`h-1 flex-1 rounded-full transition-colors ${
+              i < step ? 'bg-brand' : 'bg-brand/15 dark:bg-white/10'
+            }`}
+          />
+        ))}
       </div>
     </div>
   );

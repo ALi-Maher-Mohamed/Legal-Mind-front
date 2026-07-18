@@ -15,10 +15,12 @@ export default function RegisterStepPractices({ selected, onToggle }: Props) {
 
   return (
     <div className="space-y-3 pt-2">
-      <span className="text-xs text-gray-500 block text-start">
-        {t.auth.practicesLabel}
-      </span>
-      <div className="flex flex-wrap gap-2 max-h-56 overflow-y-auto pe-1" role="group" aria-label={t.auth.practicesLabel}>
+      <span className="text-xs text-muted block text-start">{t.auth.practicesLabel}</span>
+      <div
+        className="flex flex-wrap gap-2 max-h-56 overflow-y-auto pe-1"
+        role="group"
+        aria-label={t.auth.practicesLabel}
+      >
         {areas.map((area) => (
           <PracticeChip
             key={area}

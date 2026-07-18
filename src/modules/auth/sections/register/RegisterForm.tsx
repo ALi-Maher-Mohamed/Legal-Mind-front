@@ -23,9 +23,11 @@ export default function RegisterForm({ onComplete, onLoginInstead }: Props) {
 
   return (
     <div className="space-y-6">
-      <div>
+      <div className="text-start">
         <StepProgress step={step} label={stepLabel} />
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white mt-3">{t.auth.registerTitle}</h1>
+        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mt-3">
+          {t.auth.registerTitle}
+        </h1>
       </div>
 
       {step === 1 && <RegisterStepPersonal draft={draft} onChange={updateField} />}

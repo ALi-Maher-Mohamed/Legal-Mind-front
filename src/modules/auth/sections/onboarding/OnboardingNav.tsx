@@ -28,8 +28,8 @@ export default function OnboardingNav({ slide, total, isLast, onPrev, onNext, on
             role="tab"
             aria-selected={index === slide}
             onClick={() => onDot(index)}
-            className={`h-2 rounded-full transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 ${
-              index === slide ? 'w-6 bg-blue-500' : 'w-2 bg-white/20'
+            className={`h-2 rounded-full transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
+              index === slide ? 'w-6 bg-brand' : 'w-2 bg-brand/20 dark:bg-white/20'
             }`}
           />
         ))}
@@ -40,7 +40,7 @@ export default function OnboardingNav({ slide, total, isLast, onPrev, onNext, on
           <button
             type="button"
             onClick={onPrev}
-            className="flex items-center gap-1 text-xs text-gray-500 hover:text-white transition"
+            className="flex items-center gap-1 text-xs text-muted hover:text-foreground transition"
           >
             <PrevIcon className="h-4 w-4" />
             {t.auth.priorStep}

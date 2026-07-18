@@ -10,6 +10,7 @@ import { useAuthMode } from '../hooks/useAuthMode';
 import { buildAuthUser } from '../lib/buildAuthUser';
 import AuthHeader from '../components/AuthHeader';
 import AuthBrandPanel from '../components/AuthBrandPanel';
+import AuthModeTabs from '../components/AuthModeTabs';
 import AuthSecureFooter from '../components/AuthSecureFooter';
 import LoginForm from '../sections/login/LoginForm';
 import RegisterForm from '../sections/register/RegisterForm';
@@ -49,11 +50,12 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#090909] flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-background flex flex-col lg:flex-row">
       <div className="w-full lg:w-1/2 flex flex-col justify-between p-6 md:p-10 lg:p-14 min-h-screen relative">
-        <div className="absolute top-1/4 left-1/4 w-[280px] h-[280px] rounded-full bg-blue-600/10 blur-[100px] pointer-events-none" />
+        <div className="absolute top-1/4 start-1/4 w-[280px] h-[280px] rounded-full bg-brand/10 blur-[100px] pointer-events-none" />
         <AuthHeader />
         <div className="relative z-10 max-w-md w-full mx-auto my-auto py-8">
+          <AuthModeTabs mode={mode} onLogin={goLogin} onRegister={goRegister} />
           {mode === 'login' && (
             <LoginForm onSuccess={handleLoginSuccess} onSwitchRegister={goRegister} />
           )}

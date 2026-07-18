@@ -19,10 +19,10 @@ export default function OnboardingFlow({ onComplete }: Props) {
   return (
     <div className="space-y-8 py-2">
       <div className="text-center">
-        <span className="text-xs font-semibold uppercase tracking-wider text-blue-400 block mb-2">
+        <span className="text-xs font-semibold uppercase tracking-wider text-brand block mb-2">
           {t.auth.onboardBadge}
         </span>
-        <h1 className="text-3xl font-bold tracking-tight text-white">{t.auth.onboardTitle}</h1>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{t.auth.onboardTitle}</h1>
       </div>
 
       <OnboardingSlide

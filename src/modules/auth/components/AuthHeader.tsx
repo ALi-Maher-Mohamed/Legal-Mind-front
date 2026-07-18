@@ -22,18 +22,18 @@ export default function AuthHeader() {
               strokeLinecap="round"
               strokeLinejoin="round"
             />
-            <circle cx="50" cy="35" r="5" fill="#F6C453" />
-            <path d="M35 52 L65 52" stroke="#3B82F6" strokeWidth="4" strokeLinecap="round" />
+            <circle cx="50" cy="35" r="5" fill="var(--lm-accent)" />
+            <path d="M35 52 L65 52" stroke="var(--lm-brand)" strokeWidth="4" strokeLinecap="round" />
             <path d="M50 35 L50 65" stroke="url(#auth-logo-grad)" strokeWidth="4" />
             <defs>
               <linearGradient id="auth-logo-grad" x1="0" y1="0" x2="100" y2="100">
-                <stop offset="0%" stopColor="#3B82F6" />
-                <stop offset="100%" stopColor="#8B5CF6" />
+                <stop offset="0%" stopColor="var(--lm-brand)" />
+                <stop offset="100%" stopColor="var(--lm-brand-soft)" />
               </linearGradient>
             </defs>
           </svg>
-          <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition">
-            LegalMind<span className="text-[#F6C453] ml-0.5">AI</span>
+          <span className="text-base font-bold tracking-tight text-foreground group-hover:text-brand transition">
+            LegalMind<span className="text-accent ms-0.5">AI</span>
           </span>
         </Link>
         <AuthToolbar />
@@ -41,7 +41,7 @@ export default function AuthHeader() {
 
       <Link
         href={ROUTES.home}
-        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition"
+        className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-brand transition"
       >
         <BackIcon className="h-3.5 w-3.5" />
         {t.auth.backHome}

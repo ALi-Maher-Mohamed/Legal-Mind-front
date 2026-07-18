@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function RegisterStepPersonal({ draft, onChange }: Props) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="space-y-4 pt-2">
@@ -21,7 +21,6 @@ export default function RegisterStepPersonal({ draft, onChange }: Props) {
         onChange={(e) => onChange('name', e.target.value)}
         placeholder={t.auth.namePlaceholder}
         required
-        isRtl={isRtl}
         icon={<User className="h-4 w-4" />}
         autoComplete="name"
       />
@@ -31,7 +30,6 @@ export default function RegisterStepPersonal({ draft, onChange }: Props) {
         onChange={(e) => onChange('email', e.target.value)}
         placeholder={t.auth.regEmailPlaceholder}
         required
-        isRtl={isRtl}
         icon={<Mail className="h-4 w-4" />}
         autoComplete="email"
       />
@@ -41,7 +39,6 @@ export default function RegisterStepPersonal({ draft, onChange }: Props) {
         onChange={(e) => onChange('password', e.target.value)}
         placeholder={t.auth.regPasswordPlaceholder}
         required
-        isRtl={isRtl}
         icon={<Lock className="h-4 w-4" />}
         autoComplete="new-password"
       />

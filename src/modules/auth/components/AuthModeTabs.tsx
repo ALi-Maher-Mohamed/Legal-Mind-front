@@ -14,15 +14,15 @@ export default function AuthModeTabs({ mode, onLogin, onRegister }: Props) {
   if (mode === 'onboarding') return null;
 
   const tab = (active: boolean) =>
-    `flex-1 py-2.5 text-xs sm:text-sm font-semibold rounded-xl transition focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 cursor-pointer ${
+    `flex-1 py-2.5 text-xs sm:text-sm font-semibold rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 cursor-pointer ${
       active
-        ? 'bg-blue-600 text-white shadow-[0_0_20px_rgba(59,130,246,0.25)]'
-        : 'text-slate-500 hover:text-slate-800 dark:text-gray-400 dark:hover:text-white'
+        ? 'bg-brand text-on-brand shadow-[0_4px_12px_rgba(0,62,199,0.2)]'
+        : 'text-muted hover:text-foreground'
     }`;
 
   return (
     <div
-      className="flex p-1 mb-6 rounded-2xl border border-slate-200 bg-slate-100/80 dark:border-white/10 dark:bg-white/5"
+      className="flex p-1 mb-6 rounded-xl border border-brand/15 bg-[#f0f4ff] dark:border-white/10 dark:bg-white/5"
       role="tablist"
       aria-label="Auth mode"
     >
