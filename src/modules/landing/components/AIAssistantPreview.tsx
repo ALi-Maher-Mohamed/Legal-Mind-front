@@ -24,9 +24,12 @@ export default function AIAssistantPreview() {
 
 
 
-  // Scroll to bottom
+  // Scroll chat panel only — never the page
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length === 0 && !isTyping) return;
+    const container = messagesEndRef.current?.parentElement;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   }, [messages, isTyping]);
 
   const handleSend = async (textToSend = inputValue, overrideAttachments = attachedFiles) => {

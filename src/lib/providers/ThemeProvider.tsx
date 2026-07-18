@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, useState, useEffect, useContext } from 'react';
+import { applyThemeVars, type ThemeMode } from '@/config/theme';
 
-type Theme = 'light' | 'dark';
+type Theme = ThemeMode;
 
 interface ThemeContextProps {
   theme: Theme;
@@ -13,22 +14,12 @@ interface ThemeContextProps {
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-//   const [theme, setThemeState] = useState<Theme>('dark');
-const [theme, setThemeState] = useState<Theme>(() => {
-  if (typeof window === "undefined") return "dark";
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark';
 
-  const stored = localStorage.getItem("theme");
-
-  return stored === "light" ? "light" : "dark";
-});
-
-//   useEffect(() => {
-//     if (typeof window === 'undefined') return;
-//     const storedTheme = window.localStorage.getItem('theme') as Theme | null;
-//     if (storedTheme === 'dark' || storedTheme === 'light') {
-//       setThemeState(storedTheme);
-//     }
-//   }, []);
+    const stored = localStorage.getItem('theme');
+    return stored === 'light' ? 'light' : 'dark';
+  });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -37,11 +28,14 @@ const [theme, setThemeState] = useState<Theme>(() => {
     if (theme === 'dark') {
       root.classList.add('dark');
       root.classList.remove('light');
+      root.style.colorScheme = 'dark';
     } else {
       root.classList.remove('dark');
       root.classList.add('light');
+      root.style.colorScheme = 'light';
     }
 
+    applyThemeVars(root, theme);
     window.localStorage.setItem('theme', theme);
   }, [theme]);
 

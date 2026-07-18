@@ -15,7 +15,10 @@ export function useChatPreview(locale: Locale, isRtl: boolean) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length === 0 && !isTyping) return;
+    const container = messagesEndRef.current?.parentElement;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   }, [messages, isTyping]);
 
   const handleSend = useCallback(

@@ -1,21 +1,24 @@
-import type { Metadata } from "next";
-import Script from "next/script";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { LanguageProvider } from "@/lib/providers/LanguageProvider";import { ThemeProvider } from '@/lib/providers/ThemeProvider';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import { LanguageProvider } from '@/lib/providers/LanguageProvider';
+import { ThemeProvider } from '@/lib/providers/ThemeProvider';
+import { buildThemeStyleTag } from '@/config/theme';
+
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "LegalMind AI - Premium AI Legal Assistant",
-  description: "Draft smart contracts, review agreements, track court cases, and receive instant legal counsel powered by neural legal intelligence.",
+  title: 'LegalMind AI - Premium AI Legal Assistant',
+  description:
+    'Draft smart contracts, review agreements, track court cases, and receive instant legal counsel powered by neural legal intelligence.',
 };
 
 export default function RootLayout({
@@ -29,8 +32,11 @@ export default function RootLayout({
       lang="ar"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
-
       <head>
+        <style
+          id="legalmind-theme-tokens"
+          dangerouslySetInnerHTML={{ __html: buildThemeStyleTag() }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -52,14 +58,11 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 flex flex-col font-sans antialiased overflow-x-hidden selection:bg-blue-500/20 selection:text-slate-900 dark:selection:bg-blue-500/20 dark:selection:text-slate-100">
+      <body className="min-h-full bg-background text-foreground flex flex-col font-sans antialiased overflow-x-hidden">
         <LanguageProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </LanguageProvider>
       </body>
     </html>
-
   );
 }

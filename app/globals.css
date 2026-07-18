@@ -1,56 +1,78 @@
 @import "tailwindcss";
 
+/*
+ * Semantic Tailwind colors — values come from src/config/theme.ts
+ * (injected as --lm-* CSS variables). Prefer these in new UI:
+ *   bg-surface  bg-surface-raised  text-brand  text-accent  border-border
+ */
 @theme {
-  --color-background: #f8fafc;
-  --color-foreground: #0f172a;
-  --color-card-dark: #ffffff;
-  --color-primary-blue: #3B82F6;
-  --color-accent-gold: #F6C453;
+  --color-background: var(--lm-background);
+  --color-foreground: var(--lm-foreground);
+  --color-card: var(--lm-card);
+  --color-surface: var(--lm-surface);
+  --color-surface-raised: var(--lm-surface-raised);
+  --color-surface-muted: var(--lm-surface-muted);
+  --color-border: var(--lm-border);
+  --color-border-strong: var(--lm-border-strong);
+  --color-muted: var(--lm-muted);
+  --color-muted-foreground: var(--lm-muted-foreground);
+  --color-brand: var(--lm-brand);
+  --color-brand-soft: var(--lm-brand-soft);
+  --color-brand-deep: var(--lm-brand-deep);
+  --color-accent: var(--lm-accent);
+  --color-accent-purple: var(--lm-accent-purple);
+  --color-success: var(--lm-success);
+  --color-warning: var(--lm-warning);
+  --color-danger: var(--lm-danger);
+  --color-ring: var(--lm-ring);
+
+  /* Legacy aliases (existing classNames) */
+  --color-primary-blue: var(--lm-brand);
+  --color-accent-gold: var(--lm-accent);
+  --color-card-dark: var(--lm-card);
+
   --font-sans: var(--font-geist-sans), Arial, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 }
 
 :root {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--lm-background, #f8fafc);
+  color: var(--lm-foreground, #0f172a);
+  color-scheme: light;
 }
 
 .dark {
-  --color-background: #0f172a;
-  --color-foreground: #f8fafc;
-  --color-card-dark: #111827;
-  --color-primary-blue: #60a5fa;
-  --color-accent-gold: #F6C453;
+  color-scheme: dark;
 }
 
 .dark body {
-  background-color: #0f172a;
-  color: #f8fafc;
+  background-color: var(--lm-background);
+  color: var(--lm-foreground);
 }
 
 .dark ::selection {
-  background-color: rgba(96, 165, 250, 0.2);
-  color: #f8fafc;
+  background-color: var(--lm-selection);
+  color: var(--lm-foreground);
 }
 
 .dark [class*="bg-white"] {
-  background-color: #111827 !important;
+  background-color: var(--lm-card) !important;
 }
 
 .dark [class*="bg-slate-50"] {
-  background-color: #0f172a !important;
+  background-color: var(--lm-background) !important;
 }
 
 .dark [class*="bg-slate-100"] {
-  background-color: #1f2937 !important;
+  background-color: var(--lm-surface-muted) !important;
 }
 
 .dark [class*="bg-slate-200"] {
-  background-color: #334155 !important;
+  background-color: var(--lm-border-strong) !important;
 }
 
 .dark [class*="text-slate-900"] {
-  color: #f8fafc !important;
+  color: var(--lm-foreground) !important;
 }
 
 .dark [class*="text-slate-700"] {
@@ -66,35 +88,35 @@
 }
 
 .dark [class*="text-slate-400"] {
-  color: #94a3b8 !important;
+  color: var(--lm-muted) !important;
 }
 
 .dark [class*="border-slate-200"] {
-  border-color: #475569 !important;
+  border-color: var(--lm-border) !important;
 }
 
 .dark [class*="border-slate-100"] {
-  border-color: #334155 !important;
+  border-color: var(--lm-border-strong) !important;
 }
 
 .dark [class*="border-slate-300"] {
-  border-color: #475569 !important;
+  border-color: var(--lm-border) !important;
 }
 
 .dark [class*="placeholder-slate-400"]::placeholder {
-  color: #94a3b8 !important;
+  color: var(--lm-muted) !important;
 }
 
 .dark [class*="hover:bg-slate-100"]:hover {
-  background-color: #1f2937 !important;
+  background-color: var(--lm-surface-muted) !important;
 }
 
 .dark [class*="hover:bg-slate-200"]:hover {
-  background-color: #334155 !important;
+  background-color: var(--lm-border-strong) !important;
 }
 
 .dark [class*="hover:text-slate-900"]:hover {
-  color: #f8fafc !important;
+  color: var(--lm-foreground) !important;
 }
 
 .dark [class*="hover:text-slate-700"]:hover {
@@ -108,38 +130,33 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: var(--lm-scrollbar-track, #f1f5f9);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--lm-scrollbar-thumb, #cbd5e1);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6/40;
+  background: color-mix(in srgb, var(--lm-brand) 40%, transparent);
 }
 
 /* Glassmorphism helpers */
 .glass-effect {
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in srgb, var(--lm-card) 90%, transparent);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: 1px solid color-mix(in srgb, var(--lm-border) 80%, transparent);
 }
 
-/* Smooth selection colors */
 ::selection {
-  background-color: rgba(59, 130, 246, 0.2);
-  color: #0f172a;
+  background-color: var(--lm-selection, rgba(59, 130, 246, 0.2));
+  color: var(--lm-foreground, #0f172a);
 }
 
-/* Light-mode quick overrides: when html has .light, override common dark utilities
-   This provides a non-invasive way to show a usable light theme without changing
-   all component classNames. These rules are intentionally specific and use
-   !important to override Tailwind utility rules. */
 html.light {
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--lm-background);
+  color: var(--lm-foreground);
 }
 
 html.light .bg-slate-900 { background-color: #ffffff !important; }
@@ -155,8 +172,6 @@ html.light .hover\:text-white:hover { color: #0f172a !important; }
 html.light .hover\:text-black:hover { color: #1f2937 !important; }
 html.light .border-slate-800 { border-color: #e2e8f0 !important; }
 html.light .border-slate-950 { border-color: #e2e8f0 !important; }
-
-html.light .border-slate-800 { border-color: #e6edf3 !important; }
 html.light .border-slate-700 { border-color: #e2e8f0 !important; }
 
 html.light .placeholder-slate-500::placeholder { color: #94a3b8 !important; }

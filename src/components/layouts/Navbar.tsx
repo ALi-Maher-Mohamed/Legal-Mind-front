@@ -9,22 +9,14 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
 import { ROUTES } from '@/config/routes';
 import { Button } from '@/components/ui';
-import { Menu, X, Globe, ChevronDown, Sun, Moon } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
   const scrolled = useScroll(20);
-  const { locale, setLocale, t, isRtl } = useLanguage();
+  const { locale, toggleLanguage, t, isRtl } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
-  const [showLangMenu, setShowLangMenu] = useState(false);
-
-  const toggleLangMenu = () => setShowLangMenu(!showLangMenu);
-
-  const handleLanguageChange = (lang: 'en' | 'ar') => {
-    setLocale(lang);
-    setShowLangMenu(false);
-  };
 
   const navLinks = [
     { name: t.nav.services, href: ROUTES.services },
@@ -65,43 +57,11 @@ export default function Navbar() {
 
             {/* Language switch & Buttons */}
             <div className="hidden md:flex items-center gap-4">
-              {/* Language Picker Dropdown */}
-              <div className="relative">
-                <button
-                  onClick={toggleLangMenu}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-100 hover:text-white text-xs cursor-pointer transition select-none dark:bg-slate-900 dark:border-slate-800"
-                >
-                  <Globe className="h-3.5 w-3.5" />
-                  <span>{locale === 'en' ? 'English' : 'العربية'}</span>
-                  <ChevronDown className="h-3 w-3" />
-                </button>
-
-                <AnimatePresence>
-                  {showLangMenu && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 5 }}
-                      className={`absolute ${
-                        isRtl ? 'left-0' : 'right-0'
-                      } mt-2 w-32 rounded-xl bg-slate-950 border border-slate-800 p-1.5 shadow-xl`}
-                    >
-                      <button
-                        onClick={() => handleLanguageChange('en')}
-                        className="w-full text-left px-3 py-2 rounded-lg text-xs text-slate-100 hover:bg-slate-800 hover:text-white transition cursor-pointer"
-                      >
-                        English
-                      </button>
-                      <button
-                        onClick={() => handleLanguageChange('ar')}
-                        className="w-full text-right px-3 py-2 rounded-lg text-xs text-slate-100 hover:bg-slate-800 hover:text-white transition cursor-pointer"
-                      >
-                        العربية
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <LanguageSwitch
+                locale={locale}
+                onToggle={toggleLanguage}
+                scrolled={scrolled}
+              />
 
               <Link href={ROUTES.login}>
                 <Button
@@ -134,12 +94,12 @@ export default function Navbar() {
 
             {/* Mobile Hamburger menu icon */}
             <div className="flex md:hidden items-center gap-3">
-              <button
-                onClick={() => handleLanguageChange(locale === 'en' ? 'ar' : 'en')}
-                className="flex items-center justify-center p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300 hover:text-white"
-              >
-                <Globe className="h-4 w-4" />
-              </button>
+              <LanguageSwitch
+                locale={locale}
+                onToggle={toggleLanguage}
+                scrolled={scrolled}
+                compact
+              />
 
               <button
                 onClick={() => setIsOpen(!isOpen)}
@@ -215,9 +175,73 @@ export default function Navbar() {
   );
 }
 
-function Logo({ scrolled = false }: { scrolled?: boolean }) {
+function LanguageSwitch({
+  locale,
+  onToggle,
+  scrolled = false,
+  compact = false,
+}: {
+  locale: 'en' | 'ar';
+  onToggle: () => void;
+  scrolled?: boolean;
+  compact?: boolean;
+}) {
+  const isAr = locale === 'ar';
+
   return (
-    <a href={ROUTES.home} className="flex items-center gap-2 group cursor-pointer select-none">
+    <button
+      type="button"
+      role="switch"
+      dir="ltr"
+      aria-checked={isAr}
+      aria-label={isAr ? 'Switch to English' : 'التبديل للعربية'}
+      onClick={onToggle}
+      className={`relative inline-flex items-center rounded-full border p-0.5 cursor-pointer select-none transition ${
+        compact ? 'h-8 w-[4.25rem]' : 'h-8 w-[4.75rem]'
+      } ${
+        scrolled
+          ? 'border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-900'
+          : 'border-white/15 bg-white/10'
+      }`}
+    >
+      <span
+        className={`absolute top-0.5 bottom-0.5 start-0.5 w-[calc(50%-2px)] rounded-full bg-blue-600 shadow-sm transition-transform duration-200 ${
+          isAr ? 'translate-x-[calc(100%+2px)]' : 'translate-x-0'
+        }`}
+      />
+      <span
+        className={`relative z-10 flex-1 text-center text-[10px] font-semibold transition-colors ${
+          !isAr ? 'text-white' : scrolled ? 'text-slate-500 dark:text-slate-400' : 'text-slate-300'
+        }`}
+      >
+        EN
+      </span>
+      <span
+        className={`relative z-10 flex-1 text-center text-[10px] font-semibold transition-colors ${
+          isAr ? 'text-white' : scrolled ? 'text-slate-500 dark:text-slate-400' : 'text-slate-300'
+        }`}
+      >
+        عر
+      </span>
+    </button>
+  );
+}
+
+function Logo({ scrolled = false }: { scrolled?: boolean }) {
+  const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === 'undefined') return;
+    const isHome = window.location.pathname === '/' || window.location.pathname === '';
+    if (!isHome) return;
+
+    e.preventDefault();
+    if (window.location.hash) {
+      window.history.replaceState(null, '', '/');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return (
+    <Link href={ROUTES.home} onClick={scrollToTop} className="flex items-center gap-2 group cursor-pointer select-none">
       <svg className="h-8 w-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         {/* Shield outline */}
         <path d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z" stroke="url(#logo-grad)" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
@@ -241,6 +265,6 @@ function Logo({ scrolled = false }: { scrolled?: boolean }) {
       }`}>
         LegalMind<span className="text-accent-gold ml-0.5">AI</span>
       </span>
-    </a>
+    </Link>
   );
 }
