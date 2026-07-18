@@ -35,7 +35,7 @@ export default function ActivityItem({
       </h3>
       <p className="mt-1 text-xs leading-relaxed text-muted">{activity.desc}</p>
       {expanded && (
-        <div className="mt-3 rounded-lg border border-outline border-s-2 border-s-accent bg-surface-raised p-3 text-xs italic leading-relaxed text-foreground dark:border-outline/40">
+        <div className="mt-3 rounded-lg border border-brand/15 border-s-2 border-s-accent bg-[#f0f4ff] p-3 text-xs italic leading-relaxed text-foreground dark:border-white/10 dark:bg-brand/10">
           {activity.detail}
         </div>
       )}

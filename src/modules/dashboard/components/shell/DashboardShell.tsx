@@ -5,6 +5,7 @@ import { authService } from '@/services/auth.service';
 import { ROUTES } from '@/config/routes';
 import type { AuthUser } from '@/types/auth.types';
 import type { DashboardView } from '@/types/dashboard.types';
+import { dashPageBg } from '../../lib/panelStyles';
 import DashboardSidebar from './DashboardSidebar';
 import DashboardTopBar from './DashboardTopBar';
 import SidebarNav from './SidebarNav';
@@ -25,7 +26,7 @@ export default function DashboardShell({ user, view, onNavigate, children }: Pro
   };
 
   return (
-    <div className="flex min-h-screen bg-background text-foreground">
+    <div className={`flex min-h-screen text-foreground ${dashPageBg}`}>
       <DashboardSidebar
         user={user}
         view={view}

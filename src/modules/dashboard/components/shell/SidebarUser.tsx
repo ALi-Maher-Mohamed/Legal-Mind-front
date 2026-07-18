@@ -13,7 +13,7 @@ export default function SidebarUser({ user, onLogout }: Props) {
   const { t } = useLanguage();
 
   return (
-    <div className="space-y-2 border-t border-outline/40 p-3">
+    <div className="space-y-2 border-t border-brand/15 p-3 dark:border-white/10">
       <div className="flex items-center gap-2 px-2 py-1">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/15 text-xs font-bold text-brand">
           {user.name.charAt(0).toUpperCase()}
@@ -26,7 +26,7 @@ export default function SidebarUser({ user, onLogout }: Props) {
       <button
         type="button"
         onClick={onLogout}
-        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-surface-raised hover:text-foreground cursor-pointer"
+        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5 cursor-pointer"
       >
         <LogOut className="h-4 w-4" />
         {t.dashboard.logout}

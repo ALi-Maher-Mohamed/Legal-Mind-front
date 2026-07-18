@@ -14,7 +14,7 @@ export default function StatCard({ label, value, change, icon }: Props) {
       <div className={dashAccentBar} />
       <div className="flex items-start justify-between gap-2">
         <span className="text-[10px] font-semibold uppercase tracking-wider text-muted">{label}</span>
-        <div className="rounded-lg border border-outline bg-surface-raised p-1.5 text-brand dark:border-outline/40">
+        <div className="rounded-lg border border-brand/15 bg-[#f0f4ff] p-1.5 text-brand dark:border-white/10 dark:bg-brand/15">
           {icon}
         </div>
       </div>

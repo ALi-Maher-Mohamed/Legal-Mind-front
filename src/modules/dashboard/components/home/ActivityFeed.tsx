@@ -13,10 +13,10 @@ export default function ActivityFeed() {
 
   return (
     <DashPanel>
-      <h2 className="mb-6 border-b border-outline/40 pb-4 text-lg font-bold text-foreground">
+      <h2 className="mb-6 border-b border-brand/15 pb-4 text-lg font-bold text-foreground dark:border-white/10">
         {t.dashboard.activityLog}
       </h2>
-      <div className="relative ms-3 space-y-8 border-s-2 border-brand/20 ps-6">
+      <div className="relative ms-3 space-y-8 border-s-2 border-brand/25 ps-6">
         {activities.map((act, index) => (
           <ActivityItem
             key={act.id}

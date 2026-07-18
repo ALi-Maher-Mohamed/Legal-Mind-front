@@ -24,7 +24,7 @@ export default function SegmentSwitch({
       aria-checked={checked}
       aria-label={ariaLabel}
       onClick={onToggle}
-      className={`relative inline-flex h-9 w-[5.5rem] items-center rounded-full border border-outline bg-surface-raised p-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${className}`}
+      className={`relative inline-flex h-9 w-[5.5rem] items-center rounded-full border border-brand/15 bg-[#f0f4ff] p-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 dark:border-white/10 dark:bg-white/5 ${className}`}
     >
       <span
         aria-hidden

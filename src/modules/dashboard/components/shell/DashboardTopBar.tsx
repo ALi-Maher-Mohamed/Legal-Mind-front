@@ -13,7 +13,7 @@ export default function DashboardTopBar({ onLogout }: Props) {
   const isAr = locale === 'ar';
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-outline/40 bg-background/90 px-4 py-3 backdrop-blur-md sm:px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/15 bg-white/90 px-4 py-3 backdrop-blur-md dark:border-white/10 dark:bg-background/90 sm:px-6">
       <div className="md:hidden">
         <span className="text-sm font-bold text-foreground">
           {t.common.brandName}
@@ -33,7 +33,7 @@ export default function DashboardTopBar({ onLogout }: Props) {
         <button
           type="button"
           onClick={toggleTheme}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-outline bg-surface-raised text-muted transition hover:text-foreground cursor-pointer"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-[#f0f4ff] text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
           aria-label={theme === 'dark' ? (isRtl ? 'فاتح' : 'Light') : isRtl ? 'داكن' : 'Dark'}
         >
           {theme === 'dark' ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4" />}
@@ -41,7 +41,7 @@ export default function DashboardTopBar({ onLogout }: Props) {
         <button
           type="button"
           onClick={onLogout}
-          className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-outline bg-surface-raised text-muted cursor-pointer"
+          className="md:hidden flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-[#f0f4ff] text-muted dark:border-white/10 dark:bg-white/5 cursor-pointer"
           aria-label={t.dashboard.logout}
         >
           <LogOut className="h-4 w-4" />

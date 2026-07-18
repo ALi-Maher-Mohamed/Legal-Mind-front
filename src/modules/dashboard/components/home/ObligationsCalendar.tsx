@@ -21,9 +21,9 @@ export default function ObligationsCalendar() {
 
   return (
     <DashPanel>
-      <div className="mb-4 flex items-center justify-between border-b border-outline/40 pb-3">
+      <div className="mb-4 flex items-center justify-between border-b border-brand/15 pb-3 dark:border-white/10">
         <div className="flex items-center gap-2">
-          <Calendar className="h-4 w-4 text-accent" />
+          <Calendar className="h-4 w-4 text-brand" />
           <span className="text-xs font-bold uppercase tracking-wider text-foreground">
             {t.dashboard.calendarTitle}
           </span>
@@ -48,7 +48,7 @@ export default function ObligationsCalendar() {
               key={day}
               className={`relative flex items-center justify-center rounded-md py-1 ${
                 isToday ? 'bg-brand text-on-brand font-bold' : ''
-              } ${marked && !isToday ? 'border border-accent text-accent font-bold' : ''}`}
+              } ${marked && !isToday ? 'border border-brand/40 text-brand font-bold bg-[#f0f4ff] dark:bg-brand/15' : ''}`}
             >
               {day}
               {marked && <span className="absolute bottom-0.5 h-1 w-1 rounded-full bg-accent" />}
@@ -57,7 +57,7 @@ export default function ObligationsCalendar() {
         })}
       </div>
 
-      <div className="mt-6 space-y-3.5 border-t border-outline/40 pt-4">
+      <div className="mt-6 space-y-3.5 border-t border-brand/15 pt-4 dark:border-white/10">
         {obligations.map((ob) => (
           <ObligationRow
             key={ob.title}

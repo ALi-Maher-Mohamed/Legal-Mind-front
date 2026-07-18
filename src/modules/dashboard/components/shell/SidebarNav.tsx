@@ -16,7 +16,7 @@ export default function SidebarNav({ view, onNavigate, variant = 'sidebar' }: Pr
 
   if (mobile) {
     return (
-      <div className="flex gap-1 overflow-x-auto border-b border-outline/40 px-3 py-2 md:hidden">
+      <div className="flex gap-1 overflow-x-auto border-b border-brand/15 px-3 py-2 md:hidden dark:border-white/10">
         {DASH_NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = view === item.id;
@@ -26,7 +26,9 @@ export default function SidebarNav({ view, onNavigate, variant = 'sidebar' }: Pr
               type="button"
               onClick={() => onNavigate(item.id)}
               className={`inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                active ? 'bg-brand text-on-brand' : 'bg-surface-raised text-muted'
+                active
+                  ? 'bg-brand text-on-brand'
+                  : 'bg-white text-muted border border-brand/15 dark:bg-white/5 dark:border-white/10'
               }`}
             >
               <Icon className="h-3.5 w-3.5" />
@@ -51,7 +53,7 @@ export default function SidebarNav({ view, onNavigate, variant = 'sidebar' }: Pr
             className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition cursor-pointer text-start ${
               active
                 ? 'bg-brand text-on-brand shadow-[0_2px_8px_rgba(0,62,199,0.2)]'
-                : 'text-muted hover:bg-surface-raised hover:text-foreground'
+                : 'text-muted hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5'
             }`}
           >
             <Icon className="h-4 w-4 shrink-0" />

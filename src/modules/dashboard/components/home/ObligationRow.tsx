@@ -9,7 +9,7 @@ type Props = {
 export default function ObligationRow({ obligation, dayLabel }: Props) {
   return (
     <div className="flex items-start gap-2.5">
-      <div className="w-12 shrink-0 rounded-md border border-accent/40 bg-surface-raised p-1.5 text-center text-[11px] font-bold text-accent dark:bg-white/5">
+      <div className="w-12 shrink-0 rounded-md border border-brand/20 bg-[#f0f4ff] p-1.5 text-center text-[11px] font-bold text-brand dark:border-accent/30 dark:bg-white/5 dark:text-accent">
         {dayLabel}
       </div>
       <div>

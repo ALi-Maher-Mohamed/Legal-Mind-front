@@ -31,7 +31,7 @@ export default function DashboardPage() {
 
   if (!ready || !user) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="flex min-h-screen items-center justify-center bg-[#f0f4ff] dark:bg-background">
         <p className="text-sm text-muted">{t.common.loading}</p>
       </div>
     );

@@ -5,7 +5,7 @@ import { Sparkles } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { AuthUser } from '@/types/auth.types';
 import { formatLocaleDate } from '../../lib/formatDate';
-import { dashChip } from '../../lib/panelStyles';
+import { dashAccentBarGold, dashChip } from '../../lib/panelStyles';
 
 type Props = {
   user: AuthUser;
@@ -21,7 +21,7 @@ export default function DeskHeader({ user, showEmpty, onToggleEmpty }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-4 border-b border-outline/40 pb-6 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 border-b border-brand/15 pb-6 md:flex-row md:items-center md:justify-between dark:border-white/10">
         <div className="text-start">
           <span className="block text-xs font-semibold uppercase tracking-wider text-brand">
             {t.dashboard.chambersOf} {user.firmName}
@@ -32,7 +32,7 @@ export default function DeskHeader({ user, showEmpty, onToggleEmpty }: Props) {
         </div>
 
         <div className={`relative overflow-hidden px-4 py-3 text-end ${dashChip}`}>
-          <div className="absolute inset-y-0 end-0 w-1 bg-accent" />
+          <div className={dashAccentBarGold} />
           <span className="block text-xs font-semibold text-foreground">{todayLabel}</span>
           <span className="mt-0.5 block text-[11px] text-brand">{todayAlt}</span>
         </div>
@@ -42,9 +42,9 @@ export default function DeskHeader({ user, showEmpty, onToggleEmpty }: Props) {
         <button
           type="button"
           onClick={onToggleEmpty}
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-brand hover:opacity-80 cursor-pointer ${dashChip}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-brand hover:bg-brand/5 cursor-pointer ${dashChip}`}
         >
-          <Sparkles className="h-3.5 w-3.5" />
+          <Sparkles className="h-3.5 w-3.5 text-accent" />
           {t.dashboard.toggleDesk}: {showEmpty ? t.dashboard.deskFilled : t.dashboard.deskClear}
         </button>
       </div>

@@ -16,7 +16,7 @@ export default function DocumentsStrip({ documents, onOpenLibrary }: Props) {
 
   return (
     <DashPanel>
-      <div className="mb-4 flex items-center justify-between border-b border-outline/40 pb-4">
+      <div className="mb-4 flex items-center justify-between border-b border-brand/15 pb-4 dark:border-white/10">
         <h2 className="text-lg font-bold text-foreground">{t.dashboard.activeCases}</h2>
         <button
           type="button"
