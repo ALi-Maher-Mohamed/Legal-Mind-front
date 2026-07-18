@@ -3,14 +3,13 @@
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
-import SegmentSwitch from '../ui/SegmentSwitch';
+import { LanguageSwitch } from '@/components/ui';
 
 type Props = { onLogout: () => void };
 
 export default function DashboardTopBar({ onLogout }: Props) {
-  const { t, locale, toggleLanguage, isRtl } = useLanguage();
+  const { t, isRtl } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
-  const isAr = locale === 'ar';
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/15 bg-white/90 px-4 py-3 backdrop-blur-md dark:border-white/10 dark:bg-background/90 sm:px-6">
@@ -23,13 +22,7 @@ export default function DashboardTopBar({ onLogout }: Props) {
       <p className="hidden text-sm text-muted md:block">{t.dashboard.workspace}</p>
 
       <div className="flex items-center gap-2">
-        <SegmentSwitch
-          checked={isAr}
-          onToggle={toggleLanguage}
-          leftLabel="EN"
-          rightLabel="عر"
-          ariaLabel={isAr ? 'Switch to English' : 'التبديل للعربية'}
-        />
+        <LanguageSwitch />
         <button
           type="button"
           onClick={toggleTheme}

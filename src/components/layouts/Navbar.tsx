@@ -6,13 +6,13 @@ import { useScroll } from "@/hooks/useScroll";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useThemeContext } from "@/lib/providers/ThemeProvider";
 import { ROUTES } from "@/config/routes";
-import { Button } from "@/components/ui";
+import { Button, LanguageSwitch } from "@/components/ui";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const scrolled = useScroll(20);
-  const { locale, toggleLanguage, t, isRtl } = useLanguage();
+  const { t, isRtl } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -67,7 +67,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitch locale={locale} onToggle={toggleLanguage} />
+            <LanguageSwitch />
             <ThemeSwitch theme={theme} onToggle={toggleTheme} isRtl={isRtl} />
             <Link href={ROUTES.login}>
               <Button variant="primary" size="sm">
@@ -147,11 +147,7 @@ export default function Navbar() {
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
                     {isRtl ? "اللغة" : "Language"}
                   </p>
-                  <LanguageSwitch
-                    locale={locale}
-                    onToggle={toggleLanguage}
-                    fullWidth
-                  />
+                  <LanguageSwitch fullWidth />
                 </div>
 
                 <div className="space-y-2">
@@ -181,55 +177,6 @@ export default function Navbar() {
         )}
       </AnimatePresence>
     </>
-  );
-}
-
-function LanguageSwitch({
-  locale,
-  onToggle,
-  compact = false,
-  fullWidth = false,
-}: {
-  locale: "en" | "ar";
-  onToggle: () => void;
-  compact?: boolean;
-  fullWidth?: boolean;
-}) {
-  const isAr = locale === "ar";
-
-  return (
-    <button
-      type="button"
-      role="switch"
-      dir="ltr"
-      aria-checked={isAr}
-      aria-label={isAr ? "Switch to English" : "التبديل للعربية"}
-      onClick={onToggle}
-      className={`relative inline-flex items-center rounded-full border border-outline/50 bg-surface-raised p-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
-        fullWidth ? "h-11 w-full" : "h-9 w-[5.75rem]"
-      }`}
-    >
-      <span
-        aria-hidden
-        className={`pointer-events-none absolute top-1 bottom-1 start-1 w-[calc(50%-4px)] rounded-full bg-brand shadow-[0_1px_4px_rgba(0,62,199,0.35)] transition-transform duration-200 ease-out ${
-          isAr ? "translate-x-full" : "translate-x-0"
-        }`}
-      />
-      <span
-        className={`relative z-10 flex flex-1 items-center justify-center px-1 text-center font-semibold transition-colors ${
-          fullWidth ? "text-sm" : "text-[11px]"
-        } ${!isAr ? "text-on-brand" : "text-muted"}`}
-      >
-        {compact ? "EN" : "English"}
-      </span>
-      <span
-        className={`relative z-10 flex flex-1 items-center justify-center px-1 text-center font-semibold transition-colors ${
-          fullWidth ? "text-sm" : "text-[11px]"
-        } ${isAr ? "text-on-brand" : "text-muted"}`}
-      >
-        {compact ? "عر" : "العربية"}
-      </span>
-    </button>
   );
 }
 
