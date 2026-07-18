@@ -1,147 +1,141 @@
 /**
- * LegalMind design tokens — single source of truth for colors & theme.
+ * JurisTech Precision tokens — single source from DESIGN.md (dark) + DESIGN light.
  *
- * Usage in new features:
- *   import { colors, palette, withAlpha } from '@/config/theme';
- *
- * Tailwind (after ThemeProvider mounts CSS vars):
- *   bg-surface  text-brand  text-accent  border-border  bg-surface-raised
+ * Tailwind: bg-background text-foreground bg-card text-brand border-outline
  */
 
 export type ThemeMode = 'light' | 'dark';
 
-/** Raw brand & UI palette — edit hex values here */
+/** Raw Material-style palette from design system docs */
 export const palette = {
-  brand: {
-    blue: '#3B82F6',
-    blueSoft: '#60A5FA',
-    blueDeep: '#2563EB',
-    purple: '#8B5CF6',
-    gold: '#F6C453',
-  },
-  surface: {
-    void: '#090909',
-    ink: '#0F172A',
-    raised: '#181818',
-    panel: '#131313',
-    card: '#111827',
-    muted: '#1F2937',
-  },
-  slate: {
-    50: '#F8FAFC',
-    100: '#F1F5F9',
-    200: '#E2E8F0',
-    300: '#CBD5E1',
-    400: '#94A3B8',
-    500: '#64748B',
-    600: '#475569',
-    700: '#334155',
-    800: '#1E293B',
-    900: '#0F172A',
-    950: '#020617',
-  },
-  status: {
-    success: '#10B981',
-    warning: '#F59E0B',
-    danger: '#EF4444',
-    info: '#3B82F6',
-  },
-  white: '#FFFFFF',
-  black: '#000000',
-} as const;
-
-/** Semantic tokens per mode — what components should prefer */
-export const themes = {
   light: {
-    // Heavier than pure white so the page reads as soft gray, not blank
-    background: '#E6EBF2',
-    foreground: palette.slate[900],
-    card: '#F4F7FB',
-    surface: '#F0F4F9',
-    surfaceRaised: '#EAF0F6',
-    surfaceMuted: '#DDE4EE',
-    border: '#C9D3E0',
-    borderStrong: '#B0BDD0',
-    muted: palette.slate[500],
-    mutedForeground: palette.slate[600],
-    brand: palette.brand.blue,
-    brandSoft: palette.brand.blueSoft,
-    brandDeep: palette.brand.blueDeep,
-    accent: palette.brand.gold,
-    accentPurple: palette.brand.purple,
-    success: palette.status.success,
-    warning: palette.status.warning,
-    danger: palette.status.danger,
-    ring: palette.brand.blue,
-    selection: 'rgba(59, 130, 246, 0.2)',
-    scrollbarTrack: '#DDE4EE',
-    scrollbarThumb: '#B0BDD0',
+    background: '#f7f9fb',
+    surface: '#f7f9fb',
+    surfaceDim: '#d8dadc',
+    surfaceBright: '#f7f9fb',
+    surfaceLowest: '#ffffff',
+    surfaceLow: '#f2f4f6',
+    surfaceContainer: '#eceef0',
+    surfaceHigh: '#e6e8ea',
+    surfaceHighest: '#e0e3e5',
+    onSurface: '#191c1e',
+    onSurfaceVariant: '#434656',
+    outline: '#c3c5d9',
+    outlineStrong: '#737688',
+    primary: '#003ec7',
+    onPrimary: '#ffffff',
+    primaryContainer: '#0052ff',
+    secondary: '#565e74',
+    tertiary: '#3f4f65',
+    error: '#ba1a1a',
+    inverseSurface: '#2d3133',
   },
   dark: {
-    background: palette.surface.ink,
-    foreground: palette.slate[50],
-    card: palette.surface.card,
-    surface: palette.surface.void,
-    surfaceRaised: palette.surface.raised,
-    surfaceMuted: palette.surface.muted,
-    border: palette.slate[700],
-    borderStrong: palette.slate[600],
-    muted: palette.slate[400],
-    mutedForeground: palette.slate[300],
-    brand: palette.brand.blueSoft,
-    brandSoft: palette.brand.blue,
-    brandDeep: palette.brand.blueDeep,
-    accent: palette.brand.gold,
-    accentPurple: palette.brand.purple,
-    success: palette.status.success,
-    warning: palette.status.warning,
-    danger: palette.status.danger,
-    ring: palette.brand.blueSoft,
-    selection: 'rgba(96, 165, 250, 0.2)',
-    scrollbarTrack: palette.surface.ink,
-    scrollbarThumb: palette.slate[600],
+    background: '#0b1326',
+    surface: '#0b1326',
+    surfaceDim: '#0b1326',
+    surfaceBright: '#31394d',
+    surfaceLowest: '#060e20',
+    surfaceLow: '#131b2e',
+    surfaceContainer: '#171f33',
+    surfaceHigh: '#222a3d',
+    surfaceHighest: '#2d3449',
+    onSurface: '#dae2fd',
+    onSurfaceVariant: '#c4c6cf',
+    outline: '#43474e',
+    outlineStrong: '#8e9099',
+    primary: '#adc7f7',
+    onPrimary: '#133057',
+    primaryContainer: '#1a365d',
+    secondary: '#a2c9ff',
+    tertiary: '#f8bc4b',
+    error: '#ffb4ab',
+    inverseSurface: '#dae2fd',
+  },
+} as const;
+
+/** Semantic tokens used by CSS vars + components */
+export const themes = {
+  light: {
+    background: palette.light.background,
+    foreground: palette.light.onSurface,
+    card: palette.light.surfaceLowest,
+    surface: palette.light.surfaceLowest,
+    surfaceRaised: palette.light.surfaceLow,
+    surfaceMuted: palette.light.surfaceHigh,
+    border: palette.light.outline,
+    borderStrong: palette.light.outlineStrong,
+    muted: palette.light.onSurfaceVariant,
+    mutedForeground: palette.light.onSurfaceVariant,
+    brand: palette.light.primary,
+    brandSoft: palette.light.primaryContainer,
+    brandDeep: '#0038b6',
+    onBrand: palette.light.onPrimary,
+    accent: '#d69e2e',
+    accentPurple: '#57677e',
+    success: '#0f7b4a',
+    warning: '#d69e2e',
+    danger: palette.light.error,
+    ring: palette.light.primary,
+    selection: 'rgba(0, 62, 199, 0.18)',
+    scrollbarTrack: palette.light.surfaceLow,
+    scrollbarThumb: palette.light.outline,
+  },
+  dark: {
+    background: palette.dark.background,
+    foreground: palette.dark.onSurface,
+    card: palette.dark.surfaceContainer,
+    surface: palette.dark.surfaceContainer,
+    surfaceRaised: palette.dark.surfaceHigh,
+    surfaceMuted: palette.dark.surfaceLowest,
+    border: palette.dark.outline,
+    borderStrong: palette.dark.outlineStrong,
+    muted: palette.dark.onSurfaceVariant,
+    mutedForeground: palette.dark.onSurfaceVariant,
+    brand: palette.dark.primary,
+    brandSoft: palette.dark.primaryContainer,
+    brandDeep: '#86a0cd',
+    onBrand: palette.dark.onPrimary,
+    accent: palette.dark.tertiary,
+    accentPurple: '#a2c9ff',
+    success: '#10b981',
+    warning: palette.dark.tertiary,
+    danger: palette.dark.error,
+    ring: palette.dark.primary,
+    selection: 'rgba(173, 199, 247, 0.2)',
+    scrollbarTrack: palette.dark.surfaceLowest,
+    scrollbarThumb: palette.dark.outlineStrong,
   },
 } as const;
 
 export type ThemeTokens = (typeof themes)[ThemeMode];
 
-/** Flat aliases for quick imports (defaults to brand / dark landing look) */
 export const colors = {
-  brand: palette.brand.blue,
-  brandSoft: palette.brand.blueSoft,
-  brandDeep: palette.brand.blueDeep,
-  accent: palette.brand.gold,
-  purple: palette.brand.purple,
-  surface: palette.surface.void,
-  surfaceRaised: palette.surface.raised,
-  surfacePanel: palette.surface.panel,
-  surfaceCard: palette.surface.card,
-  success: palette.status.success,
-  warning: palette.status.warning,
-  danger: palette.status.danger,
-  white: palette.white,
-  black: palette.black,
+  brand: themes.light.brand,
+  brandSoft: themes.light.brandSoft,
+  onBrand: themes.light.onBrand,
+  accent: themes.dark.accent,
+  surface: themes.dark.background,
+  surfaceRaised: themes.dark.surface,
+  surfaceCard: themes.dark.card,
+  success: themes.light.success,
+  warning: themes.light.warning,
+  danger: themes.light.danger,
+  white: '#ffffff',
+  black: '#000000',
 } as const;
 
-/** Logo / gradient stops used in SVG */
 export const gradients = {
-  logo: {
-    from: palette.brand.blue,
-    to: palette.brand.purple,
-  },
-  brandAccent: {
-    from: palette.brand.blueSoft,
-    to: palette.brand.gold,
-  },
+  logo: { from: '#003ec7', to: '#adc7f7' },
+  brandAccent: { from: '#003ec7', to: '#d69e2e' },
 } as const;
 
-/** Common glow / overlay alphas for cards & hero effects */
 export const glows = {
-  brand: withAlpha(palette.brand.blue, 0.2),
-  brandSoft: withAlpha(palette.brand.blue, 0.18),
-  accent: withAlpha(palette.brand.gold, 0.2),
-  accentSoft: withAlpha(palette.brand.gold, 0.18),
-  purple: withAlpha(palette.brand.purple, 0.2),
+  brand: withAlpha('#003ec7', 0.15),
+  brandSoft: withAlpha('#003ec7', 0.1),
+  accent: withAlpha('#f8bc4b', 0.2),
+  accentSoft: withAlpha('#f8bc4b', 0.12),
+  purple: withAlpha('#adc7f7', 0.15),
 } as const;
 
 const CSS_VAR_MAP: Record<keyof ThemeTokens, string> = {
@@ -158,6 +152,7 @@ const CSS_VAR_MAP: Record<keyof ThemeTokens, string> = {
   brand: '--lm-brand',
   brandSoft: '--lm-brand-soft',
   brandDeep: '--lm-brand-deep',
+  onBrand: '--lm-on-brand',
   accent: '--lm-accent',
   accentPurple: '--lm-accent-purple',
   success: '--lm-success',
@@ -169,7 +164,6 @@ const CSS_VAR_MAP: Record<keyof ThemeTokens, string> = {
   scrollbarThumb: '--lm-scrollbar-thumb',
 };
 
-/** CSS custom properties for a given mode */
 export function getThemeCssVars(mode: ThemeMode): Record<string, string> {
   const tokens = themes[mode];
   const vars: Record<string, string> = {};
@@ -178,7 +172,6 @@ export function getThemeCssVars(mode: ThemeMode): Record<string, string> {
     vars[CSS_VAR_MAP[key]] = tokens[key];
   });
 
-  // Backward-compatible aliases used in older CSS / classes
   vars['--color-background'] = tokens.background;
   vars['--color-foreground'] = tokens.foreground;
   vars['--color-card-dark'] = tokens.card;
@@ -188,7 +181,6 @@ export function getThemeCssVars(mode: ThemeMode): Record<string, string> {
   return vars;
 }
 
-/** Inline <style> for SSR / first paint — keeps CSS in sync with this file */
 export function buildThemeStyleTag(): string {
   const light = getThemeCssVars('light');
   const dark = getThemeCssVars('dark');
@@ -201,7 +193,6 @@ export function buildThemeStyleTag(): string {
   return `:root {\n${toBlock(light)}\n}\n\n.dark {\n${toBlock(dark)}\n}\n`;
 }
 
-/** Apply tokens to an element (usually document.documentElement) */
 export function applyThemeVars(el: HTMLElement, mode: ThemeMode) {
   const vars = getThemeCssVars(mode);
   Object.entries(vars).forEach(([key, value]) => {
@@ -209,7 +200,6 @@ export function applyThemeVars(el: HTMLElement, mode: ThemeMode) {
   });
 }
 
-/** Hex → rgba string helper for glows / overlays */
 export function withAlpha(hex: string, alpha: number): string {
   const normalized = hex.replace('#', '');
   const full =

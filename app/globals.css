@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/*
- * Semantic Tailwind colors — values come from src/config/theme.ts
- * (injected as --lm-* CSS variables). Prefer these in new UI:
- *   bg-surface  bg-surface-raised  text-brand  text-accent  border-border
- */
 @theme {
   --color-background: var(--lm-background);
   --color-foreground: var(--lm-foreground);
@@ -13,32 +8,38 @@
   --color-surface-raised: var(--lm-surface-raised);
   --color-surface-muted: var(--lm-surface-muted);
   --color-border: var(--lm-border);
-  --color-border-strong: var(--lm-border-strong);
+  --color-outline: var(--lm-border);
+  --color-outline-strong: var(--lm-border-strong);
   --color-muted: var(--lm-muted);
   --color-muted-foreground: var(--lm-muted-foreground);
   --color-brand: var(--lm-brand);
   --color-brand-soft: var(--lm-brand-soft);
   --color-brand-deep: var(--lm-brand-deep);
+  --color-on-brand: var(--lm-on-brand);
   --color-accent: var(--lm-accent);
   --color-accent-purple: var(--lm-accent-purple);
   --color-success: var(--lm-success);
   --color-warning: var(--lm-warning);
   --color-danger: var(--lm-danger);
   --color-ring: var(--lm-ring);
-
-  /* Legacy aliases (existing classNames) */
   --color-primary-blue: var(--lm-brand);
   --color-accent-gold: var(--lm-accent);
   --color-card-dark: var(--lm-card);
 
-  --font-sans: var(--font-geist-sans), Arial, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
+  --font-sans: var(--font-ibm-plex-arabic), var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-ibm-plex-arabic), var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 :root {
-  background-color: var(--lm-background, #e6ebf2);
-  color: var(--lm-foreground, #0f172a);
+  background-color: var(--lm-background, #f7f9fb);
+  color: var(--lm-foreground, #191c1e);
   color-scheme: light;
+}
+
+html[lang='en'] {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-inter), system-ui, sans-serif;
 }
 
 html,
@@ -56,174 +57,46 @@ body {
   color: var(--lm-foreground);
 }
 
-.dark ::selection {
-  background-color: var(--lm-selection);
+::selection {
+  background-color: var(--lm-selection, rgba(0, 62, 199, 0.18));
   color: var(--lm-foreground);
 }
 
-.dark [class*="bg-white"] {
-  background-color: var(--lm-card) !important;
-}
-
-.dark [class*="bg-slate-50"] {
-  background-color: var(--lm-background) !important;
-}
-
-.dark [class*="bg-slate-100"] {
-  background-color: var(--lm-surface-muted) !important;
-}
-
-.dark [class*="bg-slate-200"] {
-  background-color: var(--lm-border-strong) !important;
-}
-
-.dark [class*="text-slate-900"] {
-  color: var(--lm-foreground) !important;
-}
-
-.dark [class*="text-slate-700"] {
-  color: #e5e7eb !important;
-}
-
-.dark [class*="text-slate-600"] {
-  color: #d1d5db !important;
-}
-
-.dark [class*="text-slate-500"] {
-  color: #9ca3af !important;
-}
-
-.dark [class*="text-slate-400"] {
-  color: var(--lm-muted) !important;
-}
-
-.dark [class*="border-slate-200"] {
-  border-color: var(--lm-border) !important;
-}
-
-.dark [class*="border-slate-100"] {
-  border-color: var(--lm-border-strong) !important;
-}
-
-.dark [class*="border-slate-300"] {
-  border-color: var(--lm-border) !important;
-}
-
-.dark [class*="placeholder-slate-400"]::placeholder {
-  color: var(--lm-muted) !important;
-}
-
-.dark [class*="hover:bg-slate-100"]:hover {
-  background-color: var(--lm-surface-muted) !important;
-}
-
-.dark [class*="hover:bg-slate-200"]:hover {
-  background-color: var(--lm-border-strong) !important;
-}
-
-.dark [class*="hover:text-slate-900"]:hover {
-  color: var(--lm-foreground) !important;
-}
-
-.dark [class*="hover:text-slate-700"]:hover {
-  color: #e5e7eb !important;
-}
-
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--lm-scrollbar-track, #dde4ee);
+  background: var(--lm-scrollbar-track);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--lm-scrollbar-thumb, #b0bdd0);
+  background: var(--lm-scrollbar-thumb);
   border-radius: 9999px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--lm-brand) 40%, transparent);
+.glass-panel {
+  background: color-mix(in srgb, var(--lm-card) 80%, transparent);
+  backdrop-filter: blur(6px);
+  border: 1px solid color-mix(in srgb, var(--lm-border) 50%, transparent);
 }
 
-.glass-effect {
-  background: color-mix(in srgb, var(--lm-card) 90%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--lm-border) 80%, transparent);
+.lm-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 1rem;
 }
 
-::selection {
-  background-color: var(--lm-selection, rgba(59, 130, 246, 0.2));
-  color: var(--lm-foreground, #0f172a);
+@media (min-width: 640px) {
+  .lm-container {
+    padding-inline: 1.5rem;
+  }
 }
 
-/* Light mode: map dark landing utilities to soft gray surfaces (not pure white) */
-html.light {
-  background-color: var(--lm-background);
-  color: var(--lm-foreground);
-}
-
-html.light body {
-  background-color: var(--lm-background);
-  color: var(--lm-foreground);
-}
-
-html.light .bg-slate-900,
-html.light .bg-slate-950,
-html.light .bg-\[\#090909\] {
-  background-color: var(--lm-surface) !important;
-}
-
-html.light .bg-slate-800,
-html.light .bg-\[\#181818\] {
-  background-color: var(--lm-surface-raised) !important;
-}
-
-html.light .bg-white {
-  background-color: var(--lm-card) !important;
-}
-
-html.light .text-slate-100,
-html.light .text-slate-200 {
-  color: var(--lm-foreground) !important;
-}
-
-html.light .text-slate-300,
-html.light .text-slate-400 {
-  color: var(--lm-muted-foreground) !important;
-}
-
-html.light .text-slate-500,
-html.light .text-gray-400,
-html.light .text-gray-500 {
-  color: var(--lm-muted) !important;
-}
-
-html.light .text-slate-900 {
-  color: var(--lm-foreground) !important;
-}
-
-html.light .border-slate-800,
-html.light .border-slate-950,
-html.light .border-slate-700,
-html.light .border-white\/5,
-html.light .border-white\/10 {
-  border-color: var(--lm-border) !important;
-}
-
-html.light .placeholder-slate-500::placeholder,
-html.light .placeholder-gray-500::placeholder {
-  color: var(--lm-muted) !important;
-}
-
-html.light .hover\:bg-slate-800:hover,
-html.light .hover\:bg-slate-700:hover {
-  background-color: var(--lm-surface-muted) !important;
-}
-
-html.light .hover\:text-slate-200:hover,
-html.light .hover\:text-slate-100:hover {
-  color: var(--lm-foreground) !important;
+@media (min-width: 1024px) {
+  .lm-container {
+    padding-inline: 4rem;
+  }
 }

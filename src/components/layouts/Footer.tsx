@@ -1,7 +1,7 @@
-// src/components/layouts/Footer.tsx
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useLanguage } from '@/hooks/useLanguage';
 import { ROUTES, SOCIAL_LINKS } from '@/config/routes';
 import { Button } from '@/components/ui';
@@ -16,7 +16,6 @@ export default function Footer() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -37,84 +36,91 @@ export default function Footer() {
   ];
 
   const legalLinks = [
-    { name: isRtl ? "شروط الخدمة" : "Terms of Service", href: "#" },
-    { name: isRtl ? "سياسة الخصوصية" : "Privacy Policy", href: "#" },
+    { name: isRtl ? 'شروط الخدمة' : 'Terms of Service', href: '#' },
+    { name: isRtl ? 'سياسة الخصوصية' : 'Privacy Policy', href: '#' },
   ];
 
   return (
-    <footer className="bg-slate-950 border-t border-slate-800 pt-16 pb-8 text-slate-300">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
-          {/* Brand Info */}
-          <div className="lg:col-span-2 flex flex-col gap-4">
-            <a href={ROUTES.home} className="flex items-center gap-2">
-              <svg className="h-7 w-7 text-accent-gold" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z" stroke="#60A5FA" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-                <circle cx="50" cy="35" r="5" className="fill-current" />
-                <path d="M35 52 L65 52" stroke="#60A5FA" strokeWidth="4" />
-                <path d="M50 35 L50 65" stroke="#60A5FA" strokeWidth="4" />
+    <footer className="border-t border-outline/40 bg-surface-muted pt-14 pb-8 text-muted">
+      <div className="lm-container">
+        <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+          <div className="flex flex-col gap-4 lg:col-span-2">
+            <Link href={ROUTES.home} className="flex items-center gap-2">
+              <svg className="h-7 w-7 text-brand" viewBox="0 0 100 100" fill="none" aria-hidden>
+                <path
+                  d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z"
+                  stroke="currentColor"
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <circle cx="50" cy="35" r="5" fill="var(--lm-accent)" />
+                <path d="M35 52 L65 52" stroke="currentColor" strokeWidth="4" />
+                <path d="M50 35 L50 65" stroke="currentColor" strokeWidth="4" />
               </svg>
-              <span className="font-sans text-base font-bold text-slate-100">
-                LegalMind<span className="text-accent-gold ml-0.5">AI</span>
+              <span className="text-base font-bold text-foreground">
+                LegalMind<span className="text-brand ms-0.5">AI</span>
               </span>
-            </a>
-            <p className="text-xs sm:text-sm leading-relaxed max-w-md">
-              {t.footer.desc}
-            </p>
-            {/* Social Links */}
-            <div className="flex items-center gap-4 mt-2">
-              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-blue-400 transition">
+            </Link>
+            <p className="max-w-md text-xs sm:text-sm leading-relaxed">{t.footer.desc}</p>
+            <div className="mt-1 flex items-center gap-4">
+              <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-brand transition">
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 transition">
+              <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-brand transition">
                 <Linkedin className="h-5 w-5" />
               </a>
-              <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="hover:text-white transition">
+              <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition">
                 <Github className="h-5 w-5" />
               </a>
             </div>
           </div>
 
-          {/* Links columns */}
           <div>
-            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.product}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
-              {productLinks.map((link, idx) => (
-                <li key={idx}>
-                  <a href={link.href} className="hover:text-white transition">{link.name}</a>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-foreground">{t.footer.product}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+              {productLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="hover:text-brand transition">
+                    {link.name}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.legal}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
-              {legalLinks.map((link, idx) => (
-                <li key={idx}>
-                  <a href={link.href} className="hover:text-white transition">{link.name}</a>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-foreground">{t.footer.company}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+              {companyLinks.map((link) => (
+                <li key={link.href}>
+                  <a href={link.href} className="hover:text-brand transition">
+                    {link.name}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-slate-100 uppercase tracking-wider mb-4">{t.footer.legal}</h3>
-            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm text-slate-300">
-              {legalLinks.map((link, idx) => (
-                <li key={idx}>
-                  <a href={link.href} className="hover:text-white transition">{link.name}</a>
+            <h3 className="mb-4 text-xs font-semibold uppercase tracking-wider text-foreground">{t.footer.legal}</h3>
+            <ul className="flex flex-col gap-2.5 text-xs sm:text-sm">
+              {legalLinks.map((link) => (
+                <li key={link.name}>
+                  <a href={link.href} className="hover:text-brand transition">
+                    {link.name}
+                  </a>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Newsletter Section */}
-        <div className="border-t border-slate-800 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col gap-1 max-w-lg text-center lg:text-start">
-            <h4 className="text-sm font-semibold text-slate-100">{t.footer.newsletterTitle}</h4>
-
+        <div className="flex flex-col items-center justify-between gap-6 border-t border-outline/40 py-8 lg:flex-row">
+          <div className="max-w-lg text-center lg:text-start">
+            <h4 className="text-sm font-semibold text-foreground">{t.footer.newsletterTitle}</h4>
+            <p className="mt-1 text-xs text-muted">{t.footer.newsletterDesc}</p>
+          </div>
           <form onSubmit={handleSubscribe} className="flex w-full max-w-sm gap-2">
             <input
               type="email"
@@ -122,22 +128,19 @@ export default function Footer() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t.common.emailPlaceholder}
               required
-              className="w-full rounded-xl bg-slate-900 border border-slate-800 px-4 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full rounded-lg border border-outline bg-card px-4 py-2 text-xs text-foreground placeholder:text-muted focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
             />
             <Button type="submit" variant="primary" size="sm" isLoading={loading}>
-              {success ? (isRtl ? "تم الاشتراك!" : "Subscribed!") : t.footer.newsletterBtn}
+              {success ? (isRtl ? 'تم!' : 'Done!') : t.footer.newsletterBtn}
             </Button>
           </form>
         </div>
 
-        {/* Copyright */}
-        <div className="border-t border-slate-800 pt-8 text-center text-xs text-slate-400 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex flex-col items-center justify-between gap-3 border-t border-outline/40 pt-6 text-center text-xs text-muted sm:flex-row">
           <span>{t.footer.copyright}</span>
-          <span className="text-[10px] text-slate-500">Powered by Advanced Agentic Neural Architectures</span>
+          <span className="text-[10px]">JurisTech Precision</span>
         </div>
-      </div>
       </div>
     </footer>
   );
-  
 }

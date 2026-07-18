@@ -34,10 +34,10 @@ export const translations = {
       titlePrefix: "Your Premium AI ",
       titleHighlight: "Legal Assistant",
       titleSuffix: "",
-      arabicHeading: "مستشارك القانوني الذكي في متناول يدك", // For the requested Arabic heading
+      arabicHeading: "مستقبلك القانوني مدعوم بالذكاء الاصطناعي",
       description: "Analyze complex contracts, draft bulletproof legal documents, track court cases, and receive instant, expert legal insights in seconds. Powered by state-of-the-art neural legal intelligence.",
-      ctaStart: "Start Analysis Free",
-      ctaDemo: "Book Live Demo",
+      ctaStart: "Start Free Now",
+      ctaDemo: "Book a Live Demo",
       features: {
         analyzeDocs: "Analyze Documents",
         generateContracts: "Generate Contracts",
@@ -252,10 +252,10 @@ export const translations = {
       titlePrefix: "مستشارك القانوني ",
       titleHighlight: "بالذكاء الاصطناعي",
       titleSuffix: " في متناول يدك",
-      arabicHeading: "مستشارك القانوني الذكي في متناول يدك",
+      arabicHeading: "مستقبلك القانوني مدعوم بالذكاء الاصطناعي",
       description: "قم بتحليل العقود المعقدة، وصياغة المستندات القانونية الخالية من الثغرات، ومتابعة القضايا في المحاكم، والحصول على إجابات قانونية فورية في ثوانٍ معدودة باستخدام الذكاء الاصطناعي.",
-      ctaStart: "ابدأ التحليل مجاناً",
-      ctaDemo: "احجز عرضاً حياً",
+      ctaStart: "ابدأ الآن مجاناً",
+      ctaDemo: "احجز عرضاً مباشراً",
       features: {
         analyzeDocs: "تحليل المستندات",
         generateContracts: "توليد العقود",
@@ -267,7 +267,7 @@ export const translations = {
     },
     aiPreview: {
       badge: "محاكي الذكاء الاصطناعي",
-      title: "جرّب الذكاء القانوني في بيئة تفاعلية",
+      title: "شاهد الذكاء القانوني في الواقع",
       description: "قم برفع أي اتفاقية، عقد إيجار، أو عقد تجاري معقد. سيقوم نظامنا فوراً بتحديد المسؤوليات القانونية، والتحذير من المخاطر المخفية، وتبسيط الصياغات الصعبة إلى لغة بسيطة وواضحة.",
       ctaText: "تجربة المنصة الكاملة",
       chatHeader: "مساعد ليجال مايند الذكي",
@@ -279,7 +279,7 @@ export const translations = {
       typing: "ليجال مايند يقوم بتحليل طلبك الآن..."
     },
     services: {
-      title: "قدرات قانونية شاملة ومتكاملة",
+      title: "قدرات قانونية شاملة",
       subtitle: "ارتقِ بأعمالك القانونية بفضل حلول الذكاء الاصطناعي المصممة خصيصاً للمحامين، الشركات، ورواد الأعمال.",
       docAnalysis: {
         title: "تحليل المستندات بالذكاء الاصطناعي",

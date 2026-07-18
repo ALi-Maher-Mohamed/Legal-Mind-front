@@ -1,13 +1,21 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic, Inter, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/lib/providers/LanguageProvider';
 import { ThemeProvider } from '@/lib/providers/ThemeProvider';
 import { buildThemeStyleTag } from '@/config/theme';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+  variable: '--font-ibm-plex-arabic',
+  subsets: ['arabic', 'latin'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const inter = Inter({
+  variable: '--font-inter',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 const geistMono = Geist_Mono({
@@ -31,7 +39,7 @@ export default function RootLayout({
       suppressHydrationWarning
       lang="ar"
       dir="rtl"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
+      className={`${ibmPlexArabic.variable} ${inter.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <head>
         <style

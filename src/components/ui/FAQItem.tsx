@@ -1,11 +1,9 @@
-// src/components/ui/FAQItem.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Minus } from 'lucide-react';
 import Card from './Card';
-import { useThemeContext } from '@/lib/providers/ThemeProvider';
 
 interface FAQItemProps {
   question: string;
@@ -13,21 +11,17 @@ interface FAQItemProps {
 }
 
 export function FAQItem({ question, answer }: FAQItemProps) {
-  const { theme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Card className="mb-4 overflow-hidden border border-slate-800 hover:border-slate-700" hoverGlow={false}>
+    <Card className="mb-3 overflow-hidden border-outline/50" hoverGlow={false}>
       <button
-                    style={{ background: theme === 'light' ? 'white' : '' }}
-
+        type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between p-5 text-start md:p-6 cursor-pointer focus:outline-none select-none"
+        className="flex w-full items-center justify-between gap-4 p-5 text-start md:p-6 cursor-pointer focus:outline-none select-none"
       >
-        <span className="text-sm font-semibold text-slate-100 transition-colors duration-200 hover:text-blue-400 md:text-base text-start">
-          {question}
-        </span>
-        <div className="ms-4 flex h-6 w-6 items-center justify-center rounded-lg bg-slate-800 text-slate-300 transition-all duration-200 group-hover:bg-slate-700">
+        <span className="text-sm font-semibold text-foreground md:text-base">{question}</span>
+        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-surface-raised text-muted">
           {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
         </div>
       </button>
@@ -36,14 +30,11 @@ export function FAQItem({ question, answer }: FAQItemProps) {
         {isOpen && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
           >
-            <div
-                           style={{ background: theme === 'light' ? 'white' : '' }}
-
-            className="px-5 pb-5 pt-0 text-xs leading-relaxed text-slate-400 md:px-6 md:pb-6 md:text-sm border-t border-slate-800 whitespace-pre-line text-start">
+            <div className="border-t border-outline/40 px-5 pb-5 pt-4 text-xs leading-relaxed text-muted md:px-6 md:pb-6 md:text-sm whitespace-pre-line">
               {answer}
             </div>
           </motion.div>

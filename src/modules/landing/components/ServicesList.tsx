@@ -1,112 +1,57 @@
-// src/modules/landing/components/ServicesList.tsx
 'use client';
 
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Card, SectionTitle } from '@/components/ui';
-import { Shield, FileText, Cpu, Search, HelpCircle, Activity } from 'lucide-react';
+import { Shield, FileText, Cpu, Search, HelpCircle, Activity, type LucideIcon } from 'lucide-react';
 
 export default function ServicesList() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
-  const services = [
-    {
-      title: t.services.docAnalysis.title,
-      desc: t.services.docAnalysis.desc,
-      icon: <Shield className="h-6 w-6 text-blue-400" />,
-      glow: "rgba(59, 130, 246, 0.18)"
-    },
-    {
-      title: t.services.contractGen.title,
-      desc: t.services.contractGen.desc,
-      icon: <FileText className="h-6 w-6 text-purple-400" />,
-      glow: "rgba(139, 92, 246, 0.18)"
-    },
-    {
-      title: t.services.consultation.title,
-      desc: t.services.consultation.desc,
-      icon: <Cpu className="h-6 w-6 text-emerald-400" />,
-      glow: "rgba(16, 185, 129, 0.18)"
-    },
-    {
-      title: t.services.govGuide.title,
-      desc: t.services.govGuide.desc,
-      icon: <Search className="h-6 w-6 text-[#F6C453]" />,
-      glow: "rgba(246, 196, 83, 0.18)"
-    },
-    {
-      title: t.services.termExplainer.title,
-      desc: t.services.termExplainer.desc,
-      icon: <HelpCircle className="h-6 w-6 text-pink-400" />,
-      glow: "rgba(244, 63, 94, 0.18)"
-    },
-    {
-      title: t.services.caseTracker.title,
-      desc: t.services.caseTracker.desc,
-      icon: <Activity className="h-6 w-6 text-orange-400" />,
-      glow: "rgba(249, 115, 22, 0.18)"
-    }
+  const services: { title: string; desc: string; icon: LucideIcon }[] = [
+    { title: t.services.docAnalysis.title, desc: t.services.docAnalysis.desc, icon: Shield },
+    { title: t.services.contractGen.title, desc: t.services.contractGen.desc, icon: FileText },
+    { title: t.services.consultation.title, desc: t.services.consultation.desc, icon: Cpu },
+    { title: t.services.govGuide.title, desc: t.services.govGuide.desc, icon: Search },
+    { title: t.services.termExplainer.title, desc: t.services.termExplainer.desc, icon: HelpCircle },
+    { title: t.services.caseTracker.title, desc: t.services.caseTracker.desc, icon: Activity },
   ];
 
-  // Motion stagger settings
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } }
-  };
-
   return (
-    <section id="services" className="py-24 bg-slate-950 relative scroll-mt-20 text-slate-100">
-      {/* Background decoration */}
-      <div className="absolute top-1/3 right-10 w-96 h-96 bg-purple-500/20 blur-[120px] rounded-full pointer-events-none" />
-
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
+    <section id="services" className="relative scroll-mt-20 bg-background py-16 md:py-20">
+      <div className="lm-container relative z-10">
         <SectionTitle
-          badge={isRtl ? "الخدمات المتقدمة" : "Premium Modules"}
+          badge="CAPABILITIES"
           title={t.services.title}
           subtitle={t.services.subtitle}
           align="center"
         />
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-        >
-          {services.map((svc, idx) => (
-            <motion.div key={idx} variants={cardVariants}>
-              <Card
-                glowColor={svc.glow}
-                className="p-8 border border-slate-800 bg-slate-900 shadow-sm hover:border-slate-700 flex flex-col items-start gap-4 transition duration-300 h-full group cursor-pointer"
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((svc, idx) => {
+            const Icon = svc.icon;
+            return (
+              <motion.div
+                key={svc.title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ duration: 0.4, delay: idx * 0.06 }}
               >
-                {/* Glowing Icon Frame */}
-                <div className="p-3.5 bg-slate-800 rounded-2xl text-slate-100 group-hover:bg-slate-700 group-hover:scale-110 transition-all duration-300">
-                  {svc.icon}
-                </div>
-
-                <div className="flex flex-col gap-2 mt-2 text-start">
-                  <h3 className="text-lg font-bold text-slate-100 group-hover:text-blue-300 transition duration-200">
+                <Card className="flex h-full flex-col items-stretch gap-4 p-6 sm:p-8 text-start group" hoverGlow>
+                  <div className="flex size-12 items-center justify-center rounded-xl bg-brand/10 text-brand transition group-hover:bg-brand/15">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="text-lg font-bold text-foreground group-hover:text-brand transition">
                     {svc.title}
                   </h3>
-                  <p className="text-sm text-slate-300 leading-relaxed group-hover:text-slate-200 transition duration-200">
-                    {svc.desc}
-                  </p>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+                  <p className="text-sm leading-relaxed text-muted">{svc.desc}</p>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

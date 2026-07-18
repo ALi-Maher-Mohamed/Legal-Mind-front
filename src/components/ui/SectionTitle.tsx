@@ -1,4 +1,3 @@
-// src/components/ui/SectionTitle.tsx
 'use client';
 
 import React from 'react';
@@ -16,10 +15,9 @@ export function SectionTitle({
   title,
   subtitle,
   align = 'center',
-  className = ''
+  className = '',
 }: SectionTitleProps) {
-  const normalizedAlign =
-    align === 'left' ? 'start' : align === 'right' ? 'end' : align;
+  const normalizedAlign = align === 'left' ? 'start' : align === 'right' ? 'end' : align;
 
   const alignmentClass = {
     center: 'text-center mx-auto items-center justify-center',
@@ -28,23 +26,19 @@ export function SectionTitle({
   };
 
   return (
-    <div className={`flex flex-col mb-12 md:mb-16 ${alignmentClass[normalizedAlign]} ${className}`}>
+    <div className={`flex flex-col mb-10 md:mb-12 ${alignmentClass[normalizedAlign]} ${className}`}>
       {badge && (
-        <span className="mb-3 inline-block rounded-full bg-blue-500/10 px-3.5 py-1 text-xs font-semibold tracking-wider text-blue-600 border border-blue-500/20 uppercase">
+        <span className="mb-2.5 inline-block text-xs font-semibold tracking-[0.1em] text-brand uppercase">
           {badge}
         </span>
       )}
-      
-      <h2 className="relative max-w-2xl text-2xl font-bold tracking-tight text-slate-100 md:text-4xl dark:text-slate-100">
+
+      <h2 className="max-w-2xl text-2xl font-semibold tracking-tight text-foreground md:text-[32px] md:leading-10">
         {title}
-        {/* Glow accent bar below title */}
-        <span className="mt-3 block h-1 w-12 rounded bg-gradient-to-r from-blue-500 to-amber-400 mx-auto md:w-20" />
       </h2>
 
       {subtitle && (
-        <p className="mt-4 max-w-2xl text-sm text-slate-300 md:text-base leading-relaxed dark:text-slate-300">
-          {subtitle}
-        </p>
+        <p className="mt-3 max-w-2xl text-sm text-muted md:text-base leading-relaxed">{subtitle}</p>
       )}
     </div>
   );
