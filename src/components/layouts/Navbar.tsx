@@ -171,6 +171,9 @@ function LanguageSwitch({
 }
 
 function Logo() {
+  const { t } = useLanguage();
+  const gradId = React.useId().replace(/:/g, '');
+
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (typeof window === 'undefined') return;
     const isHome = window.location.pathname === '/' || window.location.pathname === '';
@@ -181,28 +184,34 @@ function Logo() {
   };
 
   return (
-    <Link href={ROUTES.home} onClick={scrollToTop} className="flex items-center gap-2 group select-none">
-      <svg className="h-8 w-8" viewBox="0 0 100 100" fill="none" aria-hidden>
+    <Link
+      href={ROUTES.home}
+      onClick={scrollToTop}
+      className="flex items-center gap-2.5 group select-none shrink-0"
+      aria-label={`${t.common.brandName} ${t.common.brandSuffix}`}
+    >
+      <svg className="h-9 w-9 shrink-0" viewBox="0 0 100 100" fill="none" aria-hidden>
         <path
           d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z"
-          stroke="url(#logo-grad)"
-          strokeWidth="6"
+          stroke={`url(#${gradId})`}
+          strokeWidth="7"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        <circle cx="50" cy="35" r="5" fill="var(--lm-accent)" className="animate-pulse" />
-        <path d="M35 52 L65 52" stroke="var(--lm-brand)" strokeWidth="4" strokeLinecap="round" />
-        <path d="M50 35 L50 65" stroke="url(#logo-grad)" strokeWidth="4" />
-        <path d="M42 65 L58 65" stroke="var(--lm-accent)" strokeWidth="5" strokeLinecap="round" />
+        <circle cx="50" cy="35" r="5.5" fill="var(--lm-accent)" />
+        <path d="M35 52 L65 52" stroke="var(--lm-brand)" strokeWidth="5" strokeLinecap="round" />
+        <path d="M50 35 L50 65" stroke={`url(#${gradId})`} strokeWidth="5" />
+        <path d="M42 65 L58 65" stroke="var(--lm-accent)" strokeWidth="5.5" strokeLinecap="round" />
         <defs>
-          <linearGradient id="logo-grad" x1="0" y1="0" x2="100" y2="100">
+          <linearGradient id={gradId} x1="0" y1="0" x2="100" y2="100">
             <stop offset="0%" stopColor="var(--lm-brand)" />
-            <stop offset="100%" stopColor="var(--lm-brand-soft)" />
+            <stop offset="100%" stopColor="var(--lm-brand-deep)" />
           </linearGradient>
         </defs>
       </svg>
-      <span className="text-lg font-bold tracking-tight text-foreground">
-        LegalMind<span className="text-brand ms-0.5">AI</span>
+      <span className="text-base sm:text-lg font-bold tracking-tight text-foreground leading-none whitespace-nowrap">
+        {t.common.brandName}
+        <span className="text-brand ms-1">{t.common.brandSuffix}</span>
       </span>
     </Link>
   );

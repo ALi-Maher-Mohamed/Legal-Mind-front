@@ -13,7 +13,8 @@ export default function AuthBrandPanel() {
 
       <div className="relative z-10">
         <span className="text-lg font-bold tracking-tight text-white">
-          LegalMind<span className="text-accent">AI</span>
+          {t.common.brandName}
+          <span className="text-accent ms-1">{t.common.brandSuffix}</span>
         </span>
       </div>
 

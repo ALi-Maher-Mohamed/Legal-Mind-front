@@ -21,7 +21,9 @@ export const translations = {
       active: "Active",
       popular: "Most Popular",
       send: "Send",
-      attachmentLabel: "Attached file: "
+      attachmentLabel: "Attached file: ",
+      brandName: "LegalMind",
+      brandSuffix: "AI",
     },
     nav: {
       services: "Services",
@@ -239,7 +241,9 @@ export const translations = {
       active: "نشط",
       popular: "الأكثر شيوعاً",
       send: "إرسال",
-      attachmentLabel: "الملف المرفق: "
+      attachmentLabel: "الملف المرفق: ",
+      brandName: "ليجال مايند",
+      brandSuffix: "AI",
     },
     nav: {
       services: "خدماتنا",

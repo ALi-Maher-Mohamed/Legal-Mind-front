@@ -45,21 +45,23 @@ export default function Footer() {
       <div className="lm-container">
         <div className="mb-10 grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="flex flex-col gap-4 lg:col-span-2">
-            <Link href={ROUTES.home} className="flex items-center gap-2">
-              <svg className="h-7 w-7 text-brand" viewBox="0 0 100 100" fill="none" aria-hidden>
+            <Link href={ROUTES.home} className="flex items-center gap-2.5 shrink-0" aria-label={`${t.common.brandName} ${t.common.brandSuffix}`}>
+              <svg className="h-8 w-8 shrink-0 text-brand" viewBox="0 0 100 100" fill="none" aria-hidden>
                 <path
                   d="M50 12 L85 24 C85 55 70 78 50 88 C30 78 15 55 15 24 Z"
                   stroke="currentColor"
-                  strokeWidth="6"
+                  strokeWidth="7"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="50" cy="35" r="5" fill="var(--lm-accent)" />
-                <path d="M35 52 L65 52" stroke="currentColor" strokeWidth="4" />
-                <path d="M50 35 L50 65" stroke="currentColor" strokeWidth="4" />
+                <circle cx="50" cy="35" r="5.5" fill="var(--lm-accent)" />
+                <path d="M35 52 L65 52" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+                <path d="M50 35 L50 65" stroke="currentColor" strokeWidth="5" />
+                <path d="M42 65 L58 65" stroke="var(--lm-accent)" strokeWidth="5.5" strokeLinecap="round" />
               </svg>
-              <span className="text-base font-bold text-foreground">
-                LegalMind<span className="text-brand ms-0.5">AI</span>
+              <span className="text-base font-bold text-foreground leading-none whitespace-nowrap">
+                {t.common.brandName}
+                <span className="text-brand ms-1">{t.common.brandSuffix}</span>
               </span>
             </Link>
             <p className="max-w-md text-xs sm:text-sm leading-relaxed">{t.footer.desc}</p>
