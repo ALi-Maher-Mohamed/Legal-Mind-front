@@ -28,7 +28,7 @@ export default function TestimonialSlide({ text, name, role, avatar }: Testimoni
         <div className="h-12 w-12 rounded-full bg-blue-600/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-sm shadow-[0_0_12px_rgba(59,130,246,0.2)] select-none">
           {avatar}
         </div>
-        <div className="flex flex-col text-left">
+        <div className="flex flex-col text-start">
           <span className="text-sm font-semibold text-white">{name}</span>
           <span className="text-xs text-gray-500">{role}</span>
         </div>

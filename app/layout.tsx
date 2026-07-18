@@ -30,6 +30,7 @@ export default function RootLayout({
     <html
       suppressHydrationWarning
       lang="ar"
+      dir="rtl"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <head>
@@ -42,16 +43,22 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
+                  var root = document.documentElement;
                   var theme = localStorage.getItem('theme');
                   if (theme === 'light') {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.classList.add('light');
-                    document.documentElement.style.colorScheme = 'light';
+                    root.classList.remove('dark');
+                    root.classList.add('light');
+                    root.style.colorScheme = 'light';
                   } else {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.classList.remove('light');
-                    document.documentElement.style.colorScheme = 'dark';
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                    root.style.colorScheme = 'dark';
                   }
+
+                  var locale = localStorage.getItem('locale');
+                  if (locale !== 'en' && locale !== 'ar') locale = 'ar';
+                  root.lang = locale;
+                  root.dir = locale === 'ar' ? 'rtl' : 'ltr';
                 } catch (e) {}
               })()
             `,

@@ -36,9 +36,15 @@
 }
 
 :root {
-  background-color: var(--lm-background, #f8fafc);
+  background-color: var(--lm-background, #e6ebf2);
   color: var(--lm-foreground, #0f172a);
   color-scheme: light;
+}
+
+html,
+body {
+  direction: inherit;
+  text-align: start;
 }
 
 .dark {
@@ -130,11 +136,11 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--lm-scrollbar-track, #f1f5f9);
+  background: var(--lm-scrollbar-track, #dde4ee);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--lm-scrollbar-thumb, #cbd5e1);
+  background: var(--lm-scrollbar-thumb, #b0bdd0);
   border-radius: 9999px;
 }
 
@@ -142,7 +148,6 @@
   background: color-mix(in srgb, var(--lm-brand) 40%, transparent);
 }
 
-/* Glassmorphism helpers */
 .glass-effect {
   background: color-mix(in srgb, var(--lm-card) 90%, transparent);
   backdrop-filter: blur(12px);
@@ -154,26 +159,71 @@
   color: var(--lm-foreground, #0f172a);
 }
 
+/* Light mode: map dark landing utilities to soft gray surfaces (not pure white) */
 html.light {
   background-color: var(--lm-background);
   color: var(--lm-foreground);
 }
 
-html.light .bg-slate-900 { background-color: #ffffff !important; }
-html.light .bg-slate-950 { background-color: #ffffff !important; }
-html.light .bg-slate-800 { background-color: #f8fafc !important; }
+html.light body {
+  background-color: var(--lm-background);
+  color: var(--lm-foreground);
+}
 
-html.light .text-slate-100 { color: #0f172a !important; }
-html.light .text-slate-300 { color: #475569 !important; }
-html.light .text-slate-400 { color: #475569 !important; }
-html.light .text-slate-900 { color: #0f172a !important; }
-html.light .text-white { color: #0f172a !important; }
-html.light .hover\:text-white:hover { color: #0f172a !important; }
-html.light .hover\:text-black:hover { color: #1f2937 !important; }
-html.light .border-slate-800 { border-color: #e2e8f0 !important; }
-html.light .border-slate-950 { border-color: #e2e8f0 !important; }
-html.light .border-slate-700 { border-color: #e2e8f0 !important; }
+html.light .bg-slate-900,
+html.light .bg-slate-950,
+html.light .bg-\[\#090909\] {
+  background-color: var(--lm-surface) !important;
+}
 
-html.light .placeholder-slate-500::placeholder { color: #94a3b8 !important; }
-html.light .hover\:bg-slate-800:hover { background-color: #f1f5f9 !important; }
-html.light .hover\:bg-slate-700:hover { background-color: #eef2ff !important; }
+html.light .bg-slate-800,
+html.light .bg-\[\#181818\] {
+  background-color: var(--lm-surface-raised) !important;
+}
+
+html.light .bg-white {
+  background-color: var(--lm-card) !important;
+}
+
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: var(--lm-foreground) !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+  color: var(--lm-muted-foreground) !important;
+}
+
+html.light .text-slate-500,
+html.light .text-gray-400,
+html.light .text-gray-500 {
+  color: var(--lm-muted) !important;
+}
+
+html.light .text-slate-900 {
+  color: var(--lm-foreground) !important;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-950,
+html.light .border-slate-700,
+html.light .border-white\/5,
+html.light .border-white\/10 {
+  border-color: var(--lm-border) !important;
+}
+
+html.light .placeholder-slate-500::placeholder,
+html.light .placeholder-gray-500::placeholder {
+  color: var(--lm-muted) !important;
+}
+
+html.light .hover\:bg-slate-800:hover,
+html.light .hover\:bg-slate-700:hover {
+  background-color: var(--lm-surface-muted) !important;
+}
+
+html.light .hover\:text-slate-200:hover,
+html.light .hover\:text-slate-100:hover {
+  color: var(--lm-foreground) !important;
+}

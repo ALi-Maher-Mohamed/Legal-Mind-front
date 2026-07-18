@@ -91,7 +91,7 @@ export default function Pricing() {
                       : 'border-slate-800 bg-slate-900'
                   }`}
                 >
-                  <div className="text-right">
+                  <div className="text-start">
                     {/* Badge for Popular Plan */}
                     {plan.highlighted && (
                       <span className="mb-4 inline-block rounded-full bg-blue-500/15 px-3 py-0.5 text-[10px] font-semibold tracking-wider text-blue-400 border border-blue-500/30 uppercase">

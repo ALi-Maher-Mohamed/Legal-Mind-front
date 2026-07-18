@@ -117,7 +117,7 @@ export default function AIAssistantPreview() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
           {/* Left Details Panel */}
-          <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-right gap-6">
+          <div className="lg:col-span-5 flex flex-col items-center lg:items-start text-center lg:text-start gap-6">
             <SectionTitle
               badge={t.aiPreview.badge}
               title={t.aiPreview.title}
@@ -148,7 +148,7 @@ export default function AIAssistantPreview() {
                     {/* Glowing Online Status Indicator */}
                     <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-black animate-pulse" />
                   </div>
-                  <div className="flex flex-col text-left">
+                  <div className="flex flex-col text-start">
                     <span className="text-sm font-semibold text-white">{t.aiPreview.chatHeader}</span>
                     <span className="text-[10px] text-slate-400">{t.aiPreview.onlineStatus}</span>
                   </div>

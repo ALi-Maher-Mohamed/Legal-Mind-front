@@ -97,7 +97,7 @@ export default function Testimonials() {
                   <div className="h-12 w-12 rounded-full bg-blue-600/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold text-sm shadow-[0_0_12px_rgba(59,130,246,0.2)] select-none">
                     {testimonials[activeIndex].avatar}
                   </div>
-                  <div className="flex flex-col text-left">
+                  <div className="flex flex-col text-start">
                     <span className="text-sm font-semibold text-slate-100">
                       {testimonials[activeIndex].name}
                     </span>

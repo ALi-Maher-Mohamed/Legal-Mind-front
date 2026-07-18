@@ -53,14 +53,15 @@ export const palette = {
 /** Semantic tokens per mode — what components should prefer */
 export const themes = {
   light: {
-    background: palette.slate[50],
+    // Heavier than pure white so the page reads as soft gray, not blank
+    background: '#E6EBF2',
     foreground: palette.slate[900],
-    card: palette.white,
-    surface: palette.white,
-    surfaceRaised: palette.slate[50],
-    surfaceMuted: palette.slate[100],
-    border: palette.slate[200],
-    borderStrong: palette.slate[300],
+    card: '#F4F7FB',
+    surface: '#F0F4F9',
+    surfaceRaised: '#EAF0F6',
+    surfaceMuted: '#DDE4EE',
+    border: '#C9D3E0',
+    borderStrong: '#B0BDD0',
     muted: palette.slate[500],
     mutedForeground: palette.slate[600],
     brand: palette.brand.blue,
@@ -73,8 +74,8 @@ export const themes = {
     danger: palette.status.danger,
     ring: palette.brand.blue,
     selection: 'rgba(59, 130, 246, 0.2)',
-    scrollbarTrack: palette.slate[100],
-    scrollbarThumb: palette.slate[300],
+    scrollbarTrack: '#DDE4EE',
+    scrollbarThumb: '#B0BDD0',
   },
   dark: {
     background: palette.surface.ink,

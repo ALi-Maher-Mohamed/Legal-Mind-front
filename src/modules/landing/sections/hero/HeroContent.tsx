@@ -8,7 +8,7 @@ export default function HeroContent() {
   const { t, isRtl } = useLanguage();
 
   return (
-    <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-right gap-6">
+    <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-start gap-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

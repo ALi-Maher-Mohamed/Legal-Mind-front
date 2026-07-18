@@ -95,7 +95,7 @@ export default function ServicesList() {
                   {svc.icon}
                 </div>
 
-                <div className="flex flex-col gap-2 mt-2 text-right">
+                <div className="flex flex-col gap-2 mt-2 text-start">
                   <h3 className="text-lg font-bold text-slate-100 group-hover:text-blue-300 transition duration-200">
                     {svc.title}
                   </h3>

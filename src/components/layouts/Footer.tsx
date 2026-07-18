@@ -112,7 +112,7 @@ export default function Footer() {
 
         {/* Newsletter Section */}
         <div className="border-t border-slate-800 py-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col gap-1 max-w-lg text-center lg:text-right">
+          <div className="flex flex-col gap-1 max-w-lg text-center lg:text-start">
             <h4 className="text-sm font-semibold text-slate-100">{t.footer.newsletterTitle}</h4>
 
           <form onSubmit={handleSubscribe} className="flex w-full max-w-sm gap-2">

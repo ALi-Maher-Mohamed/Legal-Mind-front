@@ -32,7 +32,7 @@ export default function Hero() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
           
           {/* Hero Left Content */}
-          <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-right gap-6">
+          <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-start gap-6">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

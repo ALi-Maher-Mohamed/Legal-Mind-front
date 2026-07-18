@@ -4,7 +4,7 @@
 import React from 'react';
 import { Message } from '@/types/chat.types';
 import { Bot, User, FileText } from 'lucide-react';
-import { useThemeContext } from '@/lib/providers/ThemeProvider';
+
 interface ChatBubbleProps {
   message: Message;
   isTyping?: boolean;
@@ -12,7 +12,6 @@ interface ChatBubbleProps {
 
 export function ChatBubble({ message, isTyping = false }: ChatBubbleProps) {
   const isAssistant = message.role === 'assistant';
-const { theme } = useThemeContext();
   return (
     <div className={`flex w-full items-start gap-3.5 mb-4 ${isAssistant ? 'justify-start' : 'justify-end'}`}>
       {/* Bot Icon */}
@@ -52,16 +51,14 @@ const { theme } = useThemeContext();
             <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-slate-400" style={{ animationDelay: '300ms' }} />
           </div>
         ) : (
-          <div 
-          style={{ color: theme === 'light' ? 'white' : '' }}
-          className="whitespace-pre-line text-xs sm:text-sm prose max-w-none ">
+          <div className="whitespace-pre-line text-xs sm:text-sm prose max-w-none text-inherit">
             {message.content}
           </div>
         )}
 
         {/* Timestamp */}
         {!isTyping && (
-          <div className={`mt-1.5 text-[9px] ${isAssistant ? 'text-slate-500' : 'text-blue-600'} text-right`}>
+          <div className={`mt-1.5 text-[9px] ${isAssistant ? 'text-slate-500' : 'text-blue-600'} text-end`}>
             {message.timestamp}
           </div>
         )}

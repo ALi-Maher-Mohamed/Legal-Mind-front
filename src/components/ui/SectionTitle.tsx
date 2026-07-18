@@ -7,7 +7,7 @@ interface SectionTitleProps {
   badge?: string;
   title: string;
   subtitle?: string;
-  align?: 'center' | 'left' | 'right';
+  align?: 'center' | 'start' | 'end' | 'left' | 'right';
   className?: string;
 }
 
@@ -18,14 +18,17 @@ export function SectionTitle({
   align = 'center',
   className = ''
 }: SectionTitleProps) {
+  const normalizedAlign =
+    align === 'left' ? 'start' : align === 'right' ? 'end' : align;
+
   const alignmentClass = {
-    center: "text-center mx-auto items-center justify-center",
-    left: "text-left items-start justify-start",
-    right: "text-right items-end justify-end"
+    center: 'text-center mx-auto items-center justify-center',
+    start: 'text-start items-start justify-start',
+    end: 'text-end items-end justify-end',
   };
 
   return (
-    <div className={`flex flex-col mb-12 md:mb-16 ${alignmentClass[align]} ${className}`}>
+    <div className={`flex flex-col mb-12 md:mb-16 ${alignmentClass[normalizedAlign]} ${className}`}>
       {badge && (
         <span className="mb-3 inline-block rounded-full bg-blue-500/10 px-3.5 py-1 text-xs font-semibold tracking-wider text-blue-600 border border-blue-500/20 uppercase">
           {badge}

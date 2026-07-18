@@ -18,7 +18,7 @@ export default function ServiceCard({ title, desc, icon, glow }: ServiceCardProp
       <div className="p-3.5 bg-white/5 rounded-2xl text-gray-300 group-hover:bg-white/10 group-hover:scale-110 transition-all duration-300">
         {icon}
       </div>
-      <div className="flex flex-col gap-2 mt-2 text-right">
+      <div className="flex flex-col gap-2 mt-2 text-start">
         <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition duration-200">{title}</h3>
         <p className="text-sm text-gray-400 leading-relaxed group-hover:text-gray-300 transition duration-200">{desc}</p>
       </div>

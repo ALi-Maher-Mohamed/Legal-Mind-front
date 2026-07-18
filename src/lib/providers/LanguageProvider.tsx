@@ -1,7 +1,7 @@
 // src/lib/providers/LanguageProvider.tsx
 'use client';
 
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
 import { Locale, translations } from '@/config/translations';
 
 interface LanguageContextProps {
@@ -12,6 +12,14 @@ interface LanguageContextProps {
 }
 
 const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
+
+function applyDocumentLocale(locale: Locale) {
+  if (typeof document === 'undefined') return;
+  const root = document.documentElement;
+  root.dir = locale === 'ar' ? 'rtl' : 'ltr';
+  root.lang = locale;
+  root.setAttribute('data-locale', locale);
+}
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
@@ -24,16 +32,14 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return 'ar';
   });
 
-  const setLocale = (newLocale: Locale) => {
+  const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem('locale', newLocale);
-  };
+    applyDocumentLocale(newLocale);
+  }, []);
 
   useEffect(() => {
-    // Update HTML dir and lang attributes
-    const dir = locale === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.dir = dir;
-    document.documentElement.lang = locale;
+    applyDocumentLocale(locale);
   }, [locale]);
 
   const t = translations[locale];

@@ -38,7 +38,7 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
             : 'border-white/5 bg-[#181818]/60'
         }`}
       >
-        <div className="text-right">
+        <div className="text-start">
           {plan.highlighted && (
             <span className="mb-4 inline-block rounded-full bg-blue-500/15 px-3 py-0.5 text-[10px] font-semibold tracking-wider text-blue-400 border border-blue-500/30 uppercase">
               {t.common.popular}
