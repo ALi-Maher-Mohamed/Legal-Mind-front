@@ -29,6 +29,20 @@ export const authService = {
     sessionStorage.setItem('legalmind_token', token);
   },
 
+  getSession(): { user: AuthUser; token: string } | null {
+    if (typeof window === 'undefined') return null;
+    const raw = sessionStorage.getItem('legalmind_user');
+    const token = sessionStorage.getItem('legalmind_token');
+    if (!raw || !token) return null;
+    try {
+      const user = JSON.parse(raw) as AuthUser;
+      if (!user?.id || !user?.email) return null;
+      return { user, token };
+    } catch {
+      return null;
+    }
+  },
+
   clearSession() {
     if (typeof window === 'undefined') return;
     sessionStorage.removeItem('legalmind_user');
