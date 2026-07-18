@@ -56,8 +56,8 @@ export default function Navbar() {
             {/* Logo */}
             <Logo />
 
-            {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-8">
+            {/* Desktop Navigation Links - تظهر في الشاشات الكبيرة lg فقط */}
+            <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
                 <a
                   key={link.href}
@@ -90,8 +90,8 @@ export default function Navbar() {
               </Button>
             </div>
 
-            {/* Mobile Hamburger menu icon */}
-            <div className="flex md:hidden items-center gap-3">
+            {/* Mobile/Tablet Controls - تظهر في الشاشات الأصغر من lg */}
+            <div className="flex lg:hidden items-center gap-3">
               <button
                 onClick={toggleLanguage}
                 className="flex items-center justify-center p-2 rounded-lg bg-white/10 border border-white/15 text-gray-200 hover:text-white"
@@ -163,6 +163,7 @@ export default function Navbar() {
                 </nav>
               </div>
 
+              {/* أزرار التحكم في الموبايل بما فيها الثيم واللغة */}
               <div className="flex flex-col gap-3">
                 <Button
                   variant="secondary"
