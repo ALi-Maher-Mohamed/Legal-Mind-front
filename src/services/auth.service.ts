@@ -1,6 +1,9 @@
-import type { AuthUser, LoginCredentials, RegisterDraft } from '@/types/auth.types';
+import type { AuthUser, LoginCredentials, RegisterDraft, ResetPasswordPayload } from '@/types/auth.types';
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const RECOVERY_EMAIL_KEY = 'legalmind_recovery_email';
+const RECOVERY_OTP_KEY = 'legalmind_recovery_otp';
 
 export const authService = {
   async login(credentials: LoginCredentials): Promise<{ success: boolean; token: string; email: string }> {
@@ -21,6 +24,45 @@ export const authService = {
       throw new Error('Incomplete registration');
     }
     return { success: true };
+  },
+
+  async requestPasswordReset(email: string): Promise<{ success: boolean; otp: string }> {
+    await delay(700);
+    if (!email.includes('@')) throw new Error('Invalid email');
+    const otp = '123456';
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(RECOVERY_EMAIL_KEY, email);
+      sessionStorage.setItem(RECOVERY_OTP_KEY, otp);
+    }
+    return { success: true, otp };
+  },
+
+  async verifyOtp(email: string, otp: string): Promise<{ success: boolean }> {
+    await delay(500);
+    const stored =
+      typeof window !== 'undefined' ? sessionStorage.getItem(RECOVERY_OTP_KEY) : null;
+    const expected = stored || '123456';
+    if (!email || otp.length !== 6 || otp !== expected) {
+      throw new Error('Invalid code');
+    }
+    return { success: true };
+  },
+
+  async resetPassword(payload: ResetPasswordPayload): Promise<{ success: boolean }> {
+    await delay(700);
+    if (!payload.password || payload.password.length < 6) {
+      throw new Error('Weak password');
+    }
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem(RECOVERY_EMAIL_KEY);
+      sessionStorage.removeItem(RECOVERY_OTP_KEY);
+    }
+    return { success: true };
+  },
+
+  getRecoveryEmail(): string {
+    if (typeof window === 'undefined') return '';
+    return sessionStorage.getItem(RECOVERY_EMAIL_KEY) || '';
   },
 
   persistSession(user: AuthUser, token: string) {

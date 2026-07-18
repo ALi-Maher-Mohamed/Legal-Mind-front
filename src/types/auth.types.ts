@@ -1,4 +1,4 @@
-export type AuthMode = 'login' | 'register' | 'onboarding';
+export type AuthMode = 'login' | 'register' | 'onboarding' | 'forgot' | 'otp' | 'reset';
 
 export type AuthUser = {
   id: string;
@@ -24,5 +24,11 @@ export type RegisterDraft = {
 
 export type LoginCredentials = {
   email: string;
+  password: string;
+};
+
+export type ResetPasswordPayload = {
+  email: string;
+  otp: string;
   password: string;
 };

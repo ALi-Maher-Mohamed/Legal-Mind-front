@@ -9,9 +9,10 @@ import { useLoginForm } from '../../hooks/useLoginForm';
 type LoginFormProps = {
   onSuccess: (email: string) => void;
   onSwitchRegister: () => void;
+  onForgotPassword: () => void;
 };
 
-export default function LoginForm({ onSuccess, onSwitchRegister }: LoginFormProps) {
+export default function LoginForm({ onSuccess, onSwitchRegister, onForgotPassword }: LoginFormProps) {
   const { t } = useLanguage();
   const form = useLoginForm(onSuccess);
 
@@ -64,8 +65,8 @@ export default function LoginForm({ onSuccess, onSwitchRegister }: LoginFormProp
           </label>
           <button
             type="button"
-            onClick={() => alert(t.auth.forgotAlert)}
-            className="text-brand hover:opacity-80 transition"
+            onClick={onForgotPassword}
+            className="text-brand hover:opacity-80 transition cursor-pointer"
           >
             {t.auth.forgotPassword}
           </button>

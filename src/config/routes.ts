@@ -7,6 +7,9 @@ export const ROUTES = {
   about: "#about",
   faq: "#faq",
   login: "/login",
+  forgotPassword: "/forgot-password",
+  verifyOtp: "/verify-otp",
+  resetPassword: "/reset-password",
   dashboard: "/dashboard"
 };
 

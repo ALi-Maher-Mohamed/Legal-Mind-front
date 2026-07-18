@@ -11,7 +11,7 @@ type Props = {
 
 export default function AuthModeTabs({ mode, onLogin, onRegister }: Props) {
   const { t } = useLanguage();
-  if (mode === 'onboarding') return null;
+  if (mode !== 'login' && mode !== 'register') return null;
 
   const tab = (active: boolean) =>
     `flex-1 py-2.5 text-xs sm:text-sm font-semibold rounded-lg transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 cursor-pointer ${
