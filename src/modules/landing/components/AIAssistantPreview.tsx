@@ -1,3 +1,4 @@
+// src/modules/landing/components/AIAssistantPreview.tsx
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
@@ -12,8 +13,7 @@ import { useThemeContext } from "@/lib/providers/ThemeProvider";
 export default function AIAssistantPreview() {
   const { theme } = useThemeContext();
   const { t, locale, isRtl } = useLanguage();
-
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // State for simulated chat
   const [messages, setMessages] = useState<Message[]>([]);
@@ -22,11 +22,9 @@ export default function AIAssistantPreview() {
   const [attachedFiles, setAttachedFiles] = useState<Attachment[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Scroll to bottom
   useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
   const handleSend = async (
@@ -36,7 +34,7 @@ export default function AIAssistantPreview() {
     const text = textToSend.trim();
     if (!text && overrideAttachments.length === 0) return;
 
-    // Construct User Message
+    // 1. Construct User Message
     const userMsg: Message = {
       id: `msg-${Date.now()}`,
       role: "user",
@@ -59,7 +57,7 @@ export default function AIAssistantPreview() {
     setIsTyping(true);
 
     try {
-      // Call Mock Service
+      // 2. Call Mock Service
       const reply = await chatService.sendMessage(
         text,
         locale,
@@ -73,14 +71,8 @@ export default function AIAssistantPreview() {
     }
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSend();
-  };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
+    if (e.key === "Enter") {
       handleSend();
     }
   };
@@ -93,6 +85,7 @@ export default function AIAssistantPreview() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Add to attachments state
       const mockAttachment: Attachment = {
         name: file.name,
         size: file.size,
@@ -153,7 +146,7 @@ export default function AIAssistantPreview() {
           <div className="lg:col-span-7 w-full">
             <Card
               glowColor="rgba(59, 130, 246, 0.15)"
-              className="border border-slate-800 shadow-sm overflow-hidden h-[480px] flex flex-col bg-slate-900"
+              className="border border-slate-800 shadow-sm overflow-hidden h-125 flex flex-col bg-slate-900"
             >
               {/* Chat Header */}
               <div className="px-5 py-4 border-b border-slate-800 bg-slate-950 flex items-center justify-between">
@@ -172,6 +165,7 @@ export default function AIAssistantPreview() {
                         />
                       </svg>
                     </div>
+                    {/* Glowing Online Status Indicator */}
                     <span className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-emerald-500 border border-black animate-pulse" />
                   </div>
                   <div className="flex flex-col text-left">
@@ -186,10 +180,7 @@ export default function AIAssistantPreview() {
               </div>
 
               {/* Chat Message Stream */}
-              <div
-                ref={chatContainerRef}
-                className="flex-1 overflow-y-auto max-h-[320px] p-5 scrollbar-thin scrollbar-thumb-white/10 space-y-4"
-              >
+              <div className="flex-1 overflow-y-auto p-5 scrollbar-thin scrollbar-thumb-white/10 space-y-4">
                 <AnimatePresence initial={false}>
                   {[
                     {
@@ -220,26 +211,24 @@ export default function AIAssistantPreview() {
 
                 {isTyping && (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <Card role="status">
-                      <ChatBubble
-                        message={{
-                          id: "typing",
-                          role: "assistant",
-                          content: "",
-                          timestamp: "",
-                        }}
-                        isTyping={true}
-                      />
-                    </Card>
+                    <ChatBubble
+                      message={{
+                        id: "typing",
+                        role: "assistant",
+                        content: "",
+                        timestamp: "",
+                      }}
+                      isTyping={true}
+                    />
                   </motion.div>
                 )}
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Suggestion Prompt Chips */}
               {messages.length === 0 && !isTyping && (
                 <div className="px-5 pb-3 flex flex-wrap gap-2 justify-end">
                   <button
-                    type="button"
                     style={{ color: theme === "light" ? "black" : "" }}
                     onClick={() => handleSuggestionClick("lease")}
                     className="px-3 py-1.5 rounded-lg border border-slate-700 text-[11px] text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition cursor-pointer select-none"
@@ -247,7 +236,6 @@ export default function AIAssistantPreview() {
                     {t.aiPreview.promptOne}
                   </button>
                   <button
-                    type="button"
                     style={{ color: theme === "light" ? "black" : "" }}
                     onClick={() => handleSuggestionClick("developer")}
                     className="px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-[11px] text-slate-200 hover:bg-slate-700 hover:border-slate-600 transition cursor-pointer select-none"
@@ -279,7 +267,6 @@ export default function AIAssistantPreview() {
                     </span>
                   </div>
                   <button
-                    type="button"
                     onClick={removeAttachment}
                     className="p-1 hover:bg-slate-800 rounded-full text-slate-400 hover:text-slate-100 transition"
                   >
@@ -289,12 +276,8 @@ export default function AIAssistantPreview() {
               )}
 
               {/* Input Panel */}
-              <form
-                onSubmit={onSubmit}
-                className="px-5 py-4 border-t border-slate-800 bg-slate-950 flex items-center gap-3"
-              >
+              <div className="px-5 py-4 border-t border-slate-800 bg-slate-950 flex items-center gap-3">
                 <button
-                  type="button"
                   onClick={triggerFileUpload}
                   className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-100 hover:bg-slate-800 hover:border-slate-700 transition cursor-pointer"
                   title={t.common.uploadFile}
@@ -318,12 +301,12 @@ export default function AIAssistantPreview() {
                 />
 
                 <button
-                  type="submit"
+                  onClick={() => handleSend()}
                   className="p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_12px_rgba(59,130,246,0.3)] transition cursor-pointer active:scale-95"
                 >
                   <Send className="h-4 w-4" />
                 </button>
-              </form>
+              </div>
             </Card>
           </div>
         </div>
