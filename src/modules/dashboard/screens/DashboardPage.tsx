@@ -8,8 +8,9 @@ import { useLanguage } from '@/hooks/useLanguage';
 import type { AuthUser } from '@/types/auth.types';
 import type { DashboardView } from '@/types/dashboard.types';
 import { MOCK_DOCUMENTS } from '../data/mockDocuments';
-import DashboardShell from '../components/DashboardShell';
-import DashboardHome from '../components/DashboardHome';
+import DashboardShell from '../components/shell/DashboardShell';
+import DashboardHome from '../components/home/DashboardHome';
+import ComingSoonPanel from '../components/ComingSoonPanel';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -30,39 +31,18 @@ export default function DashboardPage() {
 
   if (!ready || !user) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-sm text-muted">{t.common.loading}</p>
       </div>
     );
   }
-
-  const placeholderTitle =
-    view === 'consultation'
-      ? t.dashboard.navConsultation
-      : view === 'evidence'
-        ? t.dashboard.navEvidence
-        : view === 'drafter'
-          ? t.dashboard.navDrafter
-          : view === 'gazette'
-            ? t.dashboard.navGazette
-            : t.dashboard.navSettings;
 
   return (
     <DashboardShell user={user} view={view} onNavigate={setView}>
       {view === 'dashboard' ? (
         <DashboardHome user={user} documents={MOCK_DOCUMENTS} onNavigate={setView} />
       ) : (
-        <div className="mx-auto max-w-lg rounded-2xl border border-brand/15 bg-white p-10 text-center dark:bg-white/5 dark:border-white/10">
-          <h2 className="text-xl font-bold text-foreground">{placeholderTitle}</h2>
-          <p className="mt-2 text-sm text-muted">{t.dashboard.comingSoon}</p>
-          <button
-            type="button"
-            onClick={() => setView('dashboard')}
-            className="mt-6 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand hover:opacity-90 cursor-pointer"
-          >
-            {t.dashboard.backDesk}
-          </button>
-        </div>
+        <ComingSoonPanel view={view} onBack={() => setView('dashboard')} />
       )}
     </DashboardShell>
   );
