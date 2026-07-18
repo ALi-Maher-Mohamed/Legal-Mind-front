@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Theme toggle must use .dark class — not OS prefers-color-scheme */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-background: var(--lm-background);
   --color-foreground: var(--lm-foreground);
@@ -32,7 +35,7 @@
 }
 
 :root {
-  background-color: var(--lm-background, #f7f9fb);
+  background-color: var(--lm-background, #ffffff);
   color: var(--lm-foreground, #191c1e);
   color-scheme: light;
 }
@@ -42,7 +45,14 @@ html[lang='en'] {
   --font-display: var(--font-inter), system-ui, sans-serif;
 }
 
-html,
+html[dir='rtl'] {
+  direction: rtl;
+}
+
+html[dir='ltr'] {
+  direction: ltr;
+}
+
 body {
   direction: inherit;
   text-align: start;
@@ -77,9 +87,16 @@ body {
 }
 
 .glass-panel {
-  background: color-mix(in srgb, var(--lm-card) 80%, transparent);
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--lm-brand) 12%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 62, 199, 0.06);
+}
+
+.dark .glass-panel {
+  background: color-mix(in srgb, var(--lm-card) 75%, transparent);
   backdrop-filter: blur(6px);
-  border: 1px solid color-mix(in srgb, var(--lm-border) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--lm-border) 55%, transparent);
+  box-shadow: none;
 }
 
 .lm-container {

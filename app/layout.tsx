@@ -65,15 +65,28 @@ export default function RootLayout({
 
                   var locale = localStorage.getItem('locale');
                   if (locale !== 'en' && locale !== 'ar') locale = 'ar';
+                  var dir = locale === 'ar' ? 'rtl' : 'ltr';
                   root.lang = locale;
-                  root.dir = locale === 'ar' ? 'rtl' : 'ltr';
+                  root.setAttribute('dir', dir);
+                  root.style.setProperty('direction', dir);
+                  root.setAttribute('data-locale', locale);
+                  function applyBodyDir() {
+                    if (!document.body) return;
+                    document.body.setAttribute('dir', dir);
+                    document.body.style.setProperty('direction', dir);
+                  }
+                  applyBodyDir();
+                  document.addEventListener('DOMContentLoaded', applyBodyDir);
                 } catch (e) {}
               })()
             `,
           }}
         />
       </head>
-      <body className="min-h-full bg-background text-foreground flex flex-col font-sans antialiased overflow-x-hidden">
+      <body
+        className="min-h-full bg-background text-foreground flex flex-col font-sans antialiased overflow-x-hidden"
+        suppressHydrationWarning
+      >
         <LanguageProvider>
           <ThemeProvider>{children}</ThemeProvider>
         </LanguageProvider>

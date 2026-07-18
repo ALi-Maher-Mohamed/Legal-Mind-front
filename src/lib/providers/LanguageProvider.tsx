@@ -9,16 +9,21 @@ interface LanguageContextProps {
   setLocale: (locale: Locale) => void;
   t: typeof translations.en;
   isRtl: boolean;
+  dir: 'rtl' | 'ltr';
 }
 
 const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
 
 function applyDocumentLocale(locale: Locale) {
   if (typeof document === 'undefined') return;
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
   const root = document.documentElement;
-  root.dir = locale === 'ar' ? 'rtl' : 'ltr';
-  root.lang = locale;
+  root.setAttribute('dir', dir);
+  root.setAttribute('lang', locale);
   root.setAttribute('data-locale', locale);
+  root.style.direction = dir;
+  document.body?.setAttribute('dir', dir);
+  if (document.body) document.body.style.direction = dir;
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -32,6 +37,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     return 'ar';
   });
 
+  const dir = locale === 'ar' ? 'rtl' : 'ltr';
+  const isRtl = locale === 'ar';
+
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     localStorage.setItem('locale', newLocale);
@@ -43,10 +51,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [locale]);
 
   const t = translations[locale];
-  const isRtl = locale === 'ar';
 
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t, isRtl }}>
+    <LanguageContext.Provider value={{ locale, setLocale, t, isRtl, dir }}>
       {children}
     </LanguageContext.Provider>
   );

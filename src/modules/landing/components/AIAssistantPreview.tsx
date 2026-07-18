@@ -69,20 +69,23 @@ export default function AIAssistantPreview() {
   };
 
   return (
-    <section className="bg-card py-16 md:py-20">
+    <section className="bg-[#f0f4ff] py-16 md:py-20 dark:bg-surface-muted">
       <div className="lm-container max-w-[1152px]">
         <SectionTitle badge="AI SIMULATOR" title={t.aiPreview.title} align="center" />
 
-        <div className="overflow-hidden rounded-2xl border border-brand/10 bg-card/80 shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] backdrop-blur-[6px] dark:border-brand/20 dark:bg-[rgba(23,31,51,0.6)]">
-          {/* Window chrome */}
-          <div className="flex items-center justify-between border-b border-outline/30 bg-surface-muted px-4 py-4 sm:px-6">
+        <div className="overflow-hidden rounded-2xl border border-outline bg-white shadow-[0_12px_40px_-12px_rgba(15,23,42,0.18)] dark:border-brand/20 dark:bg-[rgba(23,31,51,0.75)] dark:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.35)] dark:backdrop-blur-[6px]">
+          {/* Window chrome stays LTR like OS windows */}
+          <div
+            dir="ltr"
+            className="flex items-center justify-between border-b border-outline/40 bg-surface-raised px-4 py-4 sm:px-6 dark:bg-surface-raised"
+          >
             <div className="flex gap-2">
-              <span className="size-3 rounded-full bg-brand" />
-              <span className="size-3 rounded-full bg-muted" />
               <span className="size-3 rounded-full bg-danger" />
+              <span className="size-3 rounded-full bg-accent" />
+              <span className="size-3 rounded-full bg-brand" />
             </div>
             <div className="flex items-center gap-3">
-              <div className="text-end hidden sm:block">
+              <div className="hidden text-end sm:block" dir={isRtl ? 'rtl' : 'ltr'}>
                 <p className="text-xs font-bold tracking-wide text-foreground">{t.aiPreview.chatHeader}</p>
                 <p className="text-[10px] text-brand">{t.aiPreview.onlineStatus}</p>
               </div>
@@ -94,8 +97,8 @@ export default function AIAssistantPreview() {
             </div>
           </div>
 
-          {/* Messages */}
-          <div className="min-h-[320px] max-h-[420px] overflow-y-auto space-y-4 bg-background p-4 sm:p-6">
+          {/* Messages — inherit page direction */}
+          <div className="min-h-[320px] max-h-[420px] overflow-y-auto space-y-4 bg-white p-4 sm:p-6 dark:bg-background">
             <AnimatePresence initial={false}>
               {[
                 {
@@ -147,7 +150,7 @@ export default function AIAssistantPreview() {
           </div>
 
           {/* Input */}
-          <div className="flex items-center gap-3 border-t border-outline/30 bg-surface-muted px-4 py-3 sm:px-6">
+          <div className="flex items-center gap-3 border-t border-outline/40 bg-surface-raised px-4 py-3 sm:px-6 dark:bg-surface-raised">
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}

@@ -15,7 +15,7 @@ export default function Stats() {
   ];
 
   return (
-    <section className="border-y border-outline/30 bg-surface-muted/50 py-12 md:py-16">
+    <section className="border-y border-brand/10 bg-[#f0f4ff] py-12 md:py-16 dark:border-outline/30 dark:bg-surface-muted/50">
       <div className="lm-container">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3 sm:gap-6 text-center">
           {statItems.map((item, idx) => (

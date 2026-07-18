@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Button, Card, SectionTitle, FAQItem } from '@/components/ui';
+import { Button, SectionTitle, FAQItem } from '@/components/ui';
 import { Search, HelpCircle } from 'lucide-react';
 import { scrollToChat } from '../lib/scrollToChat';
 
@@ -25,12 +25,12 @@ export default function FAQ() {
   );
 
   return (
-    <section id="faq" className="relative scroll-mt-20 bg-surface-muted/40 py-16 md:py-20">
+    <section id="faq" className="relative scroll-mt-20 bg-white py-16 md:py-20 dark:bg-[#0b1326]">
       <div className="lm-container max-w-4xl relative z-10">
         <SectionTitle badge="FAQ" title={t.faq.title} subtitle={t.faq.subtitle} align="center" />
 
         <div className="relative mx-auto mb-8 max-w-xl">
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-muted">
+          <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3 text-brand/60 dark:text-muted">
             <Search className="h-4 w-4" />
           </div>
           <input
@@ -38,7 +38,7 @@ export default function FAQ() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t.common.searchPlaceholder}
-            className="w-full rounded-lg border border-outline bg-card py-3 ps-10 pe-4 text-xs sm:text-sm text-foreground text-start placeholder:text-muted focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand"
+            className="w-full rounded-lg border border-brand/15 bg-white py-3 ps-10 pe-4 text-xs sm:text-sm text-[#191c1e] text-start placeholder:text-[#737688] focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand dark:border-outline dark:bg-card dark:text-foreground dark:placeholder:text-muted"
           />
         </div>
 
@@ -58,7 +58,7 @@ export default function FAQ() {
                 </motion.div>
               ))
             ) : (
-              <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-muted">
+              <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-[#434656] dark:text-muted">
                 <HelpCircle className="h-8 w-8" />
                 <span>
                   {isRtl
@@ -70,13 +70,17 @@ export default function FAQ() {
           </AnimatePresence>
         </div>
 
-        <Card className="flex flex-col items-center gap-4 p-6 sm:p-8 text-center">
-          <h3 className="text-lg font-bold text-foreground md:text-xl">{t.faq.ctaTitle}</h3>
-          <p className="max-w-lg text-xs sm:text-sm leading-relaxed text-muted">{t.faq.ctaDesc}</p>
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-brand/15 bg-[#f0f4ff] p-6 sm:p-8 text-center dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)]">
+          <h3 className="text-lg font-bold text-[#191c1e] md:text-xl dark:text-[#dae2fd]">
+            {t.faq.ctaTitle}
+          </h3>
+          <p className="max-w-lg text-xs sm:text-sm leading-relaxed text-[#434656] dark:text-[#c4c6cf]">
+            {t.faq.ctaDesc}
+          </p>
           <Button variant="primary" size="md" onClick={scrollToChat}>
             {t.faq.ctaBtn}
           </Button>
-        </Card>
+        </div>
       </div>
     </section>
   );

@@ -57,13 +57,13 @@ export const palette = {
 /** Semantic tokens used by CSS vars + components */
 export const themes = {
   light: {
-    background: palette.light.background,
+    background: '#ffffff',
     foreground: palette.light.onSurface,
-    card: palette.light.surfaceLowest,
-    surface: palette.light.surfaceLowest,
-    surfaceRaised: palette.light.surfaceLow,
-    surfaceMuted: palette.light.surfaceHigh,
-    border: palette.light.outline,
+    card: '#ffffff',
+    surface: '#ffffff',
+    surfaceRaised: '#f0f4ff',
+    surfaceMuted: '#e8eeff',
+    border: '#d6e0f5',
     borderStrong: palette.light.outlineStrong,
     muted: palette.light.onSurfaceVariant,
     mutedForeground: palette.light.onSurfaceVariant,
@@ -78,8 +78,8 @@ export const themes = {
     danger: palette.light.error,
     ring: palette.light.primary,
     selection: 'rgba(0, 62, 199, 0.18)',
-    scrollbarTrack: palette.light.surfaceLow,
-    scrollbarThumb: palette.light.outline,
+    scrollbarTrack: '#f0f4ff',
+    scrollbarThumb: '#b8c7e8',
   },
   dark: {
     background: palette.dark.background,
