@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { authService } from '@/services/auth.service';
-import { ROUTES } from '@/config/routes';
-import { useLanguage } from '@/hooks/useLanguage';
-import type { AuthUser } from '@/types/auth.types';
-import type { DashboardView } from '@/types/dashboard.types';
-import { MOCK_DOCUMENTS } from '../data/mockDocuments';
-import DashboardShell from '../components/shell/DashboardShell';
-import DashboardHome from '../components/home/DashboardHome';
-import ComingSoonPanel from '../components/ComingSoonPanel';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { authService } from "@/services/auth.service";
+import { ROUTES } from "@/config/routes";
+import { useLanguage } from "@/hooks/useLanguage";
+import type { AuthUser } from "@/types/auth.types";
+import type { DashboardView } from "@/types/dashboard.types";
+import { MOCK_DOCUMENTS } from "../data/mockDocuments";
+import DashboardShell from "../components/shell/DashboardShell";
+import DashboardHome from "../components/home/DashboardHome";
+import ComingSoonPanel from "../components/ComingSoonPanel";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { t } = useLanguage();
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [view, setView] = useState<DashboardView>('dashboard');
+  const [view, setView] = useState<DashboardView>("dashboard");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export default function DashboardPage() {
       router.replace(ROUTES.login);
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUser(session.user);
     setReady(true);
   }, [router]);
@@ -39,10 +40,14 @@ export default function DashboardPage() {
 
   return (
     <DashboardShell user={user} view={view} onNavigate={setView}>
-      {view === 'dashboard' ? (
-        <DashboardHome user={user} documents={MOCK_DOCUMENTS} onNavigate={setView} />
+      {view === "dashboard" ? (
+        <DashboardHome
+          user={user}
+          documents={MOCK_DOCUMENTS}
+          onNavigate={setView}
+        />
       ) : (
-        <ComingSoonPanel view={view} onBack={() => setView('dashboard')} />
+        <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}
     </DashboardShell>
   );
