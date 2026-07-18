@@ -20,5 +20,9 @@ export function useOnboarding(onComplete: () => void) {
     setSlide((prev) => Math.max(0, prev - 1));
   }, []);
 
-  return { slide, setSlide, total, isLast, next, prev, slides: ONBOARDING_SLIDES };
+  const skip = useCallback(() => {
+    onComplete();
+  }, [onComplete]);
+
+  return { slide, setSlide, total, isLast, next, prev, skip, slides: ONBOARDING_SLIDES };
 }
