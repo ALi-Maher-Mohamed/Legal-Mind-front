@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES, SOCIAL_LINKS } from "@/config/routes";
-import { Button } from "@/components/ui";
 import { Twitter, Linkedin, Github } from "lucide-react";
 
 export default function Footer() {
