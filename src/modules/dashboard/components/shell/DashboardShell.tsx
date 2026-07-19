@@ -6,9 +6,8 @@ import { ROUTES } from '@/config/routes';
 import type { AuthUser } from '@/types/auth.types';
 import type { DashboardView } from '@/types/dashboard.types';
 import { dashPageBg } from '../../lib/panelStyles';
-import DashboardSidebar from './DashboardSidebar';
 import DashboardTopBar from './DashboardTopBar';
-import SidebarNav from './SidebarNav';
+import DashboardBottomNav from './DashboardBottomNav';
 
 type Props = {
   user: AuthUser;
@@ -26,18 +25,12 @@ export default function DashboardShell({ user, view, onNavigate, children }: Pro
   };
 
   return (
-    <div className={`flex min-h-screen text-foreground ${dashPageBg}`}>
-      <DashboardSidebar
-        user={user}
-        view={view}
-        onNavigate={onNavigate}
-        onLogout={handleLogout}
-      />
-      <div className="flex min-w-0 flex-1 flex-col">
-        <DashboardTopBar onLogout={handleLogout} />
-        <SidebarNav view={view} onNavigate={onNavigate} variant="mobile" />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
-      </div>
+    <div className={`flex min-h-screen flex-col text-foreground ${dashPageBg}`}>
+      <DashboardTopBar user={user} onLogout={handleLogout} />
+      <main className="flex-1 overflow-y-auto p-4 pb-28 sm:p-6 sm:pb-32 lg:p-8 lg:pb-32">
+        {children}
+      </main>
+      <DashboardBottomNav view={view} onNavigate={onNavigate} />
     </div>
   );
 }
