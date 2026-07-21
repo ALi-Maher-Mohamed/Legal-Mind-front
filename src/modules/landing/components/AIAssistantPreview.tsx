@@ -9,7 +9,7 @@ import { chatService } from '@/services/chat.service';
 import { Send, Paperclip, FileText, X } from 'lucide-react';
 
 export default function AIAssistantPreview() {
-  const { t, locale, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -31,8 +31,8 @@ export default function AIAssistantPreview() {
     const userMsg: Message = {
       id: `msg-${Date.now()}`,
       role: 'user',
-      content: text || (isRtl ? 'مستند مرفق للتحليل' : 'Uploaded document for analysis'),
-      timestamp: new Date().toLocaleTimeString(locale === 'ar' ? 'ar-EG' : 'en-US', {
+      content: text || 'مستند مرفق للتحليل',
+      timestamp: new Date().toLocaleTimeString('ar-EG', {
         hour: '2-digit',
         minute: '2-digit',
       }),
@@ -45,7 +45,7 @@ export default function AIAssistantPreview() {
     setIsTyping(true);
 
     try {
-      const reply = await chatService.sendMessage(text, locale, overrideAttachments);
+      const reply = await chatService.sendMessage(text, overrideAttachments);
       setIsTyping(false);
       setMessages((prev) => [...prev, reply]);
     } catch (err) {
@@ -56,16 +56,12 @@ export default function AIAssistantPreview() {
 
   const handleSuggestion = (key: 'lease' | 'developer') => {
     if (key === 'lease') {
-      handleSend(
-        locale === 'ar' ? 'حلل عقد الإيجار المرفق' : 'Analyze this commercial lease contract.',
-        [{ name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' }],
-      );
+      handleSend('حلل عقد الإيجار المرفق', [
+        { name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' },
+      ]);
       return;
     }
-    handleSend(
-      locale === 'ar' ? 'صياغة عقد عمل لمطور برمجيات مستقل' : 'Draft a freelance software developer agreement.',
-      [],
-    );
+    handleSend('صياغة عقد عمل لمطور برمجيات مستقل', []);
   };
 
   return (
@@ -85,7 +81,7 @@ export default function AIAssistantPreview() {
               <span className="size-3 rounded-full bg-brand" />
             </div>
             <div className="flex items-center gap-3">
-              <div className="hidden text-end sm:block" dir={isRtl ? 'rtl' : 'ltr'}>
+              <div className="hidden text-end sm:block" dir="rtl">
                 <p className="text-xs font-bold tracking-wide text-foreground">{t.aiPreview.chatHeader}</p>
                 <p className="text-[10px] text-brand">{t.aiPreview.onlineStatus}</p>
               </div>
@@ -105,7 +101,7 @@ export default function AIAssistantPreview() {
                   id: 'msg-welcome',
                   role: 'assistant' as const,
                   content: t.aiPreview.welcomeMessage,
-                  timestamp: new Date().toLocaleTimeString(locale === 'ar' ? 'ar-EG' : 'en-US', {
+                  timestamp: new Date().toLocaleTimeString('ar-EG', {
                     hour: '2-digit',
                     minute: '2-digit',
                   }),
@@ -182,8 +178,9 @@ export default function AIAssistantPreview() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder={isRtl ? 'اكتب سؤالك القانوني...' : 'Ask a legal question...'}
+                placeholder="اكتب سؤالك القانوني..."
                 className="w-full bg-transparent text-sm text-foreground placeholder:text-muted focus:outline-none text-start"
+                dir="rtl"
               />
             </div>
             <button

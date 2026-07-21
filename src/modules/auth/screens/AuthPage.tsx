@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLanguage } from '@/hooks/useLanguage';
 import { ROUTES } from '@/config/routes';
 import { authService } from '@/services/auth.service';
 import type { AuthMode, RegisterDraft } from '@/types/auth.types';
@@ -25,7 +24,6 @@ type Props = {
 
 export default function AuthPage({ initialMode = 'login' }: Props) {
   const router = useRouter();
-  const { locale } = useLanguage();
   const { mode, goLogin, goRegister, goOnboarding, goForgot, goOtp, goReset } =
     useAuthMode(initialMode);
   const draftRef = useRef<RegisterDraft | null>(null);
@@ -62,7 +60,7 @@ export default function AuthPage({ initialMode = 'login' }: Props) {
       teamSize: '1',
       selectedPractices: [],
     };
-    const user = buildAuthUser({ draft, loginEmail: loginEmailRef.current, locale });
+    const user = buildAuthUser({ draft, loginEmail: loginEmailRef.current });
     authService.persistSession(user, `mock-jwt-${user.id}`);
     router.push(ROUTES.dashboard);
   };

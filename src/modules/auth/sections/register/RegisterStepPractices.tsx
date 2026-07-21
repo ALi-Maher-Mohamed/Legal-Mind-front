@@ -10,8 +10,8 @@ type Props = {
 };
 
 export default function RegisterStepPractices({ selected, onToggle }: Props) {
-  const { t, locale } = useLanguage();
-  const areas = getPracticeAreas(locale);
+  const { t } = useLanguage();
+  const areas = getPracticeAreas();
 
   return (
     <div className="space-y-3 pt-2">

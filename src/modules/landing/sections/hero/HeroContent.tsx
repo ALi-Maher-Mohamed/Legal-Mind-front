@@ -5,7 +5,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
 
 export default function HeroContent() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-start gap-6">
@@ -15,7 +15,7 @@ export default function HeroContent() {
         transition={{ duration: 0.5 }}
         className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 font-semibold uppercase tracking-wider"
       >
-        <span>{isRtl ? 'تكنولوجيا المستقبل القانونية' : 'Next-Gen Legal Technology'}</span>
+        <span>تكنولوجيا المستقبل القانونية</span>
       </motion.div>
 
       <motion.h1
@@ -24,19 +24,9 @@ export default function HeroContent() {
         transition={{ duration: 0.6, delay: 0.1 }}
         className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight"
       >
-        {isRtl ? (
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-[#F6C453] block mb-2">
-            {t.hero.arabicHeading}
-          </span>
-        ) : (
-          <>
-            {t.hero.titlePrefix}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-              {t.hero.titleHighlight}
-            </span>
-            {t.hero.titleSuffix}
-          </>
-        )}
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-[#F6C453] block mb-2">
+          {t.hero.arabicHeading}
+        </span>
       </motion.h1>
 
       <motion.p

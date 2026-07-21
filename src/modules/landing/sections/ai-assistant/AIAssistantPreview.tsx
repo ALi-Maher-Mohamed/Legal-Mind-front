@@ -5,7 +5,7 @@ import { Button, SectionTitle } from '@/components/ui';
 import ChatPanel from './ChatPanel';
 
 export default function AIAssistantPreview() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <section className="py-20 bg-[#090909] relative">
@@ -17,7 +17,7 @@ export default function AIAssistantPreview() {
               badge={t.aiPreview.badge}
               title={t.aiPreview.title}
               subtitle={t.aiPreview.description}
-              align={isRtl ? 'end' : 'start'}
+              align="start"
               className="mb-0!"
             />
             <Button variant="primary" size="lg">{t.aiPreview.ctaText}</Button>

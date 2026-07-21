@@ -1,59 +1,43 @@
 // src/lib/providers/LanguageProvider.tsx
 'use client';
 
-import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
-import { Locale, translations } from '@/config/translations';
+import React, { createContext, useContext, useEffect } from 'react';
+import { translations, type Locale, type Translations } from '@/config/translations';
 
 interface LanguageContextProps {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
-  t: typeof translations.en;
-  isRtl: boolean;
-  dir: 'rtl' | 'ltr';
+  t: Translations;
+  isRtl: true;
+  dir: 'rtl';
 }
 
 const LanguageContext = createContext<LanguageContextProps | undefined>(undefined);
 
-function applyDocumentLocale(locale: Locale) {
+function applyArabicDocument() {
   if (typeof document === 'undefined') return;
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
   const root = document.documentElement;
-  root.setAttribute('dir', dir);
-  root.setAttribute('lang', locale);
-  root.setAttribute('data-locale', locale);
-  root.style.direction = dir;
-  document.body?.setAttribute('dir', dir);
-  if (document.body) document.body.style.direction = dir;
+  root.setAttribute('dir', 'rtl');
+  root.setAttribute('lang', 'ar');
+  root.setAttribute('data-locale', 'ar');
+  root.style.direction = 'rtl';
+  document.body?.setAttribute('dir', 'rtl');
+  if (document.body) document.body.style.direction = 'rtl';
+  try {
+    localStorage.removeItem('locale');
+  } catch {
+    /* ignore */
+  }
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window !== 'undefined') {
-      const storedLocale = window.localStorage.getItem('locale') as Locale;
-      if (storedLocale === 'en' || storedLocale === 'ar') {
-        return storedLocale;
-      }
-    }
-    return 'ar';
-  });
-
-  const dir = locale === 'ar' ? 'rtl' : 'ltr';
-  const isRtl = locale === 'ar';
-
-  const setLocale = useCallback((newLocale: Locale) => {
-    setLocaleState(newLocale);
-    localStorage.setItem('locale', newLocale);
-    applyDocumentLocale(newLocale);
+  useEffect(() => {
+    applyArabicDocument();
   }, []);
 
-  useEffect(() => {
-    applyDocumentLocale(locale);
-  }, [locale]);
-
-  const t = translations[locale];
-
   return (
-    <LanguageContext.Provider value={{ locale, setLocale, t, isRtl, dir }}>
+    <LanguageContext.Provider
+      value={{ locale: 'ar', t: translations, isRtl: true, dir: 'rtl' }}
+    >
       {children}
     </LanguageContext.Provider>
   );

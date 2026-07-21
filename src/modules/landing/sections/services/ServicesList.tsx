@@ -8,14 +8,14 @@ import { staggerContainer, fadeUpCard } from '../../lib/motionVariants';
 import ServiceCard from './ServiceCard';
 
 export default function ServicesList() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <section id="services" className="py-24 bg-[#090909] relative scroll-mt-20">
       <div className="absolute top-1/3 right-10 w-96 h-96 bg-purple-500/5 blur-[120px] rounded-full pointer-events-none" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle
-          badge={isRtl ? 'الخدمات المتقدمة' : 'Premium Modules'}
+          badge="الخدمات المتقدمة"
           title={t.services.title}
           subtitle={t.services.subtitle}
           align="center"

@@ -12,7 +12,7 @@ type Props = {
 const ACCENTS = ['border-s-brand', 'border-s-accent', 'border-s-brand-deep'];
 
 export default function DocumentsStrip({ documents, onOpenLibrary }: Props) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <DashPanel>
@@ -24,7 +24,7 @@ export default function DocumentsStrip({ documents, onOpenLibrary }: Props) {
           className="inline-flex items-center gap-0.5 text-xs text-brand hover:opacity-80 cursor-pointer"
         >
           {t.dashboard.viewLibrary}
-          <ChevronRight className={`h-3.5 w-3.5 ${isRtl ? 'rotate-180' : ''}`} />
+          <ChevronRight className="h-3.5 w-3.5 rotate-180" />
         </button>
       </div>
 

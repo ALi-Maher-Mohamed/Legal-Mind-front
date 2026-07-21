@@ -7,9 +7,9 @@ import DashPanel from '../ui/DashPanel';
 import ActivityItem from './ActivityItem';
 
 export default function ActivityFeed() {
-  const { t, locale } = useLanguage();
+  const { t } = useLanguage();
   const [selected, setSelected] = useState<number | null>(null);
-  const activities = useMemo(() => getDeskActivities(locale), [locale]);
+  const activities = useMemo(() => getDeskActivities(), []);
 
   return (
     <DashPanel>

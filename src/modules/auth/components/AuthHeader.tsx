@@ -1,15 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { ROUTES } from "@/config/routes";
 import AuthToolbar from "./AuthToolbar";
 import { Logo } from "@/components/common/logo";
 
 export default function AuthHeader() {
-  const { t, isRtl } = useLanguage();
-  const BackIcon = isRtl ? ArrowRight : ArrowLeft;
+  const { t } = useLanguage();
 
   return (
     <header className="relative z-20 space-y-5 mb-6">
@@ -22,7 +21,7 @@ export default function AuthHeader() {
         href={ROUTES.home}
         className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-brand transition"
       >
-        <BackIcon className="h-3.5 w-3.5" />
+        <ArrowRight className="h-3.5 w-3.5" />
         {t.auth.backHome}
       </Link>
     </header>

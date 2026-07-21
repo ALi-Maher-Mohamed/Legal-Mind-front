@@ -8,7 +8,7 @@ import { Search, HelpCircle } from 'lucide-react';
 import { scrollToChat } from '../lib/scrollToChat';
 
 export default function FAQ() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
 
   const faqData = [
@@ -60,11 +60,7 @@ export default function FAQ() {
             ) : (
               <div className="flex flex-col items-center gap-2 py-10 text-center text-sm text-[#434656] dark:text-muted">
                 <HelpCircle className="h-8 w-8" />
-                <span>
-                  {isRtl
-                    ? 'لم نعثر على نتائج مطابقة لبحثك. يرجى تجربة كلمات أخرى.'
-                    : 'No matching questions found. Try searching for other terms.'}
-                </span>
+                <span>لم نعثر على نتائج مطابقة لبحثك. يرجى تجربة كلمات أخرى.</span>
               </div>
             )}
           </AnimatePresence>

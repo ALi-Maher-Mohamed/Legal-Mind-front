@@ -1,40 +1,6 @@
-import type { Locale } from '@/config/translations';
 import type { DeskActivity } from '@/types/dashboard.types';
 
-const EN: DeskActivity[] = [
-  {
-    id: 1,
-    type: 'audit',
-    title: 'Document Analysis Completed',
-    desc: 'Contract audit on Apex_NDA_Final.pdf returned 98% analysis rating. 3 high-level risk factors were flagged in the Indemnification Clause.',
-    time: '10:32 AM',
-    date: 'Today',
-    detail:
-      'The AI Counselor flagged Section 9.2 (Indemnity holds) as lacking bilateral liability caps. Recommended amendment has been generated in Drafts.',
-  },
-  {
-    id: 2,
-    type: 'chat',
-    title: 'New Precedent Indexed',
-    desc: 'Counselor completed consultation regarding Delaware non-compete geographic boundaries. 2 authoritative citations appended to case briefcase.',
-    time: 'Yesterday',
-    date: 'Jul 12',
-    detail:
-      'Consultation cited Restatement (Second) of Contracts § 188. Saved findings outline reasonable duration limits for software trade structures.',
-  },
-  {
-    id: 3,
-    type: 'draft',
-    title: 'Smart Contract Generated',
-    desc: "Employment agreement for 'Senior Systems Director' drafted under Cairo jurisdiction. Bilateral Arabic-English clauses formatted.",
-    time: '3 days ago',
-    date: 'Jul 10',
-    detail:
-      'Generated from Smart Form. Variable parameters for compensation, probation terms, and standard arbitration channels fully populated.',
-  },
-];
-
-const AR: DeskActivity[] = [
+const ACTIVITIES: DeskActivity[] = [
   {
     id: 1,
     type: 'audit',
@@ -65,6 +31,6 @@ const AR: DeskActivity[] = [
   },
 ];
 
-export function getDeskActivities(locale: Locale): DeskActivity[] {
-  return locale === 'ar' ? AR : EN;
+export function getDeskActivities(): DeskActivity[] {
+  return ACTIVITIES;
 }

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans_Arabic, Inter, Geist_Mono } from 'next/font/google';
+import { IBM_Plex_Sans_Arabic, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { LanguageProvider } from '@/lib/providers/LanguageProvider';
 import { ThemeProvider } from '@/lib/providers/ThemeProvider';
@@ -12,21 +12,15 @@ const ibmPlexArabic = IBM_Plex_Sans_Arabic({
   display: 'swap',
 });
 
-const inter = Inter({
-  variable: '--font-inter',
-  subsets: ['latin'],
-  display: 'swap',
-});
-
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: 'LegalMind AI - Premium AI Legal Assistant',
+  title: 'LegalMind AI — المساعد القانوني بالذكاء الاصطناعي',
   description:
-    'Draft smart contracts, review agreements, track court cases, and receive instant legal counsel powered by neural legal intelligence.',
+    'صياغة العقود الذكية، مراجعة الاتفاقيات، متابعة القضايا، واستشارات قانونية فورية مدعومة بالذكاء الاصطناعي.',
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },
@@ -46,7 +40,8 @@ export default function RootLayout({
       suppressHydrationWarning
       lang="ar"
       dir="rtl"
-      className={`${ibmPlexArabic.variable} ${inter.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
+      data-locale="ar"
+      className={`${ibmPlexArabic.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
       <head>
         <style
@@ -69,18 +64,15 @@ export default function RootLayout({
                     root.classList.remove('light');
                     root.style.colorScheme = 'dark';
                   }
-
-                  var locale = localStorage.getItem('locale');
-                  if (locale !== 'en' && locale !== 'ar') locale = 'ar';
-                  var dir = locale === 'ar' ? 'rtl' : 'ltr';
-                  root.lang = locale;
-                  root.setAttribute('dir', dir);
-                  root.style.setProperty('direction', dir);
-                  root.setAttribute('data-locale', locale);
+                  root.lang = 'ar';
+                  root.setAttribute('dir', 'rtl');
+                  root.style.setProperty('direction', 'rtl');
+                  root.setAttribute('data-locale', 'ar');
+                  try { localStorage.removeItem('locale'); } catch (e) {}
                   function applyBodyDir() {
                     if (!document.body) return;
-                    document.body.setAttribute('dir', dir);
-                    document.body.style.setProperty('direction', dir);
+                    document.body.setAttribute('dir', 'rtl');
+                    document.body.style.setProperty('direction', 'rtl');
                   }
                   applyBodyDir();
                   document.addEventListener('DOMContentLoaded', applyBodyDir);
@@ -92,6 +84,7 @@ export default function RootLayout({
       </head>
       <body
         className="min-h-full bg-background text-foreground flex flex-col font-sans antialiased overflow-x-hidden"
+        dir="rtl"
         suppressHydrationWarning
       >
         <LanguageProvider>

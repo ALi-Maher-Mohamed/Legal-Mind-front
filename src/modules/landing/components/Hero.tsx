@@ -11,7 +11,7 @@ import { ROUTES } from '@/config/routes';
 import { Shield, FileText, Scale, Activity } from 'lucide-react';
 
 export default function Hero() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const { theme } = useThemeContext();
 
   const chips = [
@@ -35,19 +35,11 @@ export default function Hero() {
             className="w-full lg:max-w-[672px] flex flex-col gap-4 items-center lg:items-start text-center lg:text-start"
           >
             <span className="inline-flex self-center lg:self-start rounded-xl border border-brand/30 bg-brand/5 px-3 py-1 text-[11px] font-semibold tracking-[0.08em] text-brand uppercase">
-              {isRtl ? 'تكنولوجيا المستقبل القانونية' : 'Next-Gen Legal Technology'}
+              تكنولوجيا المستقبل القانونية
             </span>
 
             <h1 className="text-3xl sm:text-4xl lg:text-[48px] lg:leading-[60px] font-bold tracking-tight text-foreground">
-              {isRtl ? (
-                t.hero.arabicHeading
-              ) : (
-                <>
-                  {t.hero.titlePrefix}
-                  <span className="text-brand">{t.hero.titleHighlight}</span>
-                  {t.hero.titleSuffix}
-                </>
-              )}
+              {t.hero.arabicHeading}
             </h1>
 
             <p className="max-w-xl text-sm sm:text-base leading-[26px] text-muted opacity-90 lg:pt-2">

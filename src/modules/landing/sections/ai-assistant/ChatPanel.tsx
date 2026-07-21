@@ -11,8 +11,8 @@ import ChatAttachmentBar from './ChatAttachmentBar';
 import ChatInput from './ChatInput';
 
 export default function ChatPanel() {
-  const { t, locale } = useLanguage();
-  const chat = useChatPreview(locale, locale === 'ar');
+  const { t } = useLanguage();
+  const chat = useChatPreview();
 
   return (
     <Card
@@ -22,7 +22,7 @@ export default function ChatPanel() {
       <ChatHeader />
       <ChatMessages
         welcomeMessage={t.aiPreview.welcomeMessage}
-        welcomeTimestamp={formatChatTime(locale)}
+        welcomeTimestamp={formatChatTime()}
         messages={chat.messages}
         isTyping={chat.isTyping}
         messagesEndRef={chat.messagesEndRef}

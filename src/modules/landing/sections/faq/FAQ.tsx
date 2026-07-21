@@ -9,7 +9,7 @@ import FAQList from './FAQList';
 import FAQCta from './FAQCta';
 
 export default function FAQ() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   const faqData = useMemo(
     () => [
@@ -27,7 +27,7 @@ export default function FAQ() {
     <section id="faq" className="py-24 bg-[#090909] relative scroll-mt-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle
-          badge={isRtl ? 'المساعدة والمعلومات' : 'Questions & Answers'}
+          badge="المساعدة والمعلومات"
           title={t.faq.title}
           subtitle={t.faq.subtitle}
           align="center"

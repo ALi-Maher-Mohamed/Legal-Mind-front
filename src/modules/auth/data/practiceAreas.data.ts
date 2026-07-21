@@ -1,19 +1,4 @@
-import type { Locale } from '@/config/translations';
-
-const PRACTICE_AREAS_EN = [
-  'Corporate & Securities',
-  'Intellectual Property',
-  'Commercial Litigation',
-  'Labor & Employment',
-  'Mergers & Acquisitions',
-  'Maritime & Admiralty',
-  'Criminal Defense',
-  'Taxation',
-  'Estate Planning',
-  'Arbitration & ADR',
-] as const;
-
-const PRACTICE_AREAS_AR = [
+const PRACTICE_AREAS = [
   'الشركات والأوراق المالية',
   'الملكية الفكرية وبراءات الاختراع',
   'التقاضي التجاري والنزاعات',
@@ -26,6 +11,6 @@ const PRACTICE_AREAS_AR = [
   'التحكيم الدولي ومجلس تسوية المنازعات',
 ] as const;
 
-export function getPracticeAreas(locale: Locale): readonly string[] {
-  return locale === 'ar' ? PRACTICE_AREAS_AR : PRACTICE_AREAS_EN;
+export function getPracticeAreas(): readonly string[] {
+  return PRACTICE_AREAS;
 }

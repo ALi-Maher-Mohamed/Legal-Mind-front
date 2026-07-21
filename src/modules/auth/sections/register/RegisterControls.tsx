@@ -13,9 +13,9 @@ type Props = {
 };
 
 export default function RegisterControls({ step, isLoading, onBack, onNext, onLoginInstead }: Props) {
-  const { t, isRtl } = useLanguage();
-  const BackIcon = isRtl ? ChevronRight : ChevronLeft;
-  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
+  const { t } = useLanguage();
+  const BackIcon = ChevronRight;
+  const NextIcon = ChevronLeft;
 
   return (
     <div className="flex justify-between items-center pt-6 gap-4">

@@ -1,9 +1,6 @@
-import type { Locale } from '@/config/translations';
-
-export function formatLocaleDate(locale: Locale, alt = false) {
+export function formatLocaleDate(alt = false) {
   const d = new Date();
-  const useAr = alt ? locale !== 'ar' : locale === 'ar';
-  return d.toLocaleDateString(useAr ? 'ar-EG' : 'en-US', {
+  return d.toLocaleDateString(alt ? 'en-US' : 'ar-EG', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',

@@ -6,26 +6,26 @@ import StatCard from './StatCard';
 type Props = { documents: LegalDocument[] };
 
 export default function StatsRow({ documents }: Props) {
-  const { t, locale } = useLanguage();
+  const { t } = useLanguage();
   const analyzed = documents.filter((d) => d.status === 'Analysis Complete').length;
 
   const stats = [
     {
       label: t.dashboard.stat1Title,
       value: analyzed,
-      change: locale === 'ar' ? '+١٤٪ مقارنة بالشهر السابق' : '+14% vs prior mo',
+      change: '+١٤٪ مقارنة بالشهر السابق',
       icon: <FileText className="h-5 w-5" strokeWidth={2.25} />,
     },
     {
       label: t.dashboard.stat2Title,
       value: documents.length,
-      change: locale === 'ar' ? '+٢ تم تسجيلها اليوم' : '+2 registered today',
+      change: '+٢ تم تسجيلها اليوم',
       icon: <Scale className="h-5 w-5" strokeWidth={2.25} />,
     },
     {
       label: t.dashboard.stat3Title,
       value: 8,
-      change: locale === 'ar' ? 'دقة صياغية عالية' : 'Uncompromising precision',
+      change: 'دقة صياغية عالية',
       icon: <BookOpen className="h-5 w-5" strokeWidth={2.25} />,
     },
   ];

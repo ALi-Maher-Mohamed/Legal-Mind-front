@@ -7,7 +7,7 @@ import { Twitter, Linkedin, Github } from "lucide-react";
 import { Logo } from "../common/logo";
 
 export default function Footer() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const productLinks = [
     { name: t.nav.services, href: ROUTES.services },
     { name: t.nav.pricing, href: ROUTES.pricing },
@@ -19,8 +19,8 @@ export default function Footer() {
   ];
 
   const legalLinks = [
-    { name: isRtl ? "شروط الخدمة" : "Terms of Service", href: "#" },
-    { name: isRtl ? "سياسة الخصوصية" : "Privacy Policy", href: "#" },
+    { name: "شروط الخدمة", href: "#" },
+    { name: "سياسة الخصوصية", href: "#" },
   ];
 
   return (

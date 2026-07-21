@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { HelpCircle } from 'lucide-react';
 import { FAQItem } from '@/components/ui';
-import { useLanguage } from '@/hooks/useLanguage';
 
 type FaqEntry = { id: string; question: string; answer: string };
 
@@ -12,8 +11,6 @@ type FAQListProps = {
 };
 
 export default function FAQList({ items }: FAQListProps) {
-  const { isRtl } = useLanguage();
-
   return (
     <div className="space-y-4 mb-16 min-h-[100px]">
       <AnimatePresence mode="popLayout">
@@ -37,11 +34,7 @@ export default function FAQList({ items }: FAQListProps) {
             className="text-center py-10 text-gray-500 text-sm flex flex-col items-center justify-center gap-2"
           >
             <HelpCircle className="h-8 w-8 text-gray-600 animate-bounce" />
-            <span>
-              {isRtl
-                ? 'لم نعثر على نتائج مطابقة لبحثك. يرجى تجربة كلمات أخرى.'
-                : 'No matching questions found. Try searching for other terms.'}
-            </span>
+            <span>لم نعثر على نتائج مطابقة لبحثك. يرجى تجربة كلمات أخرى.</span>
           </motion.div>
         )}
       </AnimatePresence>

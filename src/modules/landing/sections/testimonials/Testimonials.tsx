@@ -11,7 +11,7 @@ import TestimonialNav from './TestimonialNav';
 import TestimonialDots from './TestimonialDots';
 
 export default function Testimonials() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const { activeIndex, handleNext, handlePrev, goTo } = useTestimonialCarousel(TESTIMONIALS.length);
 
   const items = useMemo(
@@ -32,7 +32,7 @@ export default function Testimonials() {
       <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-blue-500/5 blur-[100px] rounded-full pointer-events-none" />
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionTitle
-          badge={isRtl ? 'آراء العملاء' : 'Testimonials'}
+          badge="آراء العملاء"
           title={t.testimonials.title}
           subtitle={t.testimonials.subtitle}
           align="center"
@@ -41,9 +41,9 @@ export default function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ opacity: 0, x: isRtl ? -50 : 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: isRtl ? 50 : -50 }}
+              exit={{ opacity: 0, x: 50 }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
               className="w-full"
             >

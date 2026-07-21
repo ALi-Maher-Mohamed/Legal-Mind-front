@@ -24,7 +24,7 @@ export default function ChatInput({
   onFileTrigger,
   onFileChange,
 }: ChatInputProps) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <>
@@ -43,12 +43,9 @@ export default function ChatInput({
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder={
-            hasAttachment
-              ? t.aiPreview.uploadSuccess
-              : isRtl
-                ? 'اطرح سؤالك أو اكتب رسالتك هنا...'
-                : 'Type a message or legal question...'
+            hasAttachment ? t.aiPreview.uploadSuccess : 'اطرح سؤالك أو اكتب رسالتك هنا...'
           }
+          dir="rtl"
           className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
         />
         <button

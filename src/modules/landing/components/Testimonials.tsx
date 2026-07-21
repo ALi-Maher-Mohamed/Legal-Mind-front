@@ -8,7 +8,7 @@ import { Card, SectionTitle } from '@/components/ui';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function Testimonials() {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const testimonials = [
@@ -59,7 +59,7 @@ export default function Testimonials() {
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 relative z-10">
         
         <SectionTitle
-          badge={isRtl ? "آراء العملاء" : "Testimonials"}
+          badge="آراء العملاء"
           title={t.testimonials.title}
           subtitle={t.testimonials.subtitle}
           align="center"
@@ -70,9 +70,9 @@ export default function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              initial={{ opacity: 0, x: isRtl ? -50 : 50 }}
+              initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: isRtl ? 50 : -50 }}
+              exit={{ opacity: 0, x: 50 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="w-full"
             >
@@ -117,14 +117,14 @@ export default function Testimonials() {
               onClick={handlePrev}
               className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
             >
-              {isRtl ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+              <ChevronRight className="h-5 w-5" />
             </button>
             
             <button
               onClick={handleNext}
               className="h-10 w-10 rounded-full bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer pointer-events-auto select-none active:scale-95"
             >
-              {isRtl ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+              <ChevronLeft className="h-5 w-5" />
             </button>
           </div>
         </div>

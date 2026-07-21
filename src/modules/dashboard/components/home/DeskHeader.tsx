@@ -14,10 +14,10 @@ type Props = {
 };
 
 export default function DeskHeader({ user, showEmpty, onToggleEmpty }: Props) {
-  const { t, locale } = useLanguage();
+  const { t } = useLanguage();
   const firstName = user.name.split(' ')[0] || user.name;
-  const todayLabel = useMemo(() => formatLocaleDate(locale), [locale]);
-  const todayAlt = useMemo(() => formatLocaleDate(locale, true), [locale]);
+  const todayLabel = useMemo(() => formatLocaleDate(), []);
+  const todayAlt = useMemo(() => formatLocaleDate(true), []);
 
   return (
     <div className="space-y-4">

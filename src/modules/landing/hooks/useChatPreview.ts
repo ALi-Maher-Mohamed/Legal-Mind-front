@@ -3,10 +3,9 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Message, Attachment } from '@/types/chat.types';
 import { chatService } from '@/services/chat.service';
-import { Locale } from '@/config/translations';
 import { formatChatTime } from '../lib/formatChatTime';
 
-export function useChatPreview(locale: Locale, isRtl: boolean) {
+export function useChatPreview() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -29,8 +28,8 @@ export function useChatPreview(locale: Locale, isRtl: boolean) {
       const userMsg: Message = {
         id: `msg-${Date.now()}`,
         role: 'user',
-        content: text || (isRtl ? 'مستند مرفق للتحليل' : 'Uploaded document for analysis'),
-        timestamp: formatChatTime(locale),
+        content: text || 'مستند مرفق للتحليل',
+        timestamp: formatChatTime(),
         attachments: overrideAttachments,
       };
 
@@ -40,7 +39,7 @@ export function useChatPreview(locale: Locale, isRtl: boolean) {
       setIsTyping(true);
 
       try {
-        const reply = await chatService.sendMessage(text, locale, overrideAttachments);
+        const reply = await chatService.sendMessage(text, overrideAttachments);
         setIsTyping(false);
         setMessages((prev) => [...prev, reply]);
       } catch (err) {
@@ -48,7 +47,7 @@ export function useChatPreview(locale: Locale, isRtl: boolean) {
         console.error(err);
       }
     },
-    [inputValue, attachedFiles, isRtl, locale],
+    [inputValue, attachedFiles],
   );
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -70,16 +69,12 @@ export function useChatPreview(locale: Locale, isRtl: boolean) {
 
   const handleSuggestionClick = (promptKey: 'lease' | 'developer') => {
     if (promptKey === 'lease') {
-      handleSend(
-        locale === 'ar' ? 'حلل عقد الإيجار المرفق' : 'Analyze this commercial lease contract.',
-        [{ name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' }],
-      );
+      handleSend('حلل عقد الإيجار المرفق', [
+        { name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' },
+      ]);
       return;
     }
-    handleSend(
-      locale === 'ar' ? 'صياغة عقد عمل لمطور برمجيات مستقل' : 'Draft a freelance software developer agreement.',
-      [],
-    );
+    handleSend('صياغة عقد عمل لمطور برمجيات مستقل', []);
   };
 
   return {

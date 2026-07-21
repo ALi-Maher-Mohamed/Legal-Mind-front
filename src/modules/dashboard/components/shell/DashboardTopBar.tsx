@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
-import { LanguageSwitch } from '@/components/ui';
 import { ROUTES } from '@/config/routes';
 import type { AuthUser } from '@/types/auth.types';
 
@@ -14,7 +13,7 @@ type Props = {
 };
 
 export default function DashboardTopBar({ user, onLogout }: Props) {
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
 
   return (
@@ -41,12 +40,11 @@ export default function DashboardTopBar({ user, onLogout }: Props) {
             <p className="truncate text-[10px] text-muted">{user.email}</p>
           </div>
         </div>
-        <LanguageSwitch />
         <button
           type="button"
           onClick={toggleTheme}
           className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-[#f0f4ff] text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
-          aria-label={theme === 'dark' ? (isRtl ? 'فاتح' : 'Light') : isRtl ? 'داكن' : 'Dark'}
+          aria-label={theme === 'dark' ? 'فاتح' : 'داكن'}
         >
           {theme === 'dark' ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4" />}
         </button>

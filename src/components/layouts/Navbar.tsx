@@ -6,14 +6,14 @@ import { useScroll } from "@/hooks/useScroll";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useThemeContext } from "@/lib/providers/ThemeProvider";
 import { ROUTES } from "@/config/routes";
-import { Button, LanguageSwitch } from "@/components/ui";
+import { Button } from "@/components/ui";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "../common/logo";
 
 export default function Navbar() {
   const scrolled = useScroll(20);
-  const { t, isRtl } = useLanguage();
+  const { t } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +42,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Hide fixed bar while drawer is open so it doesn't sit over the sheet */}
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
           isOpen ? "pointer-events-none opacity-0" : "opacity-100"
@@ -68,8 +67,7 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-3">
-            <LanguageSwitch />
-            <ThemeSwitch theme={theme} onToggle={toggleTheme} isRtl={isRtl} />
+            <ThemeSwitch theme={theme} onToggle={toggleTheme} />
             <Link href={ROUTES.login}>
               <Button variant="primary" size="sm">
                 {t.common.getStarted}
@@ -81,7 +79,7 @@ export default function Navbar() {
             type="button"
             onClick={() => setIsOpen(true)}
             className="lg:hidden flex h-10 w-10 items-center justify-center rounded-lg text-foreground hover:bg-surface-raised transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
-            aria-label="Menu"
+            aria-label="القائمة"
             aria-expanded={isOpen}
           >
             <Menu className="h-6 w-6" />
@@ -99,21 +97,21 @@ export default function Navbar() {
             className="fixed inset-0 z-[60] lg:hidden"
             role="dialog"
             aria-modal="true"
-            aria-label="Menu"
+            aria-label="القائمة"
           >
             <button
               type="button"
-              aria-label="Close menu"
+              aria-label="إغلاق القائمة"
               className="absolute inset-0 bg-[#0b1326]/45 backdrop-blur-sm"
               onClick={() => setIsOpen(false)}
             />
 
             <motion.aside
-              initial={{ x: isRtl ? "100%" : "-100%" }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: isRtl ? "100%" : "-100%" }}
+              exit={{ x: "100%" }}
               transition={{ type: "spring", bounce: 0.08, duration: 0.35 }}
-              className={`absolute top-0 bottom-0 ${isRtl ? "end-0" : "start-0"} flex w-[min(100%,20rem)] flex-col bg-card shadow-2xl`}
+              className="absolute top-0 bottom-0 end-0 flex w-[min(100%,20rem)] flex-col bg-card shadow-2xl"
             >
               <div className="flex items-center justify-between gap-3 border-b border-outline/30 px-5 py-4">
                 <Logo compact onNavigate={() => setIsOpen(false)} />
@@ -121,7 +119,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => setIsOpen(false)}
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted hover:bg-surface-raised hover:text-foreground transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40"
-                  aria-label="Close"
+                  aria-label="إغلاق"
                 >
                   <X className="h-5 w-5" />
                 </button>
@@ -146,21 +144,9 @@ export default function Navbar() {
               <div className="space-y-4 border-t border-outline/30 px-5 py-5">
                 <div className="space-y-2">
                   <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
-                    {isRtl ? "اللغة" : "Language"}
+                    المظهر
                   </p>
-                  <LanguageSwitch fullWidth />
-                </div>
-
-                <div className="space-y-2">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-muted">
-                    {isRtl ? "المظهر" : "Appearance"}
-                  </p>
-                  <ThemeSwitch
-                    theme={theme}
-                    onToggle={toggleTheme}
-                    isRtl={isRtl}
-                    fullWidth
-                  />
+                  <ThemeSwitch theme={theme} onToggle={toggleTheme} fullWidth />
                 </div>
 
                 <Link
@@ -184,12 +170,10 @@ export default function Navbar() {
 function ThemeSwitch({
   theme,
   onToggle,
-  isRtl,
   fullWidth = false,
 }: {
   theme: "light" | "dark";
   onToggle: () => void;
-  isRtl: boolean;
   fullWidth?: boolean;
 }) {
   const isDark = theme === "dark";
@@ -200,15 +184,7 @@ function ThemeSwitch({
       role="switch"
       dir="ltr"
       aria-checked={isDark}
-      aria-label={
-        isDark
-          ? isRtl
-            ? "الوضع الفاتح"
-            : "Light mode"
-          : isRtl
-            ? "الوضع الداكن"
-            : "Dark mode"
-      }
+      aria-label={isDark ? "الوضع الفاتح" : "الوضع الداكن"}
       onClick={onToggle}
       className={`relative inline-flex items-center rounded-full border border-outline/50 bg-surface-raised p-1 cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 ${
         fullWidth ? "h-11 w-full" : "h-9 w-[5.75rem]"
@@ -226,7 +202,7 @@ function ThemeSwitch({
         } ${!isDark ? "text-on-brand" : "text-muted"}`}
       >
         <Sun className="h-3.5 w-3.5 shrink-0" />
-        {fullWidth ? (isRtl ? "فاتح" : "Light") : null}
+        {fullWidth ? "فاتح" : null}
       </span>
       <span
         className={`relative z-10 flex flex-1 items-center justify-center gap-1.5 font-semibold transition-colors ${
@@ -234,7 +210,7 @@ function ThemeSwitch({
         } ${isDark ? "text-on-brand" : "text-muted"}`}
       >
         <Moon className="h-3.5 w-3.5 shrink-0" />
-        {fullWidth ? (isRtl ? "داكن" : "Dark") : null}
+        {fullWidth ? "داكن" : null}
       </span>
     </button>
   );

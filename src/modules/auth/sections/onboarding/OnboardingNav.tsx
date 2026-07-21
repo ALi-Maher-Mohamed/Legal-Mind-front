@@ -23,9 +23,9 @@ export default function OnboardingNav({
   onSkip,
   onDot,
 }: Props) {
-  const { t, isRtl } = useLanguage();
-  const PrevIcon = isRtl ? ChevronRight : ChevronLeft;
-  const NextIcon = isRtl ? ChevronLeft : ChevronRight;
+  const { t } = useLanguage();
+  const PrevIcon = ChevronRight;
+  const NextIcon = ChevronLeft;
 
   return (
     <div className="space-y-5">

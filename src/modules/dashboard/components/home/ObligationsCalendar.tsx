@@ -8,16 +8,13 @@ import DashPanel from '../ui/DashPanel';
 import ObligationRow from './ObligationRow';
 
 const HIGHLIGHTED = [14, 22, 28];
+const WEEKDAYS = ['إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد'];
 
 export default function ObligationsCalendar() {
-  const { t, locale } = useLanguage();
-  const obligations = useMemo(() => getDeskObligations(locale), [locale]);
+  const { t } = useLanguage();
+  const obligations = useMemo(() => getDeskObligations(), []);
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const today = new Date().getDate();
-  const weekdays =
-    locale === 'ar'
-      ? ['إثنين', 'ثلاثاء', 'أربعاء', 'خميس', 'جمعة', 'سبت', 'أحد']
-      : ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
   return (
     <DashPanel>
@@ -32,7 +29,7 @@ export default function ObligationsCalendar() {
       </div>
 
       <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase text-muted">
-        {weekdays.map((d) => (
+        {WEEKDAYS.map((d) => (
           <span key={d}>{d}</span>
         ))}
       </div>
@@ -62,7 +59,7 @@ export default function ObligationsCalendar() {
           <ObligationRow
             key={ob.title}
             obligation={ob}
-            dayLabel={locale === 'ar' ? `${ob.day} يوليو` : `Jul ${ob.day}`}
+            dayLabel={`${ob.day} يوليو`}
           />
         ))}
       </div>
