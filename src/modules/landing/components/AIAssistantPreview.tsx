@@ -15,6 +15,10 @@ export default function AIAssistantPreview() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<Attachment[]>([]);
+  const [usedSuggestions, setUsedSuggestions] = useState<{
+    lease: boolean;
+    developer: boolean;
+  }>({ lease: false, developer: false });
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -55,6 +59,8 @@ export default function AIAssistantPreview() {
   };
 
   const handleSuggestion = (key: 'lease' | 'developer') => {
+    if (usedSuggestions[key]) return;
+    setUsedSuggestions((prev) => ({ ...prev, [key]: true }));
     if (key === 'lease') {
       handleSend('حلل عقد الإيجار المرفق', [
         { name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' },
@@ -63,6 +69,8 @@ export default function AIAssistantPreview() {
     }
     handleSend('صياغة عقد عمل لمطور برمجيات مستقل', []);
   };
+
+  const showSuggestions = !usedSuggestions.lease || !usedSuggestions.developer;
 
   return (
     <section className="bg-[#f0f4ff] py-16 md:py-20 dark:bg-surface-muted">
@@ -127,23 +135,29 @@ export default function AIAssistantPreview() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggestions */}
-          <div className="flex flex-wrap justify-center gap-2 border-t border-outline/20 px-4 py-3 sm:px-6">
-            <button
-              type="button"
-              onClick={() => handleSuggestion('lease')}
-              className="rounded-xl border border-outline px-3 py-1 text-[11px] text-muted hover:border-brand hover:text-brand transition"
-            >
-              {t.aiPreview.promptOne}
-            </button>
-            <button
-              type="button"
-              onClick={() => handleSuggestion('developer')}
-              className="rounded-xl border border-outline px-3 py-1 text-[11px] text-muted hover:border-brand hover:text-brand transition"
-            >
-              {t.aiPreview.promptTwo}
-            </button>
-          </div>
+          {/* Suggestions — each prompt hides only after it is clicked */}
+          {showSuggestions && (
+            <div className="flex flex-wrap justify-center gap-2 border-t border-outline/20 px-4 py-3 sm:px-6">
+              {!usedSuggestions.lease && (
+                <button
+                  type="button"
+                  onClick={() => handleSuggestion('lease')}
+                  className="rounded-xl border border-outline px-3 py-1 text-[11px] text-muted hover:border-brand hover:text-brand transition cursor-pointer"
+                >
+                  {t.aiPreview.promptOne}
+                </button>
+              )}
+              {!usedSuggestions.developer && (
+                <button
+                  type="button"
+                  onClick={() => handleSuggestion('developer')}
+                  className="rounded-xl border border-outline px-3 py-1 text-[11px] text-muted hover:border-brand hover:text-brand transition cursor-pointer"
+                >
+                  {t.aiPreview.promptTwo}
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Input */}
           <div className="flex items-center gap-3 border-t border-outline/40 bg-surface-raised px-4 py-3 sm:px-6 dark:bg-surface-raised">

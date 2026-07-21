@@ -10,6 +10,10 @@ export function useChatPreview() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<Attachment[]>([]);
+  const [suggestionsDismissed, setSuggestionsDismissed] = useState<{
+    lease: boolean;
+    developer: boolean;
+  }>({ lease: false, developer: false });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +72,8 @@ export function useChatPreview() {
   };
 
   const handleSuggestionClick = (promptKey: 'lease' | 'developer') => {
+    if (suggestionsDismissed[promptKey]) return;
+    setSuggestionsDismissed((prev) => ({ ...prev, [promptKey]: true }));
     if (promptKey === 'lease') {
       handleSend('حلل عقد الإيجار المرفق', [
         { name: 'lease_agreement_draft.pdf', size: 126900, type: 'application/pdf' },
@@ -83,6 +89,8 @@ export function useChatPreview() {
     setInputValue,
     isTyping,
     attachedFiles,
+    usedSuggestions: suggestionsDismissed,
+    showSuggestions: !suggestionsDismissed.lease || !suggestionsDismissed.developer,
     messagesEndRef,
     fileInputRef,
     handleSend,

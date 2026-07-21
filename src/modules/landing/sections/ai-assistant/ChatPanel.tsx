@@ -28,7 +28,8 @@ export default function ChatPanel() {
         messagesEndRef={chat.messagesEndRef}
       />
       <ChatSuggestions
-        visible={chat.messages.length === 0 && !chat.isTyping}
+        visible={chat.showSuggestions}
+        used={chat.usedSuggestions}
         onSelect={chat.handleSuggestionClick}
       />
       <ChatAttachmentBar files={chat.attachedFiles} onRemove={chat.removeAttachment} />

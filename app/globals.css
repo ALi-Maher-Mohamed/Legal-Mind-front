@@ -48,7 +48,10 @@ body {
   direction: inherit;
   text-align: start;
 }
-
+[dir="rtl"],
+[dir="rtl"] * {
+  font-family: var(--font-sans) !important;
+}
 .dark {
   color-scheme: dark;
 }

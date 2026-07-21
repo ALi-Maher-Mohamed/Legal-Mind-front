@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
-import { useThemeContext } from '@/lib/providers/ThemeProvider';
-import { Button } from '@/components/ui';
-import { ROUTES } from '@/config/routes';
-import { Shield, FileText, Scale, Activity } from 'lucide-react';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { useLanguage } from "@/hooks/useLanguage";
+import { useThemeContext } from "@/lib/providers/ThemeProvider";
+import { Button } from "@/components/ui";
+import { ROUTES } from "@/config/routes";
+import { Shield, FileText, Scale, Activity } from "lucide-react";
 
 export default function Hero() {
   const { t } = useLanguage();
@@ -48,13 +48,14 @@ export default function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full sm:w-auto sm:self-center lg:self-start">
               <Link href={ROUTES.login} className="w-full sm:w-auto">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                >
                   {t.hero.ctaStart}
                 </Button>
               </Link>
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                {t.hero.ctaDemo}
-              </Button>
             </div>
           </motion.div>
 
@@ -83,7 +84,11 @@ export default function Hero() {
 
             <div className="relative h-48 sm:h-64 w-full overflow-hidden rounded-2xl border border-outline bg-white shadow-xl dark:bg-surface dark:border-outline/40">
               <Image
-                src={theme === 'dark' ? '/images/hero-dark.png' : '/images/hero-light.png'}
+                src={
+                  theme === "dark"
+                    ? "/images/hero-dark.png"
+                    : "/images/hero-light.png"
+                }
                 alt=""
                 fill
                 priority
