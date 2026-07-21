@@ -1,7 +1,7 @@
-/** Arabic copy for the Gazette (Evidence Room) feature */
-export const gazetteCopy = {
-  eyebrow: 'ديوان الأدلة والمستندات الرقمية',
-  title: 'غرفة الجريدة والأدلة',
+/** Arabic copy for the Analysis (document audit) feature */
+export const analysisCopy = {
+  eyebrow: 'محرك التدقيق المعرفي',
+  title: 'تحليل المستندات',
   subtitle: 'ارفع الصكوك القانونية، دقّق البنود، واستعرض المخاطر والالتزامات.',
   searchPlaceholder: 'ابحث بالاسم أو الوسم...',
   dropTitle: 'أسقط مستنداتك القانونية هنا، سيادة المستشار',

@@ -29,12 +29,12 @@ export default function DashboardHome({ user, documents, onNavigate }: Props) {
       />
 
       {showEmpty ? (
-        <DeskEmptyState onEnterEvidence={() => onNavigate('evidence')} />
+        <DeskEmptyState onEnterEvidence={() => onNavigate('analysis')} />
       ) : (
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-8 lg:col-span-8">
             <StatsRow documents={documents} />
-            <DocumentsStrip documents={documents} onOpenLibrary={() => onNavigate('evidence')} />
+            <DocumentsStrip documents={documents} onOpenLibrary={() => onNavigate('analysis')} />
             <ActivityFeed />
           </div>
           <div className="space-y-8 lg:col-span-4">

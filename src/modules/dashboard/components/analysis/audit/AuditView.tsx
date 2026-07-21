@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import type { AuditTab, GazetteDocument } from '@/types/gazette.types';
+import type { AuditTab, AnalysisDocument } from '@/types/analysis.types';
 import AuditHeader from './AuditHeader';
 import DocumentViewer from './DocumentViewer';
 import AnalysisPanel from './AnalysisPanel';
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   highlightId: string | null;
   onHighlight: (id: string | null) => void;
   onBack: () => void;

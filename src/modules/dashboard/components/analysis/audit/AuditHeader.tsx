@@ -1,11 +1,11 @@
 'use client';
 
 import { ArrowRight, Download, Share2 } from 'lucide-react';
-import type { GazetteDocument } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../../data/gazetteCopy';
+import type { AnalysisDocument } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../data/analysisCopy';
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   onBack: () => void;
 };
 

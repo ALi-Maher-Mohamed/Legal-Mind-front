@@ -4,9 +4,12 @@ import { useLanguage } from '@/hooks/useLanguage';
 import type { DashboardView } from '@/types/dashboard.types';
 import DashPanel from './ui/DashPanel';
 
-const TITLE_KEY: Record<Exclude<DashboardView, 'dashboard'>, 'navConsultation' | 'navEvidence' | 'navDrafter' | 'navGazette' | 'navSettings'> = {
+const TITLE_KEY: Record<
+  Exclude<DashboardView, 'dashboard'>,
+  'navConsultation' | 'navAnalysis' | 'navDrafter' | 'navGazette' | 'navSettings'
+> = {
   consultation: 'navConsultation',
-  evidence: 'navEvidence',
+  analysis: 'navAnalysis',
   drafter: 'navDrafter',
   gazette: 'navGazette',
   settings: 'navSettings',

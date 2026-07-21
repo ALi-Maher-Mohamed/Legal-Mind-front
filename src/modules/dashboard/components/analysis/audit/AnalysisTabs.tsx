@@ -1,7 +1,7 @@
 'use client';
 
-import type { AuditTab } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../../data/gazetteCopy';
+import type { AuditTab } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../data/analysisCopy';
 
 const TABS: { id: AuditTab; label: string }[] = [
   { id: 'summary', label: c.tabSummary },

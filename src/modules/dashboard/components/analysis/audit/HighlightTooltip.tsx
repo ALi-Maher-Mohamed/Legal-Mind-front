@@ -1,7 +1,7 @@
 'use client';
 
 import { Sparkles, X } from 'lucide-react';
-import { gazetteCopy as c } from '../../../data/gazetteCopy';
+import { analysisCopy as c } from '../../../data/analysisCopy';
 
 const TOOLTIPS: Record<string, string> = {
   'cl-1':

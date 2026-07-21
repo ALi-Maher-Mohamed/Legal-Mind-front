@@ -1,7 +1,7 @@
 'use client';
 
 import { Grid, List, Search } from 'lucide-react';
-import { gazetteCopy as c } from '../../data/gazetteCopy';
+import { analysisCopy as c } from '../../data/analysisCopy';
 import { dashPanel } from '../../lib/panelStyles';
 
 type Props = {

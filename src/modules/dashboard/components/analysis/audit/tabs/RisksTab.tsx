@@ -1,7 +1,7 @@
 'use client';
 
-import type { GazetteDocument, RiskLevel } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../../../data/gazetteCopy';
+import type { AnalysisDocument, RiskLevel } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../../data/analysisCopy';
 
 const LEVEL_UI: Record<RiskLevel, { box: string; badge: string; label: string }> = {
   high: {
@@ -21,7 +21,7 @@ const LEVEL_UI: Record<RiskLevel, { box: string; badge: string; label: string }>
   },
 };
 
-type Props = { doc: GazetteDocument };
+type Props = { doc: AnalysisDocument };
 
 export default function RisksTab({ doc }: Props) {
   const risks = doc.risks ?? [];

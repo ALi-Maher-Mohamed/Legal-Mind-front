@@ -1,6 +1,6 @@
 'use client';
 
-import type { AuditTab, GazetteDocument } from '@/types/gazette.types';
+import type { AuditTab, AnalysisDocument } from '@/types/analysis.types';
 import { dashPanel } from '../../../lib/panelStyles';
 import AnalysisTabs from './AnalysisTabs';
 import SummaryTab from './tabs/SummaryTab';
@@ -10,7 +10,7 @@ import TimelineTab from './tabs/TimelineTab';
 import PartiesTab from './tabs/PartiesTab';
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   activeTab: AuditTab;
   onTabChange: (tab: AuditTab) => void;
 };

@@ -1,12 +1,12 @@
 'use client';
 
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 import DocumentFolderCard from './DocumentFolderCard';
 
 type Props = {
-  documents: GazetteDocument[];
+  documents: AnalysisDocument[];
   analyzingId: string | null;
-  onOpen: (doc: GazetteDocument) => void;
+  onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
 };
 

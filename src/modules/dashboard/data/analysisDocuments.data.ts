@@ -1,7 +1,7 @@
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 import { APEX_ANALYSIS } from './apexAnalysis.data';
 
-export const GAZETTE_DOCUMENTS: GazetteDocument[] = [
+export const ANALYSIS_DOCUMENTS: AnalysisDocument[] = [
   {
     id: 'doc-1',
     name: 'Apex_NDA_Final.pdf',

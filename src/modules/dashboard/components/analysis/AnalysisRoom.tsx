@@ -1,11 +1,11 @@
 'use client';
 
-import { useGazetteRoom } from '../../hooks/useGazetteRoom';
+import { useAnalysisRoom } from '../../hooks/useAnalysisRoom';
 import LibraryWorkspace from './LibraryWorkspace';
 import AuditView from './audit/AuditView';
 
-export default function GazetteRoom() {
-  const room = useGazetteRoom();
+export default function AnalysisRoom() {
+  const room = useAnalysisRoom();
 
   if (room.activeDoc) {
     const live =

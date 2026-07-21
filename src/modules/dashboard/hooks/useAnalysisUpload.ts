@@ -1,14 +1,14 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import type { UploadPayload } from '@/types/gazette.types';
-import { inferDocType } from '../lib/filterGazetteDocs';
+import type { UploadPayload } from '@/types/analysis.types';
+import { inferDocType } from '../lib/filterAnalysisDocs';
 
 type Options = {
   onUpload: (payload: UploadPayload) => Promise<void>;
 };
 
-export function useGazetteUpload({ onUpload }: Options) {
+export function useAnalysisUpload({ onUpload }: Options) {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadingName, setUploadingName] = useState('');

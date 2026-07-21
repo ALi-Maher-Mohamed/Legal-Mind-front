@@ -1,14 +1,14 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import type { GazetteDocument, UploadPayload } from '@/types/gazette.types';
-import { GAZETTE_DOCUMENTS } from '../data/gazetteDocuments.data';
+import type { AnalysisDocument, UploadPayload } from '@/types/analysis.types';
+import { ANALYSIS_DOCUMENTS } from '../data/analysisDocuments.data';
 import { buildMockAnalysis } from '../lib/buildMockAnalysis';
-import { filterGazetteDocs } from '../lib/filterGazetteDocs';
+import { filterAnalysisDocs } from '../lib/filterAnalysisDocs';
 
-export function useGazetteRoom() {
-  const [documents, setDocuments] = useState<GazetteDocument[]>(GAZETTE_DOCUMENTS);
-  const [activeDoc, setActiveDoc] = useState<GazetteDocument | null>(null);
+export function useAnalysisRoom() {
+  const [documents, setDocuments] = useState<AnalysisDocument[]>(ANALYSIS_DOCUMENTS);
+  const [activeDoc, setActiveDoc] = useState<AnalysisDocument | null>(null);
   const [isListView, setIsListView] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('ALL');
@@ -16,12 +16,12 @@ export function useGazetteRoom() {
   const [highlightId, setHighlightId] = useState<string | null>(null);
 
   const filteredDocs = useMemo(
-    () => filterGazetteDocs(documents, searchQuery, filterType),
+    () => filterAnalysisDocs(documents, searchQuery, filterType),
     [documents, searchQuery, filterType],
   );
 
   const uploadDocument = useCallback(async (payload: UploadPayload) => {
-    const doc: GazetteDocument = {
+    const doc: AnalysisDocument = {
       id: `doc-${Date.now()}`,
       name: payload.name,
       type: payload.type,
@@ -45,7 +45,7 @@ export function useGazetteRoom() {
     setAnalyzingId(null);
   }, []);
 
-  const openAudit = useCallback((doc: GazetteDocument) => {
+  const openAudit = useCallback((doc: AnalysisDocument) => {
     setActiveDoc(doc);
     setHighlightId(null);
   }, []);

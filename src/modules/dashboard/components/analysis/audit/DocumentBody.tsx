@@ -1,12 +1,12 @@
 'use client';
 
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 
 const mark =
   'cursor-pointer rounded-sm border-b-2 px-1 py-0.5 font-medium transition';
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   onHighlight: (id: string) => void;
 };
 

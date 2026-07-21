@@ -1,10 +1,10 @@
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 
-export function filterGazetteDocs(
-  documents: GazetteDocument[],
+export function filterAnalysisDocs(
+  documents: AnalysisDocument[],
   searchQuery: string,
   filterType: string,
-): GazetteDocument[] {
+): AnalysisDocument[] {
   const q = searchQuery.trim().toLowerCase();
   return documents.filter((doc) => {
     const matchesSearch =

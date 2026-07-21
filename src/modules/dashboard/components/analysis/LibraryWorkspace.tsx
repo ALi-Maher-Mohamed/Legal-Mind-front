@@ -1,15 +1,15 @@
 'use client';
 
-import type { GazetteDocument } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../data/gazetteCopy';
-import { useGazetteUpload } from '../../hooks/useGazetteUpload';
+import type { AnalysisDocument } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../data/analysisCopy';
+import { useAnalysisUpload } from '../../hooks/useAnalysisUpload';
 import UploadZone from './UploadZone';
 import LibraryToolbar from './LibraryToolbar';
 import DocumentGrid from './DocumentGrid';
 import DocumentList from './DocumentList';
 
 type Props = {
-  documents: GazetteDocument[];
+  documents: AnalysisDocument[];
   isListView: boolean;
   setIsListView: (v: boolean) => void;
   searchQuery: string;
@@ -18,12 +18,12 @@ type Props = {
   setFilterType: (v: string) => void;
   analyzingId: string | null;
   onUpload: (p: { name: string; size: string; content: string; type: string }) => Promise<void>;
-  onOpen: (doc: GazetteDocument) => void;
+  onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
 };
 
 export default function LibraryWorkspace(props: Props) {
-  const upload = useGazetteUpload({ onUpload: props.onUpload });
+  const upload = useAnalysisUpload({ onUpload: props.onUpload });
 
   return (
     <div className="space-y-6 sm:space-y-8">

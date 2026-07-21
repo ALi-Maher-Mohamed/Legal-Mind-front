@@ -1,7 +1,7 @@
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 
 export const APEX_ANALYSIS: Pick<
-  GazetteDocument,
+  AnalysisDocument,
   'summary' | 'clauses' | 'risks' | 'timeline' | 'parties'
 > = {
   summary:

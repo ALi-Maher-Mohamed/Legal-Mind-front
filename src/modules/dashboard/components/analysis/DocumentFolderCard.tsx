@@ -1,14 +1,14 @@
 'use client';
 
 import { ChevronLeft, Folder } from 'lucide-react';
-import type { GazetteDocument } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../data/gazetteCopy';
+import type { AnalysisDocument } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../data/analysisCopy';
 import { dashPanel } from '../../lib/panelStyles';
 
 const ACCENTS = ['border-t-brand', 'border-t-accent', 'border-t-brand-deep', 'border-t-success'];
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   index: number;
   analyzing: boolean;
   onOpen: () => void;

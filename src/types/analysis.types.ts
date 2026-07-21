@@ -37,14 +37,14 @@ export type DocumentParty = {
   obligations: string;
 };
 
-export type GazetteDocStatus = 'Analysis Complete' | 'Pending Review';
+export type AnalysisDocStatus = 'Analysis Complete' | 'Pending Review';
 
-export type GazetteDocument = {
+export type AnalysisDocument = {
   id: string;
   name: string;
   type: string;
   size: string;
-  status: GazetteDocStatus;
+  status: AnalysisDocStatus;
   dateUploaded: string;
   tags: string[];
   content?: string;

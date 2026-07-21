@@ -202,7 +202,7 @@ export const translations = {
       backDesk: "العودة للمكتب",
       navDashboard: "المكتب",
       navConsultation: "المشورة",
-      navEvidence: "الأدلة",
+      navAnalysis: "التحليل",
       navDrafter: "الصياغة",
       navGazette: "الجريدة",
       navSettings: "الإعدادات",

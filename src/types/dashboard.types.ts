@@ -1,7 +1,7 @@
 export type DashboardView =
   | 'dashboard'
   | 'consultation'
-  | 'evidence'
+  | 'analysis'
   | 'drafter'
   | 'gazette'
   | 'settings';

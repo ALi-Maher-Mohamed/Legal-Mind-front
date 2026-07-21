@@ -1,7 +1,7 @@
 'use client';
 
 import { FileText, Upload } from 'lucide-react';
-import { gazetteCopy as c } from '../../data/gazetteCopy';
+import { analysisCopy as c } from '../../data/analysisCopy';
 import { dashPanel } from '../../lib/panelStyles';
 
 type Props = {
@@ -36,7 +36,7 @@ export default function UploadZone({
     >
       <input
         type="file"
-        id="gazette-file-selector"
+        id="analysis-file-selector"
         onChange={onFileSelect}
         accept=".txt,.pdf,.docx"
         className="hidden"
@@ -65,7 +65,7 @@ export default function UploadZone({
           <p className="mt-1 max-w-sm text-xs leading-relaxed text-muted">{c.dropHint}</p>
           <button
             type="button"
-            onClick={() => document.getElementById('gazette-file-selector')?.click()}
+            onClick={() => document.getElementById('analysis-file-selector')?.click()}
             className="mt-5 rounded-lg bg-brand px-5 py-2.5 text-xs font-bold text-on-brand transition hover:opacity-90 cursor-pointer"
           >
             {c.locateFile}

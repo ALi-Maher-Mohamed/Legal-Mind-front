@@ -1,7 +1,7 @@
-import type { GazetteDocument } from '@/types/gazette.types';
+import type { AnalysisDocument } from '@/types/analysis.types';
 
 /** Simulated AI audit payload applied after "Run Audit" */
-export function buildMockAnalysis(doc: GazetteDocument): Partial<GazetteDocument> {
+export function buildMockAnalysis(doc: AnalysisDocument): Partial<AnalysisDocument> {
   return {
     status: 'Analysis Complete',
     summary: `تم تحليل المستند «${doc.name}» وفهرسة بنوده الأساسية للمراجعة.`,

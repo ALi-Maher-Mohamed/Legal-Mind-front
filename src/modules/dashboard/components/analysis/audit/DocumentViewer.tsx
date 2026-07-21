@@ -1,13 +1,13 @@
 'use client';
 
-import type { GazetteDocument } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../../data/gazetteCopy';
+import type { AnalysisDocument } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../data/analysisCopy';
 import { dashPanel } from '../../../lib/panelStyles';
 import HighlightTooltip from './HighlightTooltip';
 import DocumentBody from './DocumentBody';
 
 type Props = {
-  doc: GazetteDocument;
+  doc: AnalysisDocument;
   highlightId: string | null;
   onHighlight: (id: string | null) => void;
   onInspectTab: (tab: 'risks' | 'clauses') => void;

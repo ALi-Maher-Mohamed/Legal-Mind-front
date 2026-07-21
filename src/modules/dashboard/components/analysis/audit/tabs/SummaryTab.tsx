@@ -1,10 +1,10 @@
 'use client';
 
 import { AlertTriangle, Check } from 'lucide-react';
-import type { GazetteDocument } from '@/types/gazette.types';
-import { gazetteCopy as c } from '../../../../data/gazetteCopy';
+import type { AnalysisDocument } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../../data/analysisCopy';
 
-type Props = { doc: GazetteDocument };
+type Props = { doc: AnalysisDocument };
 
 export default function SummaryTab({ doc }: Props) {
   return (
