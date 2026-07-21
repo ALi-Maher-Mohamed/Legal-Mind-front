@@ -10,6 +10,7 @@ import type { DashboardView } from "@/types/dashboard.types";
 import { MOCK_DOCUMENTS } from "../data/mockDocuments";
 import DashboardShell from "../components/shell/DashboardShell";
 import DashboardHome from "../components/home/DashboardHome";
+import GazetteRoom from "../components/gazette/GazetteRoom";
 import ComingSoonPanel from "../components/ComingSoonPanel";
 
 export default function DashboardPage() {
@@ -46,6 +47,8 @@ export default function DashboardPage() {
           documents={MOCK_DOCUMENTS}
           onNavigate={setView}
         />
+      ) : view === "gazette" ? (
+        <GazetteRoom />
       ) : (
         <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}
