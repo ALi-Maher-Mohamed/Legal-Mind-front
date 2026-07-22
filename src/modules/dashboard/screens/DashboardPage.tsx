@@ -11,6 +11,7 @@ import { MOCK_DOCUMENTS } from "../data/mockDocuments";
 import DashboardShell from "../components/shell/DashboardShell";
 import DashboardHome from "../components/home/DashboardHome";
 import AnalysisRoom from "../components/analysis/AnalysisRoom";
+import ConsultationRoom from "../components/consultation/ConsultationRoom";
 import ComingSoonPanel from "../components/ComingSoonPanel";
 
 export default function DashboardPage() {
@@ -49,6 +50,8 @@ export default function DashboardPage() {
         />
       ) : view === "analysis" ? (
         <AnalysisRoom />
+      ) : view === "consultation" ? (
+        <ConsultationRoom />
       ) : (
         <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}
