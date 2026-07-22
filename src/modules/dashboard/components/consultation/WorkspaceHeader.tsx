@@ -64,7 +64,7 @@ export default function WorkspaceHeader({
           type="button"
           onClick={onOpenHistory}
           title={c.priorLogs}
-          className="inline-flex items-center gap-1 rounded-lg border border-brand/15 bg-[#f0f4ff] p-2 text-muted hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="inline-flex items-center gap-1 rounded-lg border border-brand/15 bg-[#f0f4ff] p-2 text-muted hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer lg:hidden"
         >
           <History className="h-3.5 w-3.5" />
           <span className="hidden text-[10px] font-bold uppercase sm:inline">{c.priorLogs}</span>

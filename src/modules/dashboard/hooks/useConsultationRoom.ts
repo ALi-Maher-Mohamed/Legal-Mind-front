@@ -1,15 +1,28 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import type { ContextType, Conversation, Citation } from '@/types/consultation.types';
+import type { Conversation, Citation } from '@/types/consultation.types';
 import { CONSULT_CONVERSATIONS } from '../data/consultConversations.data';
 import { consultCopy as c } from '../data/consultCopy';
 import { buildMockReply, collectCitations } from '../lib/consultHelpers';
 import { useSpeechRead } from './useSpeechRead';
 
+function freshGeneral(): Conversation {
+  return {
+    id: `conv-${Date.now()}`,
+    title: c.newTitles.general,
+    contextType: 'general',
+    messages: [],
+  };
+}
+
 export function useConsultationRoom() {
-  const [conversations, setConversations] = useState<Conversation[]>(CONSULT_CONVERSATIONS);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [boot] = useState(() => {
+    const fresh = freshGeneral();
+    return { conversations: [fresh, ...CONSULT_CONVERSATIONS], activeId: fresh.id };
+  });
+  const [conversations, setConversations] = useState(boot.conversations);
+  const [activeId, setActiveId] = useState(boot.activeId);
   const [inputText, setInputText] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -18,23 +31,27 @@ export function useConsultationRoom() {
   const [viewerSource, setViewerSource] = useState<Citation | null>(null);
 
   const activeConv = useMemo(
-    () => conversations.find((c) => c.id === activeId) ?? null,
+    () => conversations.find((conv) => conv.id === activeId) ?? conversations[0],
     [conversations, activeId],
   );
   const citations = useMemo(
-    () => (activeConv ? collectCitations(activeConv.messages) : []),
+    () => collectCitations(activeConv.messages),
     [activeConv],
   );
   const speech = useSpeechRead(activeId);
 
-  const createConversation = useCallback((type: ContextType) => {
-    const id = `conv-${Date.now()}`;
-    setConversations((prev) => [
-      { id, title: c.newTitles[type], contextType: type, messages: [] },
-      ...prev,
-    ]);
+  const createGeneral = useCallback(() => {
+    const fresh = freshGeneral();
+    setConversations((prev) => [fresh, ...prev]);
+    setActiveId(fresh.id);
+    setShowHistory(false);
+    setInputText('');
+  }, []);
+
+  const selectConversation = useCallback((id: string) => {
     setActiveId(id);
     setShowHistory(false);
+    setInputText('');
   }, []);
 
   const sendMessage = useCallback(
@@ -53,18 +70,14 @@ export function useConsultationRoom() {
       };
       setConversations((prev) =>
         prev.map((conv) =>
-          conv.id === activeId
-            ? { ...conv, messages: [...conv.messages, userMsg] }
-            : conv,
+          conv.id === activeId ? { ...conv, messages: [...conv.messages, userMsg] } : conv,
         ),
       );
       await new Promise((r) => setTimeout(r, 1100));
       const reply = buildMockReply(text.trim());
       setConversations((prev) =>
         prev.map((conv) =>
-          conv.id === activeId
-            ? { ...conv, messages: [...conv.messages, reply] }
-            : conv,
+          conv.id === activeId ? { ...conv, messages: [...conv.messages, reply] } : conv,
         ),
       );
       setIsSending(false);
@@ -91,9 +104,9 @@ export function useConsultationRoom() {
     setActiveCitation,
     viewerSource,
     setViewerSource,
-    createConversation,
+    createGeneral,
     sendMessage,
-    selectConversation: setActiveId,
+    selectConversation,
     flashToast,
     ...speech,
   };
