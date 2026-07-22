@@ -1,20 +1,35 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Sans_Arabic, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { LanguageProvider } from '@/lib/providers/LanguageProvider';
 import { ThemeProvider } from '@/lib/providers/ThemeProvider';
 import { buildThemeStyleTag } from '@/config/theme';
 
-const ibmPlexArabic = IBM_Plex_Sans_Arabic({
+const ibmPlexArabic = localFont({
+  src: [
+    {
+      path: './fonts/IBMPlexSansArabic-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './fonts/IBMPlexSansArabic-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './fonts/IBMPlexSansArabic-SemiBold.woff2',
+      weight: '600',
+      style: 'normal',
+    },
+    {
+      path: './fonts/IBMPlexSansArabic-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
   variable: '--font-ibm-plex-arabic',
-  subsets: ['arabic', 'latin'],
-  weight: ['400', '500', '600', '700'],
   display: 'swap',
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
@@ -41,7 +56,7 @@ export default function RootLayout({
       lang="ar"
       dir="rtl"
       data-locale="ar"
-      className={`${ibmPlexArabic.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
+      className={`${ibmPlexArabic.variable} h-full antialiased scroll-smooth`}
     >
       <head>
         <style
