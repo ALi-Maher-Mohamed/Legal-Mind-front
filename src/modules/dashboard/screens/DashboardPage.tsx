@@ -12,6 +12,7 @@ import DashboardShell from "../components/shell/DashboardShell";
 import DashboardHome from "../components/home/DashboardHome";
 import AnalysisRoom from "../components/analysis/AnalysisRoom";
 import ConsultationRoom from "../components/consultation/ConsultationRoom";
+import DraftersStudio from "../components/drafter/DraftersStudio";
 import ComingSoonPanel from "../components/ComingSoonPanel";
 
 export default function DashboardPage() {
@@ -52,6 +53,8 @@ export default function DashboardPage() {
         <AnalysisRoom />
       ) : view === "consultation" ? (
         <ConsultationRoom />
+      ) : view === "drafter" ? (
+        <DraftersStudio />
       ) : (
         <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}
