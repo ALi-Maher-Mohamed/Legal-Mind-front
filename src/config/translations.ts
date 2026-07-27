@@ -242,6 +242,18 @@ export const translations = {
     resetBtn: "تحديث كلمة المرور",
     resetSuccess: "تم تحديث كلمة المرور. يمكنك تسجيل الدخول الآن.",
     backToLogin: "العودة لتسجيل الدخول",
+    verifyEmailTitle: "تأكيد البريد الإلكتروني",
+    verifyEmailChecking: "جاري التحقق من رابط التفعيل...",
+    verifyEmailSuccessTitle: "تم تأكيد بريدك بنجاح",
+    verifyEmailSuccessDesc:
+      "حسابك جاهز الآن. يمكنك تسجيل الدخول إلى مساحة عمل ليجال مايند.",
+    verifyEmailMissingTitle: "رابط التفعيل غير مكتمل",
+    verifyEmailMissingDesc:
+      "لم نعثر على رمز التفعيل في الرابط. افتح الرابط كاملاً من رسالة البريد.",
+    verifyEmailErrorTitle: "تعذّر تأكيد البريد",
+    verifyEmailErrorDesc:
+      "رابط التفعيل غير صالح أو منتهٍ الصلاحية. اطلب رابطاً جديداً من شاشة تسجيل الدخول.",
+    verifyEmailRetry: "إعادة المحاولة",
     otpInvalid: "رمز غير صالح أو منتهٍ. جرّب 123456 في العرض التجريبي.",
     passwordMismatch: "كلمتا المرور غير متطابقتين.",
     loginBtn: "تسجيل الدخول",

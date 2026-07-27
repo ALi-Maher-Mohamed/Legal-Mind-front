@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useLanguage } from '@/hooks/useLanguage';
+import { useLanguage } from "@/hooks/useLanguage";
 
 export default function AuthBrandPanel() {
   const { t } = useLanguage();
@@ -19,7 +19,10 @@ export default function AuthBrandPanel() {
       </div>
 
       <div className="relative z-10 my-auto max-w-md space-y-6 text-start">
-        <span className="text-5xl text-brand/80 font-serif leading-none" aria-hidden>
+        <span
+          className="text-5xl text-brand/80 font-serif leading-none"
+          aria-hidden
+        >
           “
         </span>
         <blockquote className="text-2xl xl:text-3xl font-medium leading-relaxed text-[#dae2fd] -mt-4">
@@ -29,7 +32,9 @@ export default function AuthBrandPanel() {
           <cite className="not-italic font-semibold text-sm tracking-wider text-accent block">
             {t.auth.brandCite}
           </cite>
-          <span className="text-xs text-[#c4c6cf] tracking-wider">{t.auth.brandCiteSub}</span>
+          <span className="text-xs text-[#c4c6cf] tracking-wider">
+            {t.auth.brandCiteSub}
+          </span>
         </div>
       </div>
 

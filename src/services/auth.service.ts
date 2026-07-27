@@ -48,6 +48,16 @@ export const authService = {
     return { success: true };
   },
 
+  async verifyEmail(token: string): Promise<{ success: boolean }> {
+    await delay(900);
+    const value = token.trim();
+    // Demo: accept any non-empty token (wire to backend when available).
+    if (!value || value.length < 16) {
+      throw new Error('Invalid or expired token');
+    }
+    return { success: true };
+  },
+
   async resetPassword(payload: ResetPasswordPayload): Promise<{ success: boolean }> {
     await delay(700);
     if (!payload.password || payload.password.length < 6) {
