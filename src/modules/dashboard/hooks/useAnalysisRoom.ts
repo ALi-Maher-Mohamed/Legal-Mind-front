@@ -24,6 +24,7 @@ export function useAnalysisRoom() {
   const [analyzingId, setAnalyzingId] = useState<string | null>(null);
   const [highlightId, setHighlightId] = useState<string | null>(null);
   const [isLoadingList, setIsLoadingList] = useState(true);
+  const [isOpeningAudit, setIsOpeningAudit] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<AnalysisDocument | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const pollTimers = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
@@ -175,8 +176,12 @@ export function useAnalysisRoom() {
     setActiveDoc(doc);
     setHighlightId(null);
 
-    if (doc.result) return;
+    if (doc.result) {
+      setIsOpeningAudit(false);
+      return;
+    }
 
+    setIsOpeningAudit(true);
     try {
       const detail = await analyzeService.getJob(doc.id);
       const mapped = mapJobDetailToDocument(detail, doc);
@@ -184,12 +189,16 @@ export function useAnalysisRoom() {
       setActiveDoc(mapped);
     } catch (error) {
       toastApiError(error, c.openError);
+      setActiveDoc(null);
+    } finally {
+      setIsOpeningAudit(false);
     }
   }, [applyJobUpdate]);
 
   const closeAudit = useCallback(() => {
     setActiveDoc(null);
     setHighlightId(null);
+    setIsOpeningAudit(false);
   }, []);
 
   const downloadReport = useCallback(async (doc: AnalysisDocument) => {
@@ -235,6 +244,7 @@ export function useAnalysisRoom() {
     highlightId,
     setHighlightId,
     isLoadingList,
+    isOpeningAudit,
     deleteTarget,
     isDeleting,
     uploadDocument,

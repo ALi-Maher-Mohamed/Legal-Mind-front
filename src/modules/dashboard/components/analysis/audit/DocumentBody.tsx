@@ -13,18 +13,22 @@ const BORDER: Record<ComplianceStatus, string> = {
   missing: 'border-muted bg-muted/15 hover:bg-muted/25',
 };
 
+export type HighlightPoint = {
+  id: string;
+  x: number;
+  y: number;
+};
+
 type Props = {
   doc: AnalysisDocument;
-  onHighlight: (id: string) => void;
+  onHighlight: (point: HighlightPoint) => void;
 };
 
 export default function DocumentBody({ doc, onHighlight }: Props) {
   const clauses = doc.result?.clauses ?? [];
 
   if (clauses.length === 0) {
-    return (
-      <p className="text-sm italic text-muted">{c.noClauses}</p>
-    );
+    return <p className="text-sm italic text-muted">{c.noClauses}</p>;
   }
 
   return (
@@ -36,7 +40,13 @@ export default function DocumentBody({ doc, onHighlight }: Props) {
           </h4>
           <p className="mt-2">
             <span
-              onClick={() => onHighlight(cl.clause_id)}
+              onClick={(event) => {
+                onHighlight({
+                  id: cl.clause_id,
+                  x: event.clientX,
+                  y: event.clientY,
+                });
+              }}
               className={`${mark} ${BORDER[cl.compliance.status]}`}
             >
               {cl.clause_text}

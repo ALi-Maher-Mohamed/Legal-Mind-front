@@ -35,8 +35,8 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
       <section className="grid gap-5 lg:grid-cols-[1.4fr_0.9fr]">
         <ProfileDetailsCard user={user} />
         <div className="space-y-5">
-          <ProfileActivityCard user={user} />
           <ProfileDocumentCard user={user} />
+          <ProfileActivityCard user={user} />
         </div>
       </section>
 

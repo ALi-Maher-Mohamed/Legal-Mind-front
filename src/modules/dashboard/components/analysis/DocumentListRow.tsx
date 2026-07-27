@@ -36,10 +36,20 @@ export default function DocumentListRow({ doc, analyzing, onOpen, onAudit, onDel
         <div className="max-w-[16rem]">
           <p className="truncate font-bold text-foreground">{doc.name}</p>
           {doc.status === 'processing' ? (
-            <p className="mt-1 line-clamp-1 text-[10px] text-brand">
-              {doc.currentStage || c.analyzing}
-              {typeof doc.progress === 'number' ? ` • ${doc.progress}%` : ''}
-            </p>
+            <div className="mt-1.5 space-y-1">
+              <p className="line-clamp-1 text-[10px] text-brand">
+                {doc.currentStage || c.analyzing}
+                {typeof doc.progress === 'number' ? ` • ${doc.progress}%` : ''}
+              </p>
+              <div className="h-1 max-w-[10rem] overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
+                <div
+                  className="relative h-full overflow-hidden rounded-full bg-brand transition-all"
+                  style={{ width: `${Math.max(doc.progress ?? 8, 8)}%` }}
+                >
+                  <span className="lm-shimmer absolute inset-0 opacity-70" />
+                </div>
+              </div>
+            </div>
           ) : null}
           {doc.status === 'failed' && doc.error ? (
             <p className="mt-1 line-clamp-2 text-[10px] text-danger">{doc.error}</p>

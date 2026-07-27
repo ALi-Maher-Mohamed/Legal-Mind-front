@@ -7,6 +7,7 @@ import UploadZone from './UploadZone';
 import LibraryToolbar from './LibraryToolbar';
 import DocumentGrid from './DocumentGrid';
 import DocumentList from './DocumentList';
+import { LibraryGridSkeleton, LibraryListSkeleton } from './ui/AnalysisShimmer';
 
 type Props = {
   documents: AnalysisDocument[];
@@ -47,9 +48,11 @@ export default function LibraryWorkspace(props: Props) {
       />
 
       {props.isLoadingList ? (
-        <p className="rounded-2xl border border-brand/10 bg-white py-16 text-center text-sm text-muted dark:border-white/10 dark:bg-white/5">
-          {c.loadingLibrary}
-        </p>
+        props.isListView ? (
+          <LibraryListSkeleton />
+        ) : (
+          <LibraryGridSkeleton />
+        )
       ) : props.documents.length === 0 ? (
         <p className="rounded-2xl border border-brand/10 bg-white py-16 text-center text-sm italic text-muted dark:border-white/10 dark:bg-white/5">
           {c.emptyLibrary}

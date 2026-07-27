@@ -1,11 +1,39 @@
+import { env } from '@/config/env';
 import { api } from '@/lib/api/client';
+import { sessionStore } from '@/lib/api/session';
 import type {
   AnalyzeJobDetail,
   AnalyzeJobListItem,
+  ProgressLog,
   ProgressLogsResponse,
   StartAnalysisResponse,
   UploadJobResponse,
 } from '@/types/analysis.types';
+
+type StreamHandlers = {
+  onEvent: (event: ProgressLog) => void;
+  onError?: (error: Error) => void;
+  signal?: AbortSignal;
+};
+
+function parseSseChunk(chunk: string, onEvent: (event: ProgressLog) => void) {
+  const blocks = chunk.split(/\n\n/);
+  for (const block of blocks) {
+    const dataLines = block
+      .split('\n')
+      .filter((line) => line.startsWith('data:'))
+      .map((line) => line.slice(5).trim());
+
+    if (dataLines.length === 0) continue;
+
+    try {
+      const payload = JSON.parse(dataLines.join('\n')) as ProgressLog;
+      if (payload?.step) onEvent(payload);
+    } catch {
+      // ignore non-JSON keep-alives
+    }
+  }
+}
 
 export const analyzeService = {
   async listJobs(): Promise<AnalyzeJobListItem[]> {
@@ -58,5 +86,45 @@ export const analyzeService = {
     anchor.click();
     anchor.remove();
     URL.revokeObjectURL(url);
+  },
+
+  async streamProgress(jobId: string, handlers: StreamHandlers): Promise<void> {
+    const token = sessionStore.getAccessToken();
+    const response = await fetch(`${env.apiBaseUrl}/api/analyze/${jobId}/stream`, {
+      method: 'GET',
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      signal: handlers.signal,
+    });
+
+    if (!response.ok || !response.body) {
+      throw new Error('تعذّر فتح بث تقدم التحليل');
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    try {
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const parts = buffer.split(/\n\n/);
+        buffer = parts.pop() ?? '';
+
+        for (const part of parts) {
+          parseSseChunk(part, handlers.onEvent);
+        }
+      }
+
+      if (buffer.trim()) {
+        parseSseChunk(buffer, handlers.onEvent);
+      }
+    } catch (error) {
+      if ((error as Error)?.name === 'AbortError') return;
+      handlers.onError?.(error instanceof Error ? error : new Error('انقطع بث التقدم'));
+      throw error;
+    }
   },
 };

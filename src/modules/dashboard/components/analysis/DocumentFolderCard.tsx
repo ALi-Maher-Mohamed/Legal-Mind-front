@@ -88,15 +88,19 @@ export default function DocumentFolderCard({
             </p>
             <div className="h-1.5 overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
               <div
-                className="h-full bg-brand transition-all duration-500"
-                style={{ width: `${doc.progress ?? 5}%` }}
-              />
+                className="relative h-full overflow-hidden rounded-full bg-brand transition-all duration-500"
+                style={{ width: `${Math.max(doc.progress ?? 5, 8)}%` }}
+              >
+                <span className="lm-shimmer absolute inset-0 opacity-70" />
+              </div>
             </div>
             {doc.currentStep ? (
               <p className="text-[10px] text-muted">
                 {doc.currentStep} {c.progressOf}
               </p>
-            ) : null}
+            ) : (
+              <div className="lm-shimmer h-2.5 w-24 rounded" aria-hidden />
+            )}
           </div>
         ) : null}
 

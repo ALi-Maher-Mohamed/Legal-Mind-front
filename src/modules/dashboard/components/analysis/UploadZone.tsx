@@ -1,8 +1,9 @@
 'use client';
 
-import { FileText, Upload } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { analysisCopy as c } from '../../data/analysisCopy';
 import { dashPanel } from '../../lib/panelStyles';
+import { UploadSkeleton } from './ui/AnalysisShimmer';
 
 type Props = {
   isDragging: boolean;
@@ -43,16 +44,18 @@ export default function UploadZone({
       />
 
       {uploadProgress !== null ? (
-        <div className="mx-auto max-w-xs py-4">
-          <FileText className="mx-auto mb-3 h-8 w-8 animate-bounce text-accent" />
-          <h4 className="text-sm font-bold text-foreground">
+        <div className="mx-auto max-w-sm py-2">
+          <UploadSkeleton />
+          <h4 className="mt-1 text-sm font-bold text-foreground">
             {c.indexing}: {uploadingName}
           </h4>
-          <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
+          <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
             <div
-              className="h-full bg-accent transition-all duration-300"
+              className="relative h-full overflow-hidden rounded-full bg-accent transition-all duration-300"
               style={{ width: `${uploadProgress}%` }}
-            />
+            >
+              <span className="lm-shimmer absolute inset-0 rounded-full opacity-60" />
+            </div>
           </div>
           <span className="mt-2 block text-[10px] text-muted">
             {uploadProgress}% {c.complete}

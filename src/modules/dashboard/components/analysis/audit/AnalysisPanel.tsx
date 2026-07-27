@@ -7,6 +7,7 @@ import SummaryTab from './tabs/SummaryTab';
 import ClausesTab from './tabs/ClausesTab';
 import RisksTab from './tabs/RisksTab';
 import RecommendationsTab from './tabs/RecommendationsTab';
+import PartiesTab from './tabs/PartiesTab';
 
 type Props = {
   doc: AnalysisDocument;
@@ -23,6 +24,7 @@ export default function AnalysisPanel({ doc, activeTab, onTabChange }: Props) {
         {activeTab === 'clauses' && <ClausesTab doc={doc} />}
         {activeTab === 'risks' && <RisksTab doc={doc} />}
         {activeTab === 'recommendations' && <RecommendationsTab doc={doc} />}
+        {activeTab === 'parties' && <PartiesTab doc={doc} />}
       </div>
     </div>
   );

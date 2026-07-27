@@ -8,6 +8,7 @@ const TABS: { id: AuditTab; label: string }[] = [
   { id: 'clauses', label: c.tabClauses },
   { id: 'risks', label: c.tabRisks },
   { id: 'recommendations', label: c.tabRecommendations },
+  { id: 'parties', label: c.tabParties },
 ];
 
 type Props = {

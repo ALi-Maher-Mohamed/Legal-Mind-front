@@ -146,7 +146,12 @@ export type AnalysisDocument = {
   result?: AnalysisResult;
 };
 
-export type AuditTab = 'summary' | 'clauses' | 'risks' | 'recommendations';
+export type AuditTab =
+  | 'summary'
+  | 'clauses'
+  | 'risks'
+  | 'recommendations'
+  | 'parties';
 
 export type UploadPayload = {
   file: File;

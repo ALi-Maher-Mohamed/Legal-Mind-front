@@ -5,6 +5,7 @@ import { analysisCopy as c } from '../../data/analysisCopy';
 import ConfirmModal from '../ui/ConfirmModal';
 import LibraryWorkspace from './LibraryWorkspace';
 import AuditView from './audit/AuditView';
+import { AuditViewSkeleton } from './ui/AnalysisShimmer';
 
 export default function AnalysisRoom() {
   const room = useAnalysisRoom();
@@ -12,13 +13,17 @@ export default function AnalysisRoom() {
   return (
     <>
       {room.activeDoc ? (
-        <AuditView
-          doc={room.documents.find((d) => d.id === room.activeDoc?.id) ?? room.activeDoc}
-          highlightId={room.highlightId}
-          onHighlight={room.setHighlightId}
-          onBack={room.closeAudit}
-          onDownload={() => void room.downloadReport(room.activeDoc!)}
-        />
+        room.isOpeningAudit || !room.activeDoc.result ? (
+          <AuditViewSkeleton onBack={room.closeAudit} />
+        ) : (
+          <AuditView
+            doc={room.documents.find((d) => d.id === room.activeDoc?.id) ?? room.activeDoc}
+            highlightId={room.highlightId}
+            onHighlight={room.setHighlightId}
+            onBack={room.closeAudit}
+            onDownload={() => void room.downloadReport(room.activeDoc!)}
+          />
+        )
       ) : (
         <LibraryWorkspace
           documents={room.filteredDocs}
