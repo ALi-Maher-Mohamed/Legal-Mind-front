@@ -33,7 +33,7 @@ function validateStep(step: number, draft: RegisterDraft): string | null {
   return null;
 }
 
-export function useRegisterForm(onComplete: () => void) {
+export function useRegisterForm(onComplete: (email: string) => void) {
   const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<RegisterDraft>(initialDraft);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +69,7 @@ export function useRegisterForm(onComplete: () => void) {
     try {
       const result = await authService.register(draft);
       toastApiSuccess(result.message);
-      onComplete();
+      onComplete(draft.email.trim());
     } catch (error) {
       toastApiError(error, 'تعذّر إنشاء الحساب');
     } finally {

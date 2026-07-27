@@ -260,6 +260,11 @@ export const translations = {
     verifyEmailErrorDesc:
       "رابط التفعيل غير صالح أو منتهٍ الصلاحية. اطلب رابطاً جديداً من شاشة تسجيل الدخول.",
     verifyEmailRetry: "إعادة المحاولة",
+    checkEmailTitle: "تحقق من بريدك الإلكتروني",
+    checkEmailSubtitle:
+      "أرسلنا رابط تفعيل إلى {email}. افتح الرسالة واضغط على الرابط لإكمال إنشاء حسابك.",
+    checkEmailHint: "لم تصلك الرسالة؟ راجع مجلد الرسائل غير المرغوب فيها أو أعد الإرسال.",
+    resendVerificationBtn: "إعادة إرسال رابط التفعيل",
     otpInvalid: "رمز غير صالح أو منتهٍ. جرّب 123456 في العرض التجريبي.",
     passwordMismatch: "كلمتا المرور غير متطابقتين.",
     loginBtn: "تسجيل الدخول",

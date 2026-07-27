@@ -9,7 +9,7 @@ import RegisterStepPractices from './RegisterStepPractices';
 import RegisterControls from './RegisterControls';
 
 type Props = {
-  onComplete: () => void;
+  onComplete: (email: string) => void;
   onLoginInstead: () => void;
 };
 

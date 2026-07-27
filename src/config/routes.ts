@@ -10,6 +10,7 @@ export const ROUTES = {
   forgotPassword: "/forgot-password",
   verifyOtp: "/verify-otp",
   verifyEmail: "/verify-email",
+  checkEmail: "/check-email",
   resetPassword: "/reset-password",
   dashboard: "/dashboard"
 };

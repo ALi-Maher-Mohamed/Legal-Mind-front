@@ -45,7 +45,12 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
             />
           )}
           {mode === 'register' && (
-            <RegisterForm onComplete={goLogin} onLoginInstead={goLogin} />
+            <RegisterForm
+              onComplete={(email) => {
+                router.push(`${ROUTES.checkEmail}?email=${encodeURIComponent(email)}`);
+              }}
+              onLoginInstead={goLogin}
+            />
           )}
           {mode === 'onboarding' && <OnboardingFlow onComplete={enterDashboard} />}
           {mode === 'forgot' && <ForgotPasswordForm onBackLogin={goLogin} />}
