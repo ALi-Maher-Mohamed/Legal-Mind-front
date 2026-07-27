@@ -17,9 +17,11 @@ type Props = {
   filterType: string;
   setFilterType: (v: string) => void;
   analyzingId: string | null;
-  onUpload: (p: { name: string; size: string; content: string; type: string }) => Promise<void>;
+  isLoadingList: boolean;
+  onUpload: (p: { file: File }) => Promise<void>;
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
+  onDelete: (doc: AnalysisDocument) => void;
 };
 
 export default function LibraryWorkspace(props: Props) {
@@ -44,7 +46,11 @@ export default function LibraryWorkspace(props: Props) {
         onToggleView={props.setIsListView}
       />
 
-      {props.documents.length === 0 ? (
+      {props.isLoadingList ? (
+        <p className="rounded-2xl border border-brand/10 bg-white py-16 text-center text-sm text-muted dark:border-white/10 dark:bg-white/5">
+          {c.loadingLibrary}
+        </p>
+      ) : props.documents.length === 0 ? (
         <p className="rounded-2xl border border-brand/10 bg-white py-16 text-center text-sm italic text-muted dark:border-white/10 dark:bg-white/5">
           {c.emptyLibrary}
         </p>
@@ -54,6 +60,7 @@ export default function LibraryWorkspace(props: Props) {
           analyzingId={props.analyzingId}
           onOpen={props.onOpen}
           onAudit={props.onAudit}
+          onDelete={props.onDelete}
         />
       ) : (
         <DocumentGrid
@@ -61,6 +68,7 @@ export default function LibraryWorkspace(props: Props) {
           analyzingId={props.analyzingId}
           onOpen={props.onOpen}
           onAudit={props.onAudit}
+          onDelete={props.onDelete}
         />
       )}
     </div>

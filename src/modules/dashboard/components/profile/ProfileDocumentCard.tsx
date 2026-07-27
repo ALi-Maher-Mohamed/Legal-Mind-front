@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Briefcase, Expand, FileText } from "lucide-react";
+import { Briefcase, FileText } from "lucide-react";
 import { useLanguage } from "@/hooks/useLanguage";
 import { resolveMediaUrl } from "@/lib/api/media";
 import type { AuthUser } from "@/types/auth.types";

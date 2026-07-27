@@ -10,9 +10,16 @@ type Props = {
   analyzingId: string | null;
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
+  onDelete: (doc: AnalysisDocument) => void;
 };
 
-export default function DocumentList({ documents, analyzingId, onOpen, onAudit }: Props) {
+export default function DocumentList({
+  documents,
+  analyzingId,
+  onOpen,
+  onAudit,
+  onDelete,
+}: Props) {
   return (
     <div className={`${dashPanel} overflow-x-auto`}>
       <table className="w-full min-w-[36rem] border-collapse text-start text-xs sm:text-sm">
@@ -34,6 +41,7 @@ export default function DocumentList({ documents, analyzingId, onOpen, onAudit }
               analyzing={analyzingId === doc.id}
               onOpen={() => onOpen(doc)}
               onAudit={() => onAudit(doc.id)}
+              onDelete={() => onDelete(doc)}
             />
           ))}
         </tbody>

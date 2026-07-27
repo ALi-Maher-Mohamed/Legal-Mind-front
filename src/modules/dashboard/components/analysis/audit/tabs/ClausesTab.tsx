@@ -1,12 +1,26 @@
 'use client';
 
-import type { AnalysisDocument } from '@/types/analysis.types';
+import type { AnalysisDocument, ComplianceStatus } from '@/types/analysis.types';
 import { analysisCopy as c } from '../../../../data/analysisCopy';
 
 type Props = { doc: AnalysisDocument };
 
+const COMPLIANCE_UI: Record<ComplianceStatus, string> = {
+  compliant: 'bg-success/10 text-success',
+  non_compliant: 'bg-danger/10 text-danger',
+  partially_compliant: 'bg-accent/15 text-accent',
+  missing: 'bg-muted/20 text-muted',
+};
+
+const COMPLIANCE_LABEL: Record<ComplianceStatus, string> = {
+  compliant: c.complianceCompliant,
+  non_compliant: c.complianceNonCompliant,
+  partially_compliant: c.compliancePartial,
+  missing: c.complianceMissing,
+};
+
 export default function ClausesTab({ doc }: Props) {
-  const clauses = doc.clauses ?? [];
+  const clauses = doc.result?.clauses ?? [];
 
   return (
     <div className="space-y-4">
@@ -20,23 +34,37 @@ export default function ClausesTab({ doc }: Props) {
         <div className="space-y-4">
           {clauses.map((cl) => (
             <div
-              key={cl.id}
-              className="relative rounded-xl border border-brand/15 bg-[#f8faff] p-4 transition hover:border-accent dark:border-white/10 dark:bg-white/5"
+              key={cl.clause_id}
+              className="rounded-xl border border-brand/15 bg-[#f8faff] p-4 dark:border-white/10 dark:bg-white/5"
             >
-              <span className="absolute top-2 end-2 text-[10px] font-bold uppercase text-muted">
-                {c.clauseTypes[cl.type] ?? cl.type}
-              </span>
-              <h5 className="mt-4 text-xs font-bold text-foreground sm:text-sm">{cl.title}</h5>
-              <p className="mt-2 border-s border-brand/20 ps-2 text-xs italic leading-relaxed text-muted">
-                &ldquo;{cl.text}&rdquo;
-              </p>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="text-[10px] text-muted">{c.confidence}</span>
-                <div className="h-1.5 max-w-24 flex-1 overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
-                  <div className="h-full bg-accent" style={{ width: `${cl.confidence}%` }} />
-                </div>
-                <span className="text-[10px] font-bold text-accent">{cl.confidence}%</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[10px] text-muted">{cl.clause_id}</span>
+                <span
+                  className={`rounded px-2 py-0.5 text-[10px] font-bold ${COMPLIANCE_UI[cl.compliance.status]}`}
+                >
+                  {COMPLIANCE_LABEL[cl.compliance.status]}
+                </span>
+                <span className="text-[10px] text-muted">
+                  {c.confidence} {cl.compliance.confidence}
+                </span>
               </div>
+              <p className="mt-3 text-xs leading-relaxed text-foreground">{cl.clause_text}</p>
+              <p className="mt-2 text-xs leading-relaxed text-muted">{cl.compliance.explanation}</p>
+
+              {cl.legal_basis[0] ? (
+                <p className="mt-2 text-[11px] text-brand">
+                  {c.legalBasis}: {cl.legal_basis[0].law} — {cl.legal_basis[0].article}
+                </p>
+              ) : null}
+
+              {cl.required_action.action_needed ? (
+                <p className="mt-3 border-s-2 border-accent ps-2 text-xs italic leading-relaxed text-muted">
+                  <span className="mb-1 block font-mono text-[10px] font-bold uppercase not-italic text-foreground">
+                    {c.amendment}
+                  </span>
+                  {cl.required_action.suggested_fix}
+                </p>
+              ) : null}
             </div>
           ))}
         </div>

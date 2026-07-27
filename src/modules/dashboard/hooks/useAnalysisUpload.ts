@@ -2,11 +2,20 @@
 
 import { useCallback, useState } from 'react';
 import type { UploadPayload } from '@/types/analysis.types';
-import { inferDocType } from '../lib/filterAnalysisDocs';
+import toast from 'react-hot-toast';
+import { analysisCopy as c } from '../data/analysisCopy';
+
+const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.png', '.jpg', '.jpeg', '.tiff', '.bmp', '.txt'];
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 type Options = {
   onUpload: (payload: UploadPayload) => Promise<void>;
 };
+
+function hasAllowedExtension(name: string): boolean {
+  const lower = name.toLowerCase();
+  return ALLOWED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+}
 
 export function useAnalysisUpload({ onUpload }: Options) {
   const [isDragging, setIsDragging] = useState(false);
@@ -15,40 +24,38 @@ export function useAnalysisUpload({ onUpload }: Options) {
 
   const processFile = useCallback(
     async (file: File) => {
+      if (!hasAllowedExtension(file.name)) {
+        toast.error(c.uploadTypeError);
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        toast.error(c.uploadSizeError);
+        return;
+      }
+
       setUploadingName(file.name);
-      setUploadProgress(10);
+      setUploadProgress(15);
 
-      const interval = setInterval(() => {
+      const progressTimer = setInterval(() => {
         setUploadProgress((prev) => {
-          if (prev === null) return 10;
-          if (prev >= 90) {
-            clearInterval(interval);
-            return 90;
-          }
-          return prev + 20;
+          if (prev === null || prev >= 85) return prev;
+          return prev + 10;
         });
-      }, 200);
+      }, 250);
 
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const content =
-          (e.target?.result as string) ||
-          'هذا الاتفاق ينظم شروط التعاون بين الأطراف الموقعين.';
-
-        await onUpload({
-          name: file.name,
-          size: `${(file.size / 1024).toFixed(1)} KB`,
-          content,
-          type: inferDocType(file.name),
-        });
-
+      try {
+        await onUpload({ file });
         setUploadProgress(100);
         setTimeout(() => {
           setUploadProgress(null);
           setUploadingName('');
-        }, 500);
-      };
-      reader.readAsText(file);
+        }, 400);
+      } catch {
+        setUploadProgress(null);
+        setUploadingName('');
+      } finally {
+        clearInterval(progressTimer);
+      }
     },
     [onUpload],
   );
@@ -71,6 +78,7 @@ export function useAnalysisUpload({ onUpload }: Options) {
     onFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (file) void processFile(file);
+      e.target.value = '';
     },
   };
 }

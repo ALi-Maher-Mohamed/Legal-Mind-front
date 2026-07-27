@@ -1,6 +1,6 @@
 'use client';
 
-import type { AnalysisDocument } from '@/types/analysis.types';
+import type { AnalysisDocument, AuditTab } from '@/types/analysis.types';
 import { analysisCopy as c } from '../../../data/analysisCopy';
 import { dashPanel } from '../../../lib/panelStyles';
 import HighlightTooltip from './HighlightTooltip';
@@ -10,10 +10,12 @@ type Props = {
   doc: AnalysisDocument;
   highlightId: string | null;
   onHighlight: (id: string | null) => void;
-  onInspectTab: (tab: 'risks' | 'clauses') => void;
+  onInspectTab: (tab: AuditTab) => void;
 };
 
 export default function DocumentViewer({ doc, highlightId, onHighlight, onInspectTab }: Props) {
+  const clause = doc.result?.clauses.find((item) => item.clause_id === highlightId);
+
   return (
     <div className={`${dashPanel} flex h-[min(70vh,520px)] flex-col overflow-hidden lg:h-full lg:min-h-[560px]`}>
       <div className="flex shrink-0 items-center justify-between border-b border-brand/10 bg-[#f0f4ff] px-4 py-3 text-xs dark:border-white/10 dark:bg-white/5 sm:px-5">
@@ -26,16 +28,16 @@ export default function DocumentViewer({ doc, highlightId, onHighlight, onInspec
           {doc.name}
         </h3>
         <DocumentBody doc={doc} onHighlight={onHighlight} />
-        {highlightId && (
+        {highlightId ? (
           <HighlightTooltip
-            highlightId={highlightId}
+            clause={clause}
             onClose={() => onHighlight(null)}
             onInspect={(tab) => {
               onInspectTab(tab);
               onHighlight(null);
             }}
           />
-        )}
+        ) : null}
       </div>
     </div>
   );

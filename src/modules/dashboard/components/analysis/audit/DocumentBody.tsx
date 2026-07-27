@@ -1,9 +1,17 @@
 'use client';
 
-import type { AnalysisDocument } from '@/types/analysis.types';
+import type { AnalysisDocument, ComplianceStatus } from '@/types/analysis.types';
+import { analysisCopy as c } from '../../../data/analysisCopy';
 
 const mark =
   'cursor-pointer rounded-sm border-b-2 px-1 py-0.5 font-medium transition';
+
+const BORDER: Record<ComplianceStatus, string> = {
+  compliant: 'border-success bg-success/15 hover:bg-success/25',
+  non_compliant: 'border-danger bg-danger/15 hover:bg-danger/25',
+  partially_compliant: 'border-accent bg-accent/15 hover:bg-accent/25',
+  missing: 'border-muted bg-muted/15 hover:bg-muted/25',
+};
 
 type Props = {
   doc: AnalysisDocument;
@@ -11,63 +19,31 @@ type Props = {
 };
 
 export default function DocumentBody({ doc, onHighlight }: Props) {
+  const clauses = doc.result?.clauses ?? [];
+
+  if (clauses.length === 0) {
+    return (
+      <p className="text-sm italic text-muted">{c.noClauses}</p>
+    );
+  }
+
   return (
     <>
-      <p>
-        إنه في يوم {doc.dateUploaded}، تم تحرير هذا الاتفاق بين الأطراف المذكورين في البند الأول أدناه.
-      </p>
-      <p>
-        تمهيد: حيث يرغب الأطراف في تبادل المعلومات والملفات الفنية لغايات إتمام التعاون المؤسسي
-        المقترح، خاضعاً للقوانين واللوائح المحلية السارية.
-      </p>
-
-      <h4 className="mt-6 text-xs font-bold uppercase text-brand">البند ١: الموقعون الرئيسيون</h4>
-      <p>
-        يُشار إلى الموقعين بصفتهما شركة Apex Technologies Group Inc. («العميل») وشركة Counselor
-        Solutions LLC («المزود»). كل طرف يلتزم بنصوص هذا الاتفاق.
-      </p>
-
-      <h4 className="mt-6 text-xs font-bold uppercase text-brand">البند ٢: ضمانات عدم الإفصاح</h4>
-      <p>
-        يتعهد كل طرف بحماية الملفات السرية.{' '}
-        <span
-          onClick={() => onHighlight('cl-1')}
-          className={`${mark} border-accent bg-accent/15 hover:bg-accent/25`}
-        >
-          الالتزام بالسرية المطلقة لجميع المعلومات الفنية والمالية لمدة خمس (٥) سنوات.
-        </span>{' '}
-        وتخضع الأسرار التجارية لحظر إفصاح دائم.
-      </p>
-
-      <h4 className="mt-6 text-xs font-bold uppercase text-brand">البند ٣: الملكية الفكرية</h4>
-      <p>
-        <span
-          onClick={() => onHighlight('cl-2')}
-          className={`${mark} border-success bg-success/15 hover:bg-success/25`}
-        >
-          جميع مخرجات العمل الفكرية والكود المصدري تعود ملكيتها الحصرية والكاملة للعميل.
-        </span>
-      </p>
-
-      <h4 className="mt-6 text-xs font-bold uppercase text-brand">البند ٨: تسوية النزاعات</h4>
-      <p>
-        <span
-          onClick={() => onHighlight('cl-3')}
-          className={`${mark} border-accent bg-accent/15 hover:bg-accent/25`}
-        >
-          يخضع هذا الاتفاق لقوانين ولاية ديلاوير، وتكون لمحاكم ويلمنغتون الاختصاص الحصري.
-        </span>
-      </p>
-
-      <h4 className="mt-6 text-xs font-bold uppercase text-brand">البند ٩: التعويض والمسؤولية</h4>
-      <p>
-        <span
-          onClick={() => onHighlight('cl-4')}
-          className={`${mark} border-danger bg-danger/15 hover:bg-danger/25`}
-        >
-          يوافق مزود الخدمة على تعويض العميل من أي مطالبات دون أي حدود أقصى للمسؤولية القانونية.
-        </span>
-      </p>
+      {clauses.map((cl, index) => (
+        <div key={cl.clause_id} className="mb-5">
+          <h4 className="text-xs font-bold uppercase text-brand">
+            البند {index + 1}: {cl.clause_id}
+          </h4>
+          <p className="mt-2">
+            <span
+              onClick={() => onHighlight(cl.clause_id)}
+              className={`${mark} ${BORDER[cl.compliance.status]}`}
+            >
+              {cl.clause_text}
+            </span>
+          </p>
+        </div>
+      ))}
     </>
   );
 }

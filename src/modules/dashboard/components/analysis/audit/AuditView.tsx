@@ -11,14 +11,21 @@ type Props = {
   highlightId: string | null;
   onHighlight: (id: string | null) => void;
   onBack: () => void;
+  onDownload: () => void;
 };
 
-export default function AuditView({ doc, highlightId, onHighlight, onBack }: Props) {
+export default function AuditView({
+  doc,
+  highlightId,
+  onHighlight,
+  onBack,
+  onDownload,
+}: Props) {
   const [activeTab, setActiveTab] = useState<AuditTab>('summary');
 
   return (
     <div className="space-y-6">
-      <AuditHeader doc={doc} onBack={onBack} />
+      <AuditHeader doc={doc} onBack={onBack} onDownload={onDownload} />
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8 lg:items-stretch">
         <div className="lg:col-span-6">
           <DocumentViewer

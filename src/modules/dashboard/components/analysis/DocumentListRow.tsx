@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, FileText, Sparkles } from 'lucide-react';
+import { Eye, Sparkles, Trash2 } from 'lucide-react';
 import type { AnalysisDocument } from '@/types/analysis.types';
 import { analysisCopy as c } from '../../data/analysisCopy';
 
@@ -9,46 +9,89 @@ type Props = {
   analyzing: boolean;
   onOpen: () => void;
   onAudit: () => void;
+  onDelete: () => void;
 };
 
-export default function DocumentListRow({ doc, analyzing, onOpen, onAudit }: Props) {
-  const audited = doc.status === 'Analysis Complete';
+function statusMeta(doc: AnalysisDocument) {
+  switch (doc.status) {
+    case 'completed':
+      return { label: c.statusCompleted, className: 'bg-success/10 text-success' };
+    case 'processing':
+      return { label: c.statusProcessing, className: 'bg-brand/10 text-brand' };
+    case 'failed':
+      return { label: c.statusFailed, className: 'bg-danger/10 text-danger' };
+    default:
+      return { label: c.statusQueued, className: 'bg-accent/15 text-accent' };
+  }
+}
+
+export default function DocumentListRow({ doc, analyzing, onOpen, onAudit, onDelete }: Props) {
+  const status = statusMeta(doc);
   const typeLabel = c.typeLabels[doc.type] ?? doc.type;
+  const busy = analyzing || doc.status === 'processing';
 
   return (
     <tr className="border-b border-brand/10 transition hover:bg-[#f0f4ff]/60 dark:border-white/10 dark:hover:bg-white/5">
       <td className="px-3 py-3.5 sm:px-4">
-        <div className="flex max-w-[14rem] items-center gap-2 sm:max-w-xs">
-          <FileText className="h-4 w-4 shrink-0 text-brand" />
-          <span className="truncate font-bold text-foreground">{doc.name}</span>
+        <div className="max-w-[16rem]">
+          <p className="truncate font-bold text-foreground">{doc.name}</p>
+          {doc.status === 'processing' ? (
+            <p className="mt-1 line-clamp-1 text-[10px] text-brand">
+              {doc.currentStage || c.analyzing}
+              {typeof doc.progress === 'number' ? ` • ${doc.progress}%` : ''}
+            </p>
+          ) : null}
+          {doc.status === 'failed' && doc.error ? (
+            <p className="mt-1 line-clamp-2 text-[10px] text-danger">{doc.error}</p>
+          ) : null}
         </div>
       </td>
       <td className="hidden px-4 py-3.5 text-muted md:table-cell">{typeLabel}</td>
       <td className="hidden px-4 py-3.5 font-mono text-[10px] text-muted sm:table-cell">{doc.size}</td>
       <td className="hidden px-4 py-3.5 text-muted lg:table-cell">{doc.dateUploaded}</td>
       <td className="px-3 py-3.5 sm:px-4">
-        <span
-          className={`rounded px-2 py-0.5 text-[9px] font-bold uppercase ${
-            audited ? 'bg-success/10 text-success' : 'bg-accent/15 text-accent'
-          }`}
-        >
-          {audited ? c.audited : c.pending}
+        <span className={`rounded px-2 py-0.5 text-[9px] font-bold uppercase ${status.className}`}>
+          {status.label}
         </span>
       </td>
       <td className="px-3 py-3.5 sm:px-4">
-        <button
-          type="button"
-          onClick={audited ? onOpen : onAudit}
-          disabled={analyzing}
-          className={`inline-flex items-center gap-1 rounded-lg px-3 py-1.5 text-[10px] font-bold transition cursor-pointer disabled:opacity-50 ${
-            audited
-              ? 'bg-brand text-on-brand hover:opacity-90'
-              : 'border border-brand text-brand hover:bg-brand hover:text-on-brand'
-          }`}
-        >
-          {audited ? <Eye className="h-3.5 w-3.5" /> : <Sparkles className="h-3.5 w-3.5 text-accent" />}
-          {analyzing ? c.analyzing : audited ? c.openAudit : c.runAudit}
-        </button>
+        <div className="flex items-center gap-2">
+          {doc.status === 'completed' ? (
+            <button
+              type="button"
+              onClick={onOpen}
+              className="inline-flex items-center gap-1 rounded-lg bg-brand px-3 py-1.5 text-[10px] font-bold text-on-brand transition hover:opacity-90 cursor-pointer"
+            >
+              <Eye className="h-3.5 w-3.5" />
+              {c.openAudit}
+            </button>
+          ) : null}
+
+          {doc.status === 'queued' ? (
+            <button
+              type="button"
+              onClick={onAudit}
+              disabled={busy}
+              className="inline-flex items-center gap-1 rounded-lg border border-brand px-3 py-1.5 text-[10px] font-bold text-brand transition hover:bg-brand hover:text-on-brand disabled:opacity-50 cursor-pointer"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-accent" />
+              {busy ? c.analyzing : c.runAudit}
+            </button>
+          ) : null}
+
+          {doc.status === 'processing' ? (
+            <span className="text-[10px] font-bold text-brand">{c.analyzing}</span>
+          ) : null}
+
+          <button
+            type="button"
+            onClick={onDelete}
+            className="rounded-lg p-1.5 text-muted transition hover:bg-danger/10 hover:text-danger cursor-pointer"
+            aria-label={c.deleteTitle}
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </td>
     </tr>
   );

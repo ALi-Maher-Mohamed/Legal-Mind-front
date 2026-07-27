@@ -43,10 +43,9 @@ export default function LibraryToolbar({
           className="rounded-lg border border-brand/15 bg-white px-3 py-2 text-xs text-foreground focus:border-brand focus:outline-none dark:border-white/10 dark:bg-white/5"
         >
           <option value="ALL">{c.allTypes}</option>
-          <option value="NDA">{c.typeNda}</option>
           <option value="Employment">{c.typeEmployment}</option>
-          <option value="Service Agreement">{c.typeService}</option>
-          <option value="Brief">{c.typeBrief}</option>
+          <option value="Contract">{c.typeLabels.Contract}</option>
+          <option value="NDA">{c.typeNda}</option>
         </select>
 
         <div className="flex shrink-0 overflow-hidden rounded-lg border border-brand/15 dark:border-white/10">

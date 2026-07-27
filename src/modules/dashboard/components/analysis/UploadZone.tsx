@@ -38,7 +38,7 @@ export default function UploadZone({
         type="file"
         id="analysis-file-selector"
         onChange={onFileSelect}
-        accept=".txt,.pdf,.docx"
+        accept=".txt,.pdf,.docx,.png,.jpg,.jpeg,.tiff,.bmp"
         className="hidden"
       />
 

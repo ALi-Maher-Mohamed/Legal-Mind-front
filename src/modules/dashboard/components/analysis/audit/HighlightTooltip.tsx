@@ -1,26 +1,22 @@
 'use client';
 
 import { Sparkles, X } from 'lucide-react';
+import type { ClauseAnalysis } from '@/types/analysis.types';
 import { analysisCopy as c } from '../../../data/analysisCopy';
 
-const TOOLTIPS: Record<string, string> = {
-  'cl-1':
-    'يحتوي البند ٢ على قيود السرية. تم تصنيفه كنموذج معياري لكن يتطلب استثناءات واضحة للأسرار التجارية.',
-  'cl-2':
-    'يحدد البند ٣ براءات الاختراع والملكية الفكرية. تم تأكيده كـ «عمل لصالح الغير» بثقة ٩٨٪.',
-  'cl-3':
-    'يؤدي البند ٨ إلى تفعيل ولاية ديلاوير القضائية، مما يرفع تكلفة التقاضي لمكاتب القاهرة.',
-  'cl-4':
-    '⚠️ البند ٩ يفعل مخاطر مسؤولية عالية بسبب التعويض غير المحدود. نقترح وضع سقف للتعويضات.',
-};
-
 type Props = {
-  highlightId: string;
+  clause?: ClauseAnalysis;
   onClose: () => void;
   onInspect: (tab: 'risks' | 'clauses') => void;
 };
 
-export default function HighlightTooltip({ highlightId, onClose, onInspect }: Props) {
+export default function HighlightTooltip({ clause, onClose, onInspect }: Props) {
+  if (!clause) return null;
+
+  const risky =
+    clause.risk_assessment.category === 'high' ||
+    clause.risk_assessment.category === 'critical';
+
   return (
     <div className="absolute inset-x-4 bottom-4 rounded-xl border border-brand/20 bg-white p-4 shadow-xl dark:border-white/15 dark:bg-card sm:inset-x-6">
       <button
@@ -35,11 +31,11 @@ export default function HighlightTooltip({ highlightId, onClose, onInspect }: Pr
         <Sparkles className="h-3.5 w-3.5 text-accent" />
         {c.highlightLabel}
       </div>
-      <p className="mt-1 text-xs leading-relaxed text-muted">{TOOLTIPS[highlightId]}</p>
+      <p className="mt-1 text-xs leading-relaxed text-muted">{clause.compliance.explanation}</p>
       <div className="mt-3 flex justify-end">
         <button
           type="button"
-          onClick={() => onInspect(highlightId === 'cl-4' ? 'risks' : 'clauses')}
+          onClick={() => onInspect(risky ? 'risks' : 'clauses')}
           className="text-[10px] font-bold uppercase tracking-wider text-brand hover:opacity-80 cursor-pointer"
         >
           {c.inspectPanel}

@@ -8,9 +8,16 @@ type Props = {
   analyzingId: string | null;
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
+  onDelete: (doc: AnalysisDocument) => void;
 };
 
-export default function DocumentGrid({ documents, analyzingId, onOpen, onAudit }: Props) {
+export default function DocumentGrid({
+  documents,
+  analyzingId,
+  onOpen,
+  onAudit,
+  onDelete,
+}: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
       {documents.map((doc, index) => (
@@ -21,6 +28,7 @@ export default function DocumentGrid({ documents, analyzingId, onOpen, onAudit }
           analyzing={analyzingId === doc.id}
           onOpen={() => onOpen(doc)}
           onAudit={() => onAudit(doc.id)}
+          onDelete={() => onDelete(doc)}
         />
       ))}
     </div>

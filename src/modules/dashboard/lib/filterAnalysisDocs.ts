@@ -1,4 +1,7 @@
 import type { AnalysisDocument } from '@/types/analysis.types';
+import { inferDocType } from './analyzeMappers';
+
+export { inferDocType };
 
 export function filterAnalysisDocs(
   documents: AnalysisDocument[],
@@ -14,10 +17,4 @@ export function filterAnalysisDocs(
     const matchesType = filterType === 'ALL' || doc.type === filterType;
     return matchesSearch && matchesType;
   });
-}
-
-export function inferDocType(fileName: string): string {
-  if (fileName.endsWith('.docx')) return 'Employment';
-  if (fileName.toUpperCase().includes('NDA')) return 'NDA';
-  return 'Service Agreement';
 }

@@ -69,6 +69,43 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   return payload as ApiResponse<T>;
 }
 
+export async function apiDownload(
+  path: string,
+  options: Omit<RequestOptions, 'method' | 'json' | 'formData'> = {},
+): Promise<{ blob: Blob; fileName: string | null }> {
+  const headers = new Headers(options.headers);
+
+  if (options.auth) {
+    const token = sessionStore.getAccessToken();
+    if (token) headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  const response = await fetch(`${env.apiBaseUrl}${path}`, {
+    method: 'GET',
+    headers,
+    signal: options.signal,
+  });
+
+  if (!response.ok) {
+    const payload = await parseJson(response);
+    throw new ApiError(
+      resolveApiErrorMessage(
+        payload?.message,
+        payload?.errors ?? null,
+        `فشل التحميل (${response.status})`,
+      ),
+      response.status,
+      payload?.errors ?? null,
+    );
+  }
+
+  const disposition = response.headers.get('Content-Disposition');
+  const match = disposition?.match(/filename="?([^"]+)"?/i);
+  const blob = await response.blob();
+
+  return { blob, fileName: match?.[1] ?? null };
+}
+
 export const api = {
   get: <T>(path: string, options?: Omit<RequestOptions, 'method' | 'json' | 'formData'>) =>
     apiRequest<T>(path, { ...options, method: 'GET' }),
@@ -84,4 +121,9 @@ export const api = {
       json: body?.json,
       formData: body?.formData,
     }),
+
+  delete: <T>(path: string, options?: Omit<RequestOptions, 'method' | 'json' | 'formData'>) =>
+    apiRequest<T>(path, { ...options, method: 'DELETE' }),
+
+  download: apiDownload,
 };
