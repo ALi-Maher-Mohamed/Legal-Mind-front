@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { authService } from '@/services/auth.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { isPasswordValid, validateResetPassword } from '../lib/validation';
 
 export function useResetPassword(token: string, onSuccess: () => void) {
   const [password, setPassword] = useState('');
@@ -17,10 +18,14 @@ export function useResetPassword(token: string, onSuccess: () => void) {
       setError('missing');
       return;
     }
-    if (password.length < 6) {
-      setError('weak');
+
+    const passwordError = validateResetPassword(token, password);
+    if (passwordError) {
+      setError(isPasswordValid(password) ? '' : 'weak');
+      toastApiError(new Error(passwordError));
       return;
     }
+
     if (password !== confirm) {
       setError('mismatch');
       return;

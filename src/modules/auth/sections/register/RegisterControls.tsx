@@ -6,16 +6,25 @@ import { Button } from '@/components/ui';
 
 type Props = {
   step: number;
+  totalSteps: number;
   isLoading: boolean;
   onBack: () => void;
   onNext: () => void;
   onLoginInstead: () => void;
 };
 
-export default function RegisterControls({ step, isLoading, onBack, onNext, onLoginInstead }: Props) {
+export default function RegisterControls({
+  step,
+  totalSteps,
+  isLoading,
+  onBack,
+  onNext,
+  onLoginInstead,
+}: Props) {
   const { t } = useLanguage();
   const BackIcon = ChevronRight;
   const NextIcon = ChevronLeft;
+  const isLast = step === totalSteps;
 
   return (
     <div className="flex justify-between items-center pt-6 gap-4">
@@ -40,7 +49,7 @@ export default function RegisterControls({ step, isLoading, onBack, onNext, onLo
 
       <Button type="button" variant="primary" size="md" isLoading={isLoading} onClick={onNext}>
         <span className="flex items-center gap-1.5">
-          {step === 3 ? t.auth.enrollBtn : t.auth.nextStep}
+          {isLast ? t.auth.enrollBtn : t.auth.nextStep}
           <NextIcon className="h-4 w-4" />
         </span>
       </Button>

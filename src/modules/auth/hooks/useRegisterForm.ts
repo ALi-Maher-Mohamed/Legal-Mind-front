@@ -4,6 +4,9 @@ import { useState, useCallback } from 'react';
 import type { RegisterDraft } from '@/types/auth.types';
 import { authService } from '@/services/auth.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { validateRegisterStep } from '../lib/validation';
+
+const TOTAL_STEPS = 4;
 
 const initialDraft: RegisterDraft = {
   name: '',
@@ -12,26 +15,10 @@ const initialDraft: RegisterDraft = {
   phone: '',
   firmName: '',
   barId: '',
-  teamSize: 'small',
+  teamSize: 'solo',
   lawyerIdDocument: null,
   selectedPractices: [],
 };
-
-function validateStep(step: number, draft: RegisterDraft): string | null {
-  if (step === 1) {
-    if (!draft.name.trim() || !draft.email.trim() || !draft.password || !draft.phone.trim()) {
-      return 'أكمل بياناتك الشخصية بما فيها رقم الهاتف';
-    }
-    if (draft.password.length < 6) {
-      return 'كلمة المرور يجب أن تكون ٦ أحرف على الأقل';
-    }
-  }
-  if (step === 2) {
-    if (!draft.firmName.trim()) return 'أدخل اسم المكتب';
-    if (!draft.lawyerIdDocument) return 'ارفع مستند هوية المحامي';
-  }
-  return null;
-}
 
 export function useRegisterForm(onComplete: (email: string) => void) {
   const [step, setStep] = useState(1);
@@ -54,13 +41,13 @@ export function useRegisterForm(onComplete: (email: string) => void) {
   const goBack = () => setStep((prev) => Math.max(1, prev - 1));
 
   const goNext = async () => {
-    const validationError = validateStep(step, draft);
+    const validationError = validateRegisterStep(step, draft);
     if (validationError) {
       toastApiError(new Error(validationError));
       return;
     }
 
-    if (step < 3) {
+    if (step < TOTAL_STEPS) {
       setStep((prev) => prev + 1);
       return;
     }
@@ -77,5 +64,14 @@ export function useRegisterForm(onComplete: (email: string) => void) {
     }
   };
 
-  return { step, draft, updateField, togglePractice, goBack, goNext, isLoading };
+  return {
+    step,
+    totalSteps: TOTAL_STEPS,
+    draft,
+    updateField,
+    togglePractice,
+    goBack,
+    goNext,
+    isLoading,
+  };
 }

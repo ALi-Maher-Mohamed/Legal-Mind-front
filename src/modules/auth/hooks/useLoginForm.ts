@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { authService } from '@/services/auth.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 import type { AuthUser } from '@/types/auth.types';
+import { validateLogin } from '../lib/validation';
 
 export function useLoginForm(onSuccess: (user: AuthUser) => void) {
   const [email, setEmail] = useState('');
@@ -14,7 +15,12 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    const validationError = validateLogin(email, password);
+    if (validationError) {
+      toastApiError(new Error(validationError));
+      return;
+    }
+
     setIsLoading(true);
     try {
       const result = await authService.login({ email, password, rememberMe });

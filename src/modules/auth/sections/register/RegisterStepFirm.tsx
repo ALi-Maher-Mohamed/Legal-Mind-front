@@ -10,11 +10,14 @@ type Props = {
   onChange: <K extends keyof RegisterDraft>(key: K, value: RegisterDraft[K]) => void;
 };
 
-const TEAM_OPTIONS: { value: TeamSizeValue; labelKey: 'teamSolo' | 'teamBoutique' | 'teamRegional' | 'teamCorporate' }[] = [
-  { value: 'small', labelKey: 'teamSolo' },
-  { value: 'medium', labelKey: 'teamBoutique' },
-  { value: 'large', labelKey: 'teamRegional' },
-  { value: 'enterprise', labelKey: 'teamCorporate' },
+const TEAM_OPTIONS: {
+  value: TeamSizeValue;
+  labelKey: 'teamSolo' | 'teamSmall' | 'teamMedium' | 'teamLarge';
+}[] = [
+  { value: 'solo', labelKey: 'teamSolo' },
+  { value: 'small', labelKey: 'teamSmall' },
+  { value: 'medium', labelKey: 'teamMedium' },
+  { value: 'large', labelKey: 'teamLarge' },
 ];
 
 export default function RegisterStepFirm({ draft, onChange }: Props) {

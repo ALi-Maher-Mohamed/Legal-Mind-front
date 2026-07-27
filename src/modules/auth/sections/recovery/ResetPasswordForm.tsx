@@ -5,6 +5,7 @@ import { Lock, Eye, EyeOff, CheckCircle2, MailWarning } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
 import AuthInput from '../../components/AuthInput';
+import PasswordRulesList from '../../components/PasswordRulesList';
 import { useResetPassword } from '../../hooks/useResetPassword';
 
 type Props = {
@@ -78,6 +79,8 @@ export default function ResetPasswordForm({ token, onSuccess, onBackLogin }: Pro
             </button>
           }
         />
+        <PasswordRulesList password={form.password} />
+
         <AuthInput
           type={form.showPassword ? 'text' : 'password'}
           value={form.confirm}

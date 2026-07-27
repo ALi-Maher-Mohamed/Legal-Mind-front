@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { authService } from '@/services/auth.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { validateResendVerification } from '../lib/validation';
 
 export function useResendVerification(email: string) {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,6 +17,11 @@ export function useResendVerification(email: string) {
 
   const resend = async () => {
     if (!email || cooldown > 0 || isLoading) return;
+    const validationError = validateResendVerification(email);
+    if (validationError) {
+      toastApiError(new Error(validationError));
+      return;
+    }
     setIsLoading(true);
     try {
       const result = await authService.resendVerification(email);

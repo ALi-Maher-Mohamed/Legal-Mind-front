@@ -1,6 +1,6 @@
 export type AuthMode = 'login' | 'register' | 'onboarding' | 'forgot' | 'reset';
 
-export type TeamSizeValue = 'small' | 'medium' | 'large' | 'enterprise';
+export type TeamSizeValue = 'solo' | 'small' | 'medium' | 'large';
 
 export type AuthUser = {
   id: string;

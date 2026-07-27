@@ -1,6 +1,6 @@
 'use client';
 
-import { User, Mail, Lock, Phone } from 'lucide-react';
+import { User, Mail, Phone } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import AuthInput from '../../components/AuthInput';
 import type { RegisterDraft } from '@/types/auth.types';
@@ -38,19 +38,10 @@ export default function RegisterStepPersonal({ draft, onChange }: Props) {
         value={draft.phone}
         onChange={(e) => onChange('phone', e.target.value)}
         placeholder={t.auth.phonePlaceholder}
-        required
         icon={<Phone className="h-4 w-4" />}
         autoComplete="tel"
       />
-      <AuthInput
-        type="password"
-        value={draft.password}
-        onChange={(e) => onChange('password', e.target.value)}
-        placeholder={t.auth.regPasswordPlaceholder}
-        required
-        icon={<Lock className="h-4 w-4" />}
-        autoComplete="new-password"
-      />
+      <p className="text-[11px] text-muted text-start">{t.auth.phoneOptionalHint}</p>
     </div>
   );
 }
