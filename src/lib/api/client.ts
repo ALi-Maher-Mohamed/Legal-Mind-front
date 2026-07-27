@@ -100,10 +100,20 @@ export async function apiDownload(
   }
 
   const disposition = response.headers.get('Content-Disposition');
-  const match = disposition?.match(/filename="?([^"]+)"?/i);
-  const blob = await response.blob();
+  const utfMatch = disposition?.match(/filename\*=UTF-8''([^;]+)/i);
+  const plainMatch = disposition?.match(/filename="?([^";]+)"?/i);
+  const headerName = utfMatch?.[1]
+    ? decodeURIComponent(utfMatch[1])
+    : plainMatch?.[1]?.trim() || null;
 
-  return { blob, fileName: match?.[1] ?? null };
+  const contentType = response.headers.get('Content-Type') || undefined;
+  const rawBlob = await response.blob();
+  const blob =
+    contentType && rawBlob.type !== contentType
+      ? new Blob([rawBlob], { type: contentType.split(';')[0]?.trim() })
+      : rawBlob;
+
+  return { blob, fileName: headerName };
 }
 
 export const api = {

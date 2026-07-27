@@ -78,10 +78,19 @@ export const analyzeService = {
       auth: true,
     });
 
+    const resolvedName = (() => {
+      if (fileName?.toLowerCase().endsWith('.pdf')) return fileName;
+      if (blob.type.includes('pdf')) {
+        const base = (fileName || fallbackName).replace(/\.[^/.]+$/, '');
+        return `${base}.pdf`;
+      }
+      return fileName || fallbackName;
+    })();
+
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement('a');
     anchor.href = url;
-    anchor.download = fileName || fallbackName;
+    anchor.download = resolvedName;
     document.body.appendChild(anchor);
     anchor.click();
     anchor.remove();

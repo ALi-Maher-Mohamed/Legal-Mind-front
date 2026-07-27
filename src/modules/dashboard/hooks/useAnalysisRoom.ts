@@ -214,7 +214,7 @@ export function useAnalysisRoom() {
   const downloadReport = useCallback(async (doc: AnalysisDocument) => {
     try {
       const base = doc.name.replace(/\.[^/.]+$/, '');
-      await analyzeService.downloadReport(doc.id, `report_${base}.md`);
+      await analyzeService.downloadReport(doc.id, `report_${base}.pdf`);
       toastApiSuccess(c.downloadSuccess);
     } catch (error) {
       toastApiError(error, c.downloadError);
