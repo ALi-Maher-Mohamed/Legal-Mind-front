@@ -44,7 +44,7 @@ function StepIcon({ state }: { state: 'pending' | 'active' | 'done' | 'error' })
     );
   }
   return (
-    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand/5 text-muted">
+    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand/5 text-muted dark:bg-white/5">
       <Circle className="h-3 w-3" />
     </span>
   );
@@ -89,15 +89,15 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
     >
       <button
         type="button"
-        className="absolute inset-0 bg-[#0b1326]/70 backdrop-blur-sm cursor-pointer"
+        className="absolute inset-0 bg-[#0b1326]/45 backdrop-blur-[2px] cursor-pointer dark:bg-[#0b1326]/70 dark:backdrop-blur-sm"
         aria-label={c.streamClose}
         onClick={onClose}
       />
 
-      <div className="relative flex max-h-[min(90vh,720px)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b1326] shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
+      <div className="relative flex max-h-[min(90vh,720px)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-brand/15 bg-white shadow-[0_24px_60px_rgba(11,19,38,0.28)] dark:border-white/10 dark:bg-card dark:shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-brand via-[#4f7dff] to-accent" />
 
-        <div className="flex items-start justify-between gap-3 border-b border-white/10 px-4 py-4 sm:px-6">
+        <div className="flex items-start justify-between gap-3 border-b border-brand/10 px-4 py-4 sm:px-6 dark:border-white/10">
           <div className="min-w-0 text-start">
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold text-accent">
@@ -108,32 +108,32 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
                     ? c.streamDone
                     : c.streamLive}
               </span>
-              <span className="font-mono text-[10px] text-[#9aa3b5]">
+              <span className="font-mono text-[10px] text-muted">
                 {stream.currentStep || '—'} • {stream.progress}%
               </span>
             </div>
-            <h3 className="truncate text-base font-bold text-white sm:text-lg">{doc.name}</h3>
-            <p className="mt-0.5 text-xs text-[#c4c6cf]">{c.streamSubtitle}</p>
+            <h3 className="truncate text-base font-bold text-foreground sm:text-lg">{doc.name}</h3>
+            <p className="mt-0.5 text-xs text-muted">{c.streamSubtitle}</p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[#c4c6cf] transition hover:bg-white/10 hover:text-white cursor-pointer"
+            className="rounded-lg p-1.5 text-muted transition hover:bg-brand/5 hover:text-foreground dark:hover:bg-white/10 cursor-pointer"
             aria-label={c.streamClose}
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="border-b border-white/10 px-4 py-3 sm:px-6">
+        <div className="border-b border-brand/10 bg-[#f7f9ff] px-4 py-3 sm:px-6 dark:border-white/10 dark:bg-white/5">
           <div className="mb-2 flex items-center justify-between gap-3 text-[11px]">
-            <span className="inline-flex items-center gap-1.5 text-[#c4c6cf]">
-              <Sparkles className="h-3.5 w-3.5 text-accent" />
+            <span className="inline-flex min-w-0 items-center gap-1.5 text-muted">
+              <Sparkles className="h-3.5 w-3.5 shrink-0 text-accent" />
               <span className="line-clamp-1">{stream.liveMessage || c.analyzing}</span>
             </span>
-            <span className="shrink-0 font-bold text-white">{stream.progress}%</span>
+            <span className="shrink-0 font-bold text-foreground">{stream.progress}%</span>
           </div>
-          <div className="h-2 overflow-hidden rounded-full bg-white/10">
+          <div className="h-2 overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
             <div
               className={`relative h-full rounded-full transition-all duration-500 ${
                 stream.failed ? 'bg-danger' : stream.done ? 'bg-success' : 'bg-brand'
@@ -146,8 +146,8 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
         </div>
 
         <div className="grid min-h-0 flex-1 grid-cols-1 gap-0 overflow-hidden md:grid-cols-2">
-          <div className="overflow-y-auto border-b border-white/10 p-4 sm:p-5 md:border-b-0 md:border-e">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-[#9aa3b5]">
+          <div className="overflow-y-auto border-b border-brand/10 p-4 sm:p-5 md:border-b-0 md:border-e dark:border-white/10">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-muted">
               {c.streamStages}
             </p>
             <ol className="space-y-3">
@@ -158,12 +158,12 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
                     <p
                       className={`text-xs font-semibold ${
                         item.state === 'active'
-                          ? 'text-white'
+                          ? 'text-foreground'
                           : item.state === 'done'
-                            ? 'text-[#d7dce8]'
+                            ? 'text-foreground/80'
                             : item.state === 'error'
                               ? 'text-danger'
-                              : 'text-[#7f8798]'
+                              : 'text-muted'
                       }`}
                     >
                       {item.step} — {item.label}
@@ -175,22 +175,22 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
           </div>
 
           <div className="flex min-h-[220px] flex-col overflow-hidden p-4 sm:p-5">
-            <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-[#9aa3b5]">
+            <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-muted">
               {c.streamFeed}
             </p>
-            <div className="flex-1 space-y-2 overflow-y-auto rounded-xl border border-white/10 bg-black/25 p-3 font-mono text-[11px] leading-relaxed">
+            <div className="flex-1 space-y-2 overflow-y-auto rounded-xl border border-brand/10 bg-[#f0f4ff] p-3 font-mono text-[11px] leading-relaxed dark:border-white/10 dark:bg-black/25">
               {stream.logs.length === 0 ? (
-                <p className="text-[#7f8798]">{c.streamWaiting}</p>
+                <p className="text-muted">{c.streamWaiting}</p>
               ) : (
                 stream.logs.map((log, index) => (
                   <div
                     key={`${log.timestamp}-${log.step}-${index}`}
                     className={`rounded-lg px-2.5 py-2 ${
                       log.step === 'error'
-                        ? 'bg-danger/10 text-[#ffb4b4]'
-                        : index === 0
-                          ? 'bg-brand/15 text-[#dce6ff]'
-                          : 'text-[#a8b0c2]'
+                        ? 'bg-danger/10 text-danger'
+                        : index === stream.logs.length - 1
+                          ? 'bg-brand/10 text-foreground dark:bg-brand/15'
+                          : 'bg-white/70 text-muted dark:bg-transparent dark:text-[#a8b0c2]'
                     }`}
                   >
                     <div className="mb-1 flex items-center justify-between gap-2 text-[10px] opacity-70">

@@ -25,6 +25,7 @@ export function useAnalysisRoom() {
   const [highlightId, setHighlightId] = useState<string | null>(null);
   const [isLoadingList, setIsLoadingList] = useState(true);
   const [isOpeningAudit, setIsOpeningAudit] = useState(false);
+  const [streamDoc, setStreamDoc] = useState<AnalysisDocument | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<AnalysisDocument | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const pollTimers = useRef<Map<string, ReturnType<typeof setInterval>>>(new Map());
@@ -143,24 +144,33 @@ export function useAnalysisRoom() {
       setAnalyzingId(docId);
       try {
         const started = await analyzeService.startAnalysis(docId);
-        applyJobUpdate(docId, (prev) => ({
-          ...prev,
-          status: started.status,
-          currentStage: stageLabel('0/7'),
-          currentStep: '0/7',
-          progress: stepProgress('0/7') ?? 0,
-          error: undefined,
-          tags: ['جاري التحليل'],
-        }));
+        let streamTarget: AnalysisDocument | null = null;
+
+        applyJobUpdate(docId, (prev) => {
+          streamTarget = {
+            ...prev,
+            status: started.status,
+            currentStage: stageLabel('0/7'),
+            currentStep: '0/7',
+            progress: stepProgress('0/7') ?? 0,
+            error: undefined,
+            tags: ['جاري التحليل'],
+          };
+          return streamTarget;
+        });
         toastApiSuccess(c.startSuccess);
 
         try {
           const detail = await analyzeService.getJob(docId);
-          applyJobUpdate(docId, (prev) => mapJobDetailToDocument(detail, prev));
+          applyJobUpdate(docId, (prev) => {
+            streamTarget = mapJobDetailToDocument(detail, prev);
+            return streamTarget;
+          });
         } catch {
           // polling will recover
         }
 
+        if (streamTarget) setStreamDoc(streamTarget);
         pollJob(docId);
       } catch (error) {
         setAnalyzingId(null);
@@ -245,6 +255,9 @@ export function useAnalysisRoom() {
     setHighlightId,
     isLoadingList,
     isOpeningAudit,
+    streamDoc: streamDoc
+      ? (documents.find((doc) => doc.id === streamDoc.id) ?? streamDoc)
+      : null,
     deleteTarget,
     isDeleting,
     uploadDocument,
@@ -252,6 +265,8 @@ export function useAnalysisRoom() {
     openAudit,
     closeAudit,
     downloadReport,
+    openStream: setStreamDoc,
+    closeStream: () => setStreamDoc(null),
     requestDelete: setDeleteTarget,
     cancelDelete: () => {
       if (!isDeleting) setDeleteTarget(null);

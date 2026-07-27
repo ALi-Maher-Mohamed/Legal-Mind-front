@@ -11,6 +11,7 @@ type Props = {
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
   onDelete: (doc: AnalysisDocument) => void;
+  onWatchStream: (doc: AnalysisDocument) => void;
 };
 
 export default function DocumentList({
@@ -19,6 +20,7 @@ export default function DocumentList({
   onOpen,
   onAudit,
   onDelete,
+  onWatchStream,
 }: Props) {
   return (
     <div className={`${dashPanel} overflow-x-auto`}>
@@ -42,6 +44,7 @@ export default function DocumentList({
               onOpen={() => onOpen(doc)}
               onAudit={() => onAudit(doc.id)}
               onDelete={() => onDelete(doc)}
+              onWatchStream={() => onWatchStream(doc)}
             />
           ))}
         </tbody>

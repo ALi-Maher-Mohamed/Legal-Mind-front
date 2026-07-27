@@ -5,6 +5,7 @@ import { analysisCopy as c } from '../../data/analysisCopy';
 import ConfirmModal from '../ui/ConfirmModal';
 import LibraryWorkspace from './LibraryWorkspace';
 import AuditView from './audit/AuditView';
+import AnalysisStreamModal from './AnalysisStreamModal';
 import { AuditViewSkeleton } from './ui/AnalysisShimmer';
 
 export default function AnalysisRoom() {
@@ -39,8 +40,15 @@ export default function AnalysisRoom() {
           onOpen={(doc) => void room.openAudit(doc)}
           onAudit={(id) => void room.runAudit(id)}
           onDelete={room.requestDelete}
+          onWatchStream={room.openStream}
         />
       )}
+
+      <AnalysisStreamModal
+        open={Boolean(room.streamDoc)}
+        doc={room.streamDoc}
+        onClose={room.closeStream}
+      />
 
       <ConfirmModal
         open={Boolean(room.deleteTarget)}

@@ -14,6 +14,7 @@ type Props = {
   onOpen: () => void;
   onAudit: () => void;
   onDelete: () => void;
+  onWatchStream: () => void;
 };
 
 function statusMeta(doc: AnalysisDocument) {
@@ -36,6 +37,7 @@ export default function DocumentFolderCard({
   onOpen,
   onAudit,
   onDelete,
+  onWatchStream,
 }: Props) {
   const status = statusMeta(doc);
   const typeLabel = c.typeLabels[doc.type] ?? doc.type;
@@ -44,20 +46,31 @@ export default function DocumentFolderCard({
   const actionLabel =
     doc.status === 'completed'
       ? c.viewAudit
-      : doc.status === 'failed'
-        ? c.retryUpload
-        : busy
-          ? c.analyzing
-          : c.runAudit;
-
-  const canPrimary =
-    doc.status === 'queued' || doc.status === 'completed' || doc.status === 'failed';
+      : doc.status === 'processing'
+        ? c.watchStream
+        : doc.status === 'failed'
+          ? c.retryUpload
+          : busy
+            ? c.analyzing
+            : c.runAudit;
 
   return (
     <div
-      className={`${dashPanel} flex flex-col justify-between border-t-4 p-5 ${ACCENTS[index % ACCENTS.length]} ${
+      role={doc.status === 'processing' ? 'button' : undefined}
+      tabIndex={doc.status === 'processing' ? 0 : undefined}
+      onClick={() => {
+        if (doc.status === 'processing') onWatchStream();
+      }}
+      onKeyDown={(event) => {
+        if (doc.status !== 'processing') return;
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          onWatchStream();
+        }
+      }}
+      className={`${dashPanel} flex flex-col justify-between border-t-4 p-5 transition ${ACCENTS[index % ACCENTS.length]} ${
         doc.status === 'queued' || doc.status === 'failed' ? 'bg-[#f8faff] dark:bg-white/[0.03]' : ''
-      }`}
+      } ${doc.status === 'processing' ? 'cursor-pointer hover:border-brand/40 hover:shadow-[0_8px_24px_rgba(0,62,199,0.12)]' : ''}`}
     >
       <div>
         <div className="mb-3 flex items-start justify-between gap-2">
@@ -68,7 +81,10 @@ export default function DocumentFolderCard({
             </span>
             <button
               type="button"
-              onClick={onDelete}
+              onClick={(event) => {
+                event.stopPropagation();
+                onDelete();
+              }}
               className="rounded-md p-1 text-muted transition hover:bg-danger/10 hover:text-danger cursor-pointer"
               aria-label={c.deleteTitle}
             >
@@ -113,12 +129,18 @@ export default function DocumentFolderCard({
         <span className="italic text-muted">{doc.dateUploaded}</span>
         <button
           type="button"
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation();
             if (doc.status === 'completed') onOpen();
             else if (doc.status === 'queued') onAudit();
+            else if (doc.status === 'processing') onWatchStream();
           }}
-          disabled={!canPrimary || (doc.status === 'queued' && busy) || doc.status === 'failed'}
-          className="inline-flex items-center gap-0.5 font-bold text-brand hover:opacity-80 disabled:cursor-not-allowed disabled:text-muted cursor-pointer"
+          disabled={doc.status === 'failed' || (doc.status === 'queued' && analyzing)}
+          className={`inline-flex items-center gap-0.5 font-bold ${
+            doc.status === 'failed' || (doc.status === 'queued' && analyzing)
+              ? 'cursor-not-allowed text-muted'
+              : 'cursor-pointer text-brand hover:opacity-80'
+          }`}
         >
           {actionLabel}
           {doc.status !== 'failed' ? <ChevronLeft className="h-3.5 w-3.5" strokeWidth={2.5} /> : null}

@@ -117,12 +117,8 @@ export function useAnalysisStream(doc: AnalysisDocument | null, open: boolean) {
     });
   }, [currentStep, done, failed]);
 
-  const displayLogs = useMemo(() => {
-    return [...logs].reverse();
-  }, [logs]);
-
   return {
-    logs: displayLogs,
+    logs,
     liveMessage,
     currentStep,
     progress,

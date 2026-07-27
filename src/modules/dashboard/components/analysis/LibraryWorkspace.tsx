@@ -23,6 +23,7 @@ type Props = {
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
   onDelete: (doc: AnalysisDocument) => void;
+  onWatchStream: (doc: AnalysisDocument) => void;
 };
 
 export default function LibraryWorkspace(props: Props) {
@@ -64,6 +65,7 @@ export default function LibraryWorkspace(props: Props) {
           onOpen={props.onOpen}
           onAudit={props.onAudit}
           onDelete={props.onDelete}
+          onWatchStream={props.onWatchStream}
         />
       ) : (
         <DocumentGrid
@@ -72,6 +74,7 @@ export default function LibraryWorkspace(props: Props) {
           onOpen={props.onOpen}
           onAudit={props.onAudit}
           onDelete={props.onDelete}
+          onWatchStream={props.onWatchStream}
         />
       )}
     </div>

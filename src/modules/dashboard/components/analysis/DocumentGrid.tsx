@@ -9,6 +9,7 @@ type Props = {
   onOpen: (doc: AnalysisDocument) => void;
   onAudit: (id: string) => void;
   onDelete: (doc: AnalysisDocument) => void;
+  onWatchStream: (doc: AnalysisDocument) => void;
 };
 
 export default function DocumentGrid({
@@ -17,6 +18,7 @@ export default function DocumentGrid({
   onOpen,
   onAudit,
   onDelete,
+  onWatchStream,
 }: Props) {
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
@@ -29,6 +31,7 @@ export default function DocumentGrid({
           onOpen={() => onOpen(doc)}
           onAudit={() => onAudit(doc.id)}
           onDelete={() => onDelete(doc)}
+          onWatchStream={() => onWatchStream(doc)}
         />
       ))}
     </div>

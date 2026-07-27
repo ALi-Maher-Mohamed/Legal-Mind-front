@@ -1,6 +1,6 @@
 'use client';
 
-import { Eye, Sparkles, Trash2 } from 'lucide-react';
+import { Eye, Radio, Sparkles, Trash2 } from 'lucide-react';
 import type { AnalysisDocument } from '@/types/analysis.types';
 import { analysisCopy as c } from '../../data/analysisCopy';
 
@@ -10,6 +10,7 @@ type Props = {
   onOpen: () => void;
   onAudit: () => void;
   onDelete: () => void;
+  onWatchStream: () => void;
 };
 
 function statusMeta(doc: AnalysisDocument) {
@@ -25,13 +26,27 @@ function statusMeta(doc: AnalysisDocument) {
   }
 }
 
-export default function DocumentListRow({ doc, analyzing, onOpen, onAudit, onDelete }: Props) {
+export default function DocumentListRow({
+  doc,
+  analyzing,
+  onOpen,
+  onAudit,
+  onDelete,
+  onWatchStream,
+}: Props) {
   const status = statusMeta(doc);
   const typeLabel = c.typeLabels[doc.type] ?? doc.type;
   const busy = analyzing || doc.status === 'processing';
 
   return (
-    <tr className="border-b border-brand/10 transition hover:bg-[#f0f4ff]/60 dark:border-white/10 dark:hover:bg-white/5">
+    <tr
+      className={`border-b border-brand/10 transition hover:bg-[#f0f4ff]/60 dark:border-white/10 dark:hover:bg-white/5 ${
+        doc.status === 'processing' ? 'cursor-pointer' : ''
+      }`}
+      onClick={() => {
+        if (doc.status === 'processing') onWatchStream();
+      }}
+    >
       <td className="px-3 py-3.5 sm:px-4">
         <div className="max-w-[16rem]">
           <p className="truncate font-bold text-foreground">{doc.name}</p>
@@ -64,7 +79,7 @@ export default function DocumentListRow({ doc, analyzing, onOpen, onAudit, onDel
           {status.label}
         </span>
       </td>
-      <td className="px-3 py-3.5 sm:px-4">
+      <td className="px-3 py-3.5 sm:px-4" onClick={(event) => event.stopPropagation()}>
         <div className="flex items-center gap-2">
           {doc.status === 'completed' ? (
             <button
@@ -85,12 +100,19 @@ export default function DocumentListRow({ doc, analyzing, onOpen, onAudit, onDel
               className="inline-flex items-center gap-1 rounded-lg border border-brand px-3 py-1.5 text-[10px] font-bold text-brand transition hover:bg-brand hover:text-on-brand disabled:opacity-50 cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5 text-accent" />
-              {busy ? c.analyzing : c.runAudit}
+              {analyzing ? c.analyzing : c.runAudit}
             </button>
           ) : null}
 
           {doc.status === 'processing' ? (
-            <span className="text-[10px] font-bold text-brand">{c.analyzing}</span>
+            <button
+              type="button"
+              onClick={onWatchStream}
+              className="inline-flex items-center gap-1 rounded-lg border border-brand bg-brand/5 px-3 py-1.5 text-[10px] font-bold text-brand transition hover:bg-brand hover:text-on-brand cursor-pointer"
+            >
+              <Radio className="h-3.5 w-3.5 animate-pulse" />
+              {c.watchStream}
+            </button>
           ) : null}
 
           <button
