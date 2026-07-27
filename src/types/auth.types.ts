@@ -15,6 +15,13 @@ export type AuthUser = {
   teamSize: string;
   isEmailVerified: boolean;
   isActive: boolean;
+  firstName?: string;
+  lastName?: string;
+  displayName?: string;
+  lawyerIdDocument?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastLogin?: string;
 };
 
 export type ApiUser = {

@@ -4,7 +4,7 @@ import {
   ScanSearch,
   PenLine,
   Newspaper,
-  Settings,
+  UserRound,
   type LucideIcon,
 } from 'lucide-react';
 import type { DashboardView } from '@/types/dashboard.types';
@@ -15,7 +15,7 @@ export type NavLabelKey =
   | 'navAnalysis'
   | 'navDrafter'
   | 'navGazette'
-  | 'navSettings';
+  | 'navProfile';
 
 export type NavItem = {
   id: DashboardView;
@@ -29,5 +29,5 @@ export const DASH_NAV_ITEMS: NavItem[] = [
   { id: 'analysis', icon: ScanSearch, labelKey: 'navAnalysis' },
   { id: 'drafter', icon: PenLine, labelKey: 'navDrafter' },
   { id: 'gazette', icon: Newspaper, labelKey: 'navGazette' },
-  { id: 'settings', icon: Settings, labelKey: 'navSettings' },
+  { id: 'profile', icon: UserRound, labelKey: 'navProfile' },
 ];

@@ -6,6 +6,10 @@ import { authService } from '@/services/auth.service';
 import { ROUTES } from '@/config/routes';
 import { useLanguage } from '@/hooks/useLanguage';
 import { toastApiError } from '@/lib/api/toast';
+import {
+  hasCompletedOnboarding,
+  markOnboardingCompleted,
+} from '@/modules/auth/lib/onboardingStorage';
 import type { AuthUser } from '@/types/auth.types';
 import type { DashboardView } from '@/types/dashboard.types';
 import { MOCK_DOCUMENTS } from '../data/mockDocuments';
@@ -14,7 +18,9 @@ import DashboardHome from '../components/home/DashboardHome';
 import AnalysisRoom from '../components/analysis/AnalysisRoom';
 import ConsultationRoom from '../components/consultation/ConsultationRoom';
 import DraftersStudio from '../components/drafter/DraftersStudio';
+import ProfileView from '../components/profile/ProfileView';
 import ComingSoonPanel from '../components/ComingSoonPanel';
+import DashboardOnboarding from '../components/onboarding/DashboardOnboarding';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -22,6 +28,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [view, setView] = useState<DashboardView>('dashboard');
   const [ready, setReady] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -34,11 +41,14 @@ export default function DashboardPage() {
       }
 
       setUser(session.user);
+      setShowOnboarding(!hasCompletedOnboarding(session.user.id));
       setReady(true);
 
       try {
         const freshUser = await authService.me();
-        if (active) setUser(freshUser);
+        if (!active) return;
+        setUser(freshUser);
+        setShowOnboarding(!hasCompletedOnboarding(freshUser.id));
       } catch (error) {
         authService.clearSession();
         toastApiError(error, 'انتهت الجلسة. سجّل الدخول مجدداً');
@@ -60,6 +70,17 @@ export default function DashboardPage() {
     );
   }
 
+  if (showOnboarding) {
+    return (
+      <DashboardOnboarding
+        onComplete={() => {
+          markOnboardingCompleted(user.id);
+          setShowOnboarding(false);
+        }}
+      />
+    );
+  }
+
   return (
     <DashboardShell user={user} view={view} onNavigate={setView}>
       {view === 'dashboard' ? (
@@ -70,6 +91,8 @@ export default function DashboardPage() {
         <ConsultationRoom />
       ) : view === 'drafter' ? (
         <DraftersStudio />
+      ) : view === 'profile' ? (
+        <ProfileView user={user} onUserUpdate={setUser} />
       ) : (
         <ComingSoonPanel view={view} onBack={() => setView('dashboard')} />
       )}

@@ -18,5 +18,12 @@ export function mapApiUserToAuthUser(
     teamSize: user.teamSize || 'small',
     isEmailVerified: Boolean(user.isEmailVerified),
     isActive: user.isActive !== false,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    displayName: user.displayName || user.fullName,
+    lawyerIdDocument: user.lawyerIdDocument,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    lastLogin: user.lastLogin,
   };
 }

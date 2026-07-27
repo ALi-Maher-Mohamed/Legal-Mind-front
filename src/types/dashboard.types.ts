@@ -4,7 +4,7 @@ export type DashboardView =
   | 'analysis'
   | 'drafter'
   | 'gazette'
-  | 'settings';
+  | 'profile';
 
 export type LegalDocumentStatus = 'Analysis Complete' | 'Pending Review';
 

@@ -10,9 +10,10 @@ import type { AuthUser } from '@/types/auth.types';
 type Props = {
   user: AuthUser;
   onLogout: () => void;
+  onOpenProfile?: () => void;
 };
 
-export default function DashboardTopBar({ user, onLogout }: Props) {
+export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props) {
   const { t } = useLanguage();
   const { theme, toggleTheme } = useThemeContext();
 
@@ -31,15 +32,20 @@ export default function DashboardTopBar({ user, onLogout }: Props) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <div className="hidden items-center gap-2 sm:flex">
+        <button
+          type="button"
+          onClick={onOpenProfile}
+          className="hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-[#f0f4ff] dark:hover:bg-white/5 cursor-pointer sm:flex"
+          aria-label={t.dashboard.navProfile}
+        >
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/15 text-xs font-bold text-brand">
             {user.name.charAt(0).toUpperCase()}
           </div>
-          <div className="min-w-0 max-w-[10rem]">
+          <div className="min-w-0 max-w-[10rem] text-start">
             <p className="truncate text-xs font-semibold text-foreground">{user.name}</p>
             <p className="truncate text-[10px] text-muted">{user.email}</p>
           </div>
-        </div>
+        </button>
         <button
           type="button"
           onClick={toggleTheme}

@@ -5,18 +5,17 @@ import type { DashboardView } from '@/types/dashboard.types';
 import DashPanel from './ui/DashPanel';
 
 const TITLE_KEY: Record<
-  Exclude<DashboardView, 'dashboard'>,
-  'navConsultation' | 'navAnalysis' | 'navDrafter' | 'navGazette' | 'navSettings'
+  Exclude<DashboardView, 'dashboard' | 'profile'>,
+  'navConsultation' | 'navAnalysis' | 'navDrafter' | 'navGazette'
 > = {
   consultation: 'navConsultation',
   analysis: 'navAnalysis',
   drafter: 'navDrafter',
   gazette: 'navGazette',
-  settings: 'navSettings',
 };
 
 type Props = {
-  view: Exclude<DashboardView, 'dashboard'>;
+  view: Exclude<DashboardView, 'dashboard' | 'profile'>;
   onBack: () => void;
 };
 

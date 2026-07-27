@@ -10,7 +10,6 @@ import AuthModeTabs from '../components/AuthModeTabs';
 import AuthSecureFooter from '../components/AuthSecureFooter';
 import LoginForm from '../sections/login/LoginForm';
 import RegisterForm from '../sections/register/RegisterForm';
-import OnboardingFlow from '../sections/onboarding/OnboardingFlow';
 import ForgotPasswordForm from '../sections/recovery/ForgotPasswordForm';
 import ResetPasswordForm from '../sections/recovery/ResetPasswordForm';
 
@@ -21,7 +20,7 @@ type Props = {
 
 export default function AuthPage({ initialMode = 'login', resetToken = null }: Props) {
   const router = useRouter();
-  const { mode, goLogin, goRegister, goOnboarding, goForgot } = useAuthMode(initialMode);
+  const { mode, goLogin, goRegister, goForgot } = useAuthMode(initialMode);
 
   const enterDashboard = () => {
     router.push(ROUTES.dashboard);
@@ -39,7 +38,7 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
 
           {mode === 'login' && (
             <LoginForm
-              onSuccess={() => goOnboarding()}
+              onSuccess={enterDashboard}
               onSwitchRegister={goRegister}
               onForgotPassword={goForgot}
             />
@@ -52,7 +51,6 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
               onLoginInstead={goLogin}
             />
           )}
-          {mode === 'onboarding' && <OnboardingFlow onComplete={enterDashboard} />}
           {mode === 'forgot' && <ForgotPasswordForm onBackLogin={goLogin} />}
           {mode === 'reset' && (
             <ResetPasswordForm
