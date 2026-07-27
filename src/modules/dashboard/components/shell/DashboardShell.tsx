@@ -19,8 +19,8 @@ type Props = {
 export default function DashboardShell({ user, view, onNavigate, children }: Props) {
   const router = useRouter();
 
-  const handleLogout = () => {
-    authService.clearSession();
+  const handleLogout = async () => {
+    await authService.logout();
     router.push(ROUTES.login);
   };
 

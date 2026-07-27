@@ -2,20 +2,21 @@
 
 import { useState } from 'react';
 import { authService } from '@/services/auth.service';
+import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 
-export function useResetPassword(
-  email: string,
-  otp: string,
-  onSuccess: () => void,
-) {
+export function useResetPassword(token: string, onSuccess: () => void) {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<'mismatch' | 'weak' | ''>('');
+  const [error, setError] = useState<'mismatch' | 'weak' | 'missing' | ''>('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!token) {
+      setError('missing');
+      return;
+    }
     if (password.length < 6) {
       setError('weak');
       return;
@@ -24,13 +25,15 @@ export function useResetPassword(
       setError('mismatch');
       return;
     }
+
     setIsLoading(true);
     setError('');
     try {
-      await authService.resetPassword({ email, otp, password });
+      const result = await authService.resetPassword({ token, password });
+      toastApiSuccess(result.message);
       onSuccess();
-    } catch {
-      setError('weak');
+    } catch (error) {
+      toastApiError(error, 'تعذّر تحديث كلمة المرور');
     } finally {
       setIsLoading(false);
     }

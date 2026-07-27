@@ -2,25 +2,26 @@
 
 import { useState } from 'react';
 import { authService } from '@/services/auth.service';
+import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import type { AuthUser } from '@/types/auth.types';
 
-export function useLoginForm(onSuccess: (email: string) => void) {
-  const [email, setEmail] = useState('counselor@firm.com');
-  const [password, setPassword] = useState('password123');
+export function useLoginForm(onSuccess: (user: AuthUser) => void) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
     setIsLoading(true);
-    setError('');
     try {
-      await authService.login({ email, password });
-      onSuccess(email);
-    } catch {
-      setError('Login failed');
+      const result = await authService.login({ email, password, rememberMe });
+      toastApiSuccess(result.message);
+      onSuccess(result.user);
+    } catch (error) {
+      toastApiError(error, 'تعذّر تسجيل الدخول');
     } finally {
       setIsLoading(false);
     }
@@ -36,7 +37,6 @@ export function useLoginForm(onSuccess: (email: string) => void) {
     rememberMe,
     setRememberMe,
     isLoading,
-    error,
     handleSubmit,
   };
 }

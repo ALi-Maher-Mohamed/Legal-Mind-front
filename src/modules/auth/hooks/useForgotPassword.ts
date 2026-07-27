@@ -2,26 +2,26 @@
 
 import { useState } from 'react';
 import { authService } from '@/services/auth.service';
+import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 
 export function useForgotPassword(onSent: (email: string) => void) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     setIsLoading(true);
-    setError('');
     try {
-      await authService.requestPasswordReset(email.trim());
+      const result = await authService.requestPasswordReset(email.trim());
+      toastApiSuccess(result.message || 'تم إرسال رابط إعادة التعيين إلى بريدك');
       onSent(email.trim());
-    } catch {
-      setError('Invalid email');
+    } catch (error) {
+      toastApiError(error, 'تعذّر إرسال رابط الاستعادة');
     } finally {
       setIsLoading(false);
     }
   };
 
-  return { email, setEmail, isLoading, error, handleSubmit };
+  return { email, setEmail, isLoading, handleSubmit };
 }

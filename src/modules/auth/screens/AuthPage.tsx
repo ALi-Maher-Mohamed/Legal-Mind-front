@@ -1,12 +1,9 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/config/routes';
-import { authService } from '@/services/auth.service';
-import type { AuthMode, RegisterDraft } from '@/types/auth.types';
+import type { AuthMode } from '@/types/auth.types';
 import { useAuthMode } from '../hooks/useAuthMode';
-import { buildAuthUser } from '../lib/buildAuthUser';
 import AuthHeader from '../components/AuthHeader';
 import AuthBrandPanel from '../components/AuthBrandPanel';
 import AuthModeTabs from '../components/AuthModeTabs';
@@ -15,58 +12,22 @@ import LoginForm from '../sections/login/LoginForm';
 import RegisterForm from '../sections/register/RegisterForm';
 import OnboardingFlow from '../sections/onboarding/OnboardingFlow';
 import ForgotPasswordForm from '../sections/recovery/ForgotPasswordForm';
-import OtpForm from '../sections/recovery/OtpForm';
 import ResetPasswordForm from '../sections/recovery/ResetPasswordForm';
 
 type Props = {
   initialMode?: AuthMode;
+  resetToken?: string | null;
 };
 
-export default function AuthPage({ initialMode = 'login' }: Props) {
+export default function AuthPage({ initialMode = 'login', resetToken = null }: Props) {
   const router = useRouter();
-  const { mode, goLogin, goRegister, goOnboarding, goForgot, goOtp, goReset } =
-    useAuthMode(initialMode);
-  const draftRef = useRef<RegisterDraft | null>(null);
-  const loginEmailRef = useRef('counselor@firm.com');
-  const [recoveryEmail, setRecoveryEmail] = useState('');
-  const [recoveryOtp, setRecoveryOtp] = useState('');
+  const { mode, goLogin, goRegister, goOnboarding, goForgot } = useAuthMode(initialMode);
 
-  useEffect(() => {
-    const stored = authService.getRecoveryEmail();
-    if (stored) setRecoveryEmail(stored);
-    if ((initialMode === 'otp' || initialMode === 'reset') && !stored) {
-      goForgot();
-    }
-  }, [initialMode, goForgot]);
-
-  const handleLoginSuccess = (email: string) => {
-    loginEmailRef.current = email;
-    goOnboarding();
-  };
-
-  const handleRegisterComplete = (draft: RegisterDraft) => {
-    draftRef.current = draft;
-    loginEmailRef.current = draft.email;
-    goOnboarding();
-  };
-
-  const handleAuthComplete = () => {
-    const draft = draftRef.current ?? {
-      name: '',
-      email: loginEmailRef.current,
-      password: '',
-      firmName: '',
-      barId: '',
-      teamSize: '1',
-      selectedPractices: [],
-    };
-    const user = buildAuthUser({ draft, loginEmail: loginEmailRef.current });
-    authService.persistSession(user, `mock-jwt-${user.id}`);
+  const enterDashboard = () => {
     router.push(ROUTES.dashboard);
   };
 
   const showTabs = mode === 'login' || mode === 'register';
-  const email = recoveryEmail || authService.getRecoveryEmail();
 
   return (
     <div className="flex min-h-screen flex-col bg-background lg:flex-row">
@@ -78,36 +39,22 @@ export default function AuthPage({ initialMode = 'login' }: Props) {
 
           {mode === 'login' && (
             <LoginForm
-              onSuccess={handleLoginSuccess}
+              onSuccess={() => goOnboarding()}
               onSwitchRegister={goRegister}
               onForgotPassword={goForgot}
             />
           )}
           {mode === 'register' && (
-            <RegisterForm onComplete={handleRegisterComplete} onLoginInstead={goLogin} />
+            <RegisterForm onComplete={goLogin} onLoginInstead={goLogin} />
           )}
-          {mode === 'onboarding' && <OnboardingFlow onComplete={handleAuthComplete} />}
-          {mode === 'forgot' && (
-            <ForgotPasswordForm
-              onSent={(value) => {
-                setRecoveryEmail(value);
-                goOtp();
-              }}
+          {mode === 'onboarding' && <OnboardingFlow onComplete={enterDashboard} />}
+          {mode === 'forgot' && <ForgotPasswordForm onBackLogin={goLogin} />}
+          {mode === 'reset' && (
+            <ResetPasswordForm
+              token={resetToken}
+              onSuccess={enterDashboard}
               onBackLogin={goLogin}
             />
-          )}
-          {mode === 'otp' && (
-            <OtpForm
-              email={email}
-              onVerified={(otp) => {
-                setRecoveryOtp(otp);
-                goReset();
-              }}
-              onBack={goForgot}
-            />
-          )}
-          {mode === 'reset' && (
-            <ResetPasswordForm email={email} otp={recoveryOtp} onBackLogin={goLogin} />
           )}
         </div>
         <AuthSecureFooter />

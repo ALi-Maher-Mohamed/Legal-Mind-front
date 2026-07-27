@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { LanguageProvider } from '@/lib/providers/LanguageProvider';
 import { ThemeProvider } from '@/lib/providers/ThemeProvider';
+import { ToastProvider } from '@/lib/providers/ToastProvider';
 import { buildThemeStyleTag } from '@/config/theme';
 
 const ibmPlexArabic = localFont({
@@ -103,7 +104,10 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <LanguageProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            <ToastProvider />
+            {children}
+          </ThemeProvider>
         </LanguageProvider>
       </body>
     </html>

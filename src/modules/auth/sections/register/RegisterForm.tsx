@@ -1,7 +1,6 @@
 'use client';
 
 import { useLanguage } from '@/hooks/useLanguage';
-import type { RegisterDraft } from '@/types/auth.types';
 import StepProgress from '../../components/StepProgress';
 import { useRegisterForm } from '../../hooks/useRegisterForm';
 import RegisterStepPersonal from './RegisterStepPersonal';
@@ -10,7 +9,7 @@ import RegisterStepPractices from './RegisterStepPractices';
 import RegisterControls from './RegisterControls';
 
 type Props = {
-  onComplete: (draft: RegisterDraft) => void;
+  onComplete: () => void;
   onLoginInstead: () => void;
 };
 

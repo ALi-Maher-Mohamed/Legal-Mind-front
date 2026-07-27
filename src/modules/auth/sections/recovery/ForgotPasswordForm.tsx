@@ -1,19 +1,39 @@
 'use client';
 
-import { Mail } from 'lucide-react';
+import { useState } from 'react';
+import { Mail, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
 import AuthInput from '../../components/AuthInput';
 import { useForgotPassword } from '../../hooks/useForgotPassword';
 
 type Props = {
-  onSent: (email: string) => void;
   onBackLogin: () => void;
 };
 
-export default function ForgotPasswordForm({ onSent, onBackLogin }: Props) {
+export default function ForgotPasswordForm({ onBackLogin }: Props) {
   const { t } = useLanguage();
-  const form = useForgotPassword(onSent);
+  const [sentEmail, setSentEmail] = useState('');
+  const form = useForgotPassword((email) => setSentEmail(email));
+
+  if (sentEmail) {
+    return (
+      <div className="space-y-6 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+          <CheckCircle2 className="h-8 w-8" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t.auth.forgotSentTitle}</h1>
+          <p className="mt-2 text-sm text-muted">
+            {t.auth.forgotSentSubtitle.replace('{email}', sentEmail)}
+          </p>
+        </div>
+        <Button type="button" variant="primary" fullWidth size="lg" onClick={onBackLogin}>
+          {t.auth.backToLogin}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -35,14 +55,8 @@ export default function ForgotPasswordForm({ onSent, onBackLogin }: Props) {
           autoComplete="email"
         />
 
-        {form.error && (
-          <p className="text-xs text-red-600 dark:text-red-400" role="alert">
-            {form.error}
-          </p>
-        )}
-
         <Button type="submit" variant="primary" fullWidth size="lg" isLoading={form.isLoading}>
-          {t.auth.sendCodeBtn}
+          {t.auth.sendResetLinkBtn}
         </Button>
       </form>
 

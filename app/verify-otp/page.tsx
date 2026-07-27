@@ -1,5 +1,6 @@
-import { AuthPage } from '@/modules/auth';
+import { redirect } from 'next/navigation';
+import { ROUTES } from '@/config/routes';
 
 export default function VerifyOtpPage() {
-  return <AuthPage initialMode="otp" />;
+  redirect(ROUTES.forgotPassword);
 }

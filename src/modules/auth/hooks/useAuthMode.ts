@@ -10,7 +10,6 @@ export function useAuthMode(initial: AuthMode = 'login') {
   const goRegister = useCallback(() => setMode('register'), []);
   const goOnboarding = useCallback(() => setMode('onboarding'), []);
   const goForgot = useCallback(() => setMode('forgot'), []);
-  const goOtp = useCallback(() => setMode('otp'), []);
   const goReset = useCallback(() => setMode('reset'), []);
 
   return {
@@ -20,7 +19,6 @@ export function useAuthMode(initial: AuthMode = 'login') {
     goRegister,
     goOnboarding,
     goForgot,
-    goOtp,
     goReset,
   };
 }

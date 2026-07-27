@@ -1,103 +1,152 @@
-import type { AuthUser, LoginCredentials, RegisterDraft, ResetPasswordPayload } from '@/types/auth.types';
+import { api } from "@/lib/api/client";
+import { ApiError } from "@/lib/api/errors";
+import { sessionStore } from "@/lib/api/session";
+import { buildRegisterFormData } from "@/modules/auth/lib/buildRegisterFormData";
+import { mapApiUserToAuthUser } from "@/modules/auth/lib/mapAuthUser";
+import type {
+  ApiUser,
+  AuthSessionPayload,
+  AuthUser,
+  LoginCredentials,
+  RegisterDraft,
+  ResetPasswordPayload,
+} from "@/types/auth.types";
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const RECOVERY_EMAIL_KEY = 'legalmind_recovery_email';
-const RECOVERY_OTP_KEY = 'legalmind_recovery_otp';
+type UserEnvelope = { user: ApiUser };
+type AuthEnvelope = {
+  user: ApiUser;
+  accessToken: string;
+  refreshToken?: string;
+};
 
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<{ success: boolean; token: string; email: string }> {
-    await delay(600);
-    if (!credentials.email || !credentials.password) {
-      throw new Error('Missing credentials');
+  async login(credentials: LoginCredentials): Promise<AuthSessionPayload> {
+    const response = await api.post<AuthEnvelope>("/api/auth/login", {
+      json: {
+        email: credentials.email.trim(),
+        password: credentials.password,
+      },
+    });
+
+    const user = mapApiUserToAuthUser(response.data.user);
+    if (!user.isEmailVerified) {
+      throw new ApiError("يرجى تفعيل بريدك الإلكتروني قبل تسجيل الدخول", 403);
     }
+
+    sessionStore.persist(user, response.data.accessToken, {
+      rememberMe: credentials.rememberMe,
+      refreshToken: response.data.refreshToken,
+    });
+
     return {
-      success: true,
-      token: `mock-jwt-${Math.random().toString(36).substring(7)}`,
-      email: credentials.email,
+      user,
+      accessToken: response.data.accessToken,
+      refreshToken: response.data.refreshToken,
+      message: response.message,
     };
   },
 
-  async register(draft: RegisterDraft): Promise<{ success: boolean }> {
-    await delay(600);
-    if (!draft.name || !draft.email || !draft.password) {
-      throw new Error('Incomplete registration');
+  async register(
+    draft: RegisterDraft,
+  ): Promise<{ user: AuthUser; message: string }> {
+    const response = await api.post<UserEnvelope>("/api/auth/register", {
+      formData: buildRegisterFormData(draft),
+    });
+
+    return {
+      user: mapApiUserToAuthUser(response.data.user, draft.selectedPractices),
+      message: response.message,
+    };
+  },
+
+  async me(): Promise<AuthUser> {
+    const response = await api.get<UserEnvelope>("/api/auth/me", {
+      auth: true,
+    });
+    const practiceAreas = sessionStore.getUser()?.practiceAreas ?? [];
+    const user = mapApiUserToAuthUser(response.data.user, practiceAreas);
+    const token = sessionStore.getAccessToken();
+    if (token) {
+      sessionStore.persist(user, token, {
+        refreshToken: sessionStore.getRefreshToken(),
+      });
     }
-    return { success: true };
+    return user;
   },
 
-  async requestPasswordReset(email: string): Promise<{ success: boolean; otp: string }> {
-    await delay(700);
-    if (!email.includes('@')) throw new Error('Invalid email');
-    const otp = '123456';
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem(RECOVERY_EMAIL_KEY, email);
-      sessionStorage.setItem(RECOVERY_OTP_KEY, otp);
-    }
-    return { success: true, otp };
+  async verifyEmail(token: string): Promise<{ message: string }> {
+    const response = await api.post<unknown>("/api/auth/verify-email", {
+      json: { token: token.trim() },
+    });
+    return { message: response.message };
   },
 
-  async verifyOtp(email: string, otp: string): Promise<{ success: boolean }> {
-    await delay(500);
-    const stored =
-      typeof window !== 'undefined' ? sessionStorage.getItem(RECOVERY_OTP_KEY) : null;
-    const expected = stored || '123456';
-    if (!email || otp.length !== 6 || otp !== expected) {
-      throw new Error('Invalid code');
-    }
-    return { success: true };
+  async resendVerification(email: string): Promise<{ message: string }> {
+    const response = await api.post<unknown>("/api/auth/resend-verification", {
+      json: { email: email.trim() },
+    });
+    return { message: response.message };
   },
 
-  async verifyEmail(token: string): Promise<{ success: boolean }> {
-    await delay(900);
-    const value = token.trim();
-    // Demo: accept any non-empty token (wire to backend when available).
-    if (!value || value.length < 16) {
-      throw new Error('Invalid or expired token');
-    }
-    return { success: true };
+  async requestPasswordReset(email: string): Promise<{ message: string }> {
+    const response = await api.post<unknown>("/api/auth/forgot-password", {
+      json: { email: email.trim() },
+    });
+    return { message: response.message };
   },
 
-  async resetPassword(payload: ResetPasswordPayload): Promise<{ success: boolean }> {
-    await delay(700);
-    if (!payload.password || payload.password.length < 6) {
-      throw new Error('Weak password');
-    }
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem(RECOVERY_EMAIL_KEY);
-      sessionStorage.removeItem(RECOVERY_OTP_KEY);
-    }
-    return { success: true };
+  async resetPassword(
+    payload: ResetPasswordPayload,
+  ): Promise<AuthSessionPayload> {
+    const response = await api.post<AuthEnvelope>("/api/auth/reset-password", {
+      json: {
+        token: payload.token.trim(),
+        password: payload.password,
+      },
+    });
+
+    const user = mapApiUserToAuthUser(response.data.user);
+    sessionStore.persist(user, response.data.accessToken, {
+      rememberMe: true,
+      refreshToken: response.data.refreshToken,
+    });
+
+    return {
+      user,
+      accessToken: response.data.accessToken,
+      refreshToken: response.data.refreshToken,
+      message: response.message,
+    };
   },
 
-  getRecoveryEmail(): string {
-    if (typeof window === 'undefined') return '';
-    return sessionStorage.getItem(RECOVERY_EMAIL_KEY) || '';
-  },
-
-  persistSession(user: AuthUser, token: string) {
-    if (typeof window === 'undefined') return;
-    sessionStorage.setItem('legalmind_user', JSON.stringify(user));
-    sessionStorage.setItem('legalmind_token', token);
-  },
-
-  getSession(): { user: AuthUser; token: string } | null {
-    if (typeof window === 'undefined') return null;
-    const raw = sessionStorage.getItem('legalmind_user');
-    const token = sessionStorage.getItem('legalmind_token');
-    if (!raw || !token) return null;
+  async logout(): Promise<void> {
+    const refreshToken = sessionStore.getRefreshToken();
     try {
-      const user = JSON.parse(raw) as AuthUser;
-      if (!user?.id || !user?.email) return null;
-      return { user, token };
+      if (refreshToken) {
+        await api.post("/api/auth/logout", { json: { refreshToken } });
+      } else if (sessionStore.getAccessToken()) {
+        await api.post("/api/auth/logout-all", undefined, { auth: true });
+      }
     } catch {
-      return null;
+      // Local session must clear even if the network call fails.
+    } finally {
+      sessionStore.clear();
     }
+  },
+
+  persistSession(
+    user: AuthUser,
+    token: string,
+    options?: { rememberMe?: boolean; refreshToken?: string | null },
+  ) {
+    sessionStore.persist(user, token, options);
+  },
+
+  getSession() {
+    return sessionStore.getSession();
   },
 
   clearSession() {
-    if (typeof window === 'undefined') return;
-    sessionStorage.removeItem('legalmind_user');
-    sessionStorage.removeItem('legalmind_token');
+    sessionStore.clear();
   },
 };

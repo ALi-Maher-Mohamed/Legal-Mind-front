@@ -3,11 +3,12 @@
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
+import type { AuthUser } from '@/types/auth.types';
 import AuthInput from '../../components/AuthInput';
 import { useLoginForm } from '../../hooks/useLoginForm';
 
 type LoginFormProps = {
-  onSuccess: (email: string) => void;
+  onSuccess: (user: AuthUser) => void;
   onSwitchRegister: () => void;
   onForgotPassword: () => void;
 };
@@ -71,12 +72,6 @@ export default function LoginForm({ onSuccess, onSwitchRegister, onForgotPasswor
             {t.auth.forgotPassword}
           </button>
         </div>
-
-        {form.error && (
-          <p className="text-xs text-red-600 dark:text-red-400" role="alert">
-            {form.error}
-          </p>
-        )}
 
         <Button type="submit" variant="primary" fullWidth size="lg" isLoading={form.isLoading}>
           {t.auth.loginBtn}

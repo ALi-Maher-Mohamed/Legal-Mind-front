@@ -1,22 +1,39 @@
 'use client';
 
 import { useState } from 'react';
-import { Lock, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Lock, Eye, EyeOff, CheckCircle2, MailWarning } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
 import AuthInput from '../../components/AuthInput';
 import { useResetPassword } from '../../hooks/useResetPassword';
 
 type Props = {
-  email: string;
-  otp: string;
+  token: string | null;
+  onSuccess: () => void;
   onBackLogin: () => void;
 };
 
-export default function ResetPasswordForm({ email, otp, onBackLogin }: Props) {
+export default function ResetPasswordForm({ token, onSuccess, onBackLogin }: Props) {
   const { t } = useLanguage();
   const [done, setDone] = useState(false);
-  const form = useResetPassword(email, otp, () => setDone(true));
+  const form = useResetPassword(token || '', () => setDone(true));
+
+  if (!token) {
+    return (
+      <div className="space-y-6 text-center">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+          <MailWarning className="h-8 w-8" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t.auth.resetMissingTitle}</h1>
+          <p className="mt-2 text-sm text-muted">{t.auth.resetMissingDesc}</p>
+        </div>
+        <Button type="button" variant="primary" fullWidth size="lg" onClick={onBackLogin}>
+          {t.auth.backToLogin}
+        </Button>
+      </div>
+    );
+  }
 
   if (done) {
     return (
@@ -25,8 +42,8 @@ export default function ResetPasswordForm({ email, otp, onBackLogin }: Props) {
           <CheckCircle2 className="h-8 w-8" />
         </div>
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t.auth.resetSuccess}</h1>
-        <Button type="button" variant="primary" fullWidth size="lg" onClick={onBackLogin}>
-          {t.auth.backToLogin}
+        <Button type="button" variant="primary" fullWidth size="lg" onClick={onSuccess}>
+          {t.auth.enterApp}
         </Button>
       </div>
     );
@@ -78,7 +95,7 @@ export default function ResetPasswordForm({ email, otp, onBackLogin }: Props) {
         )}
         {form.error === 'weak' && (
           <p className="text-xs text-red-600 dark:text-red-400" role="alert">
-            {t.auth.regPasswordPlaceholder}
+            {t.auth.passwordWeak}
           </p>
         )}
 
