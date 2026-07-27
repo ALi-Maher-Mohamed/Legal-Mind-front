@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
 import { ROUTES } from '@/config/routes';
-import { useLanguage } from '@/hooks/useLanguage';
 import { toastApiError } from '@/lib/api/toast';
+import BrandSplash from '@/components/common/BrandSplash';
+import { useSplashGate } from '@/hooks/useSplashGate';
 import {
   hasCompletedOnboarding,
   markOnboardingCompleted,
@@ -24,11 +25,11 @@ import DashboardOnboarding from '../components/onboarding/DashboardOnboarding';
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { t } = useLanguage();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [view, setView] = useState<DashboardView>('dashboard');
   const [ready, setReady] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const showSplash = useSplashGate(ready && Boolean(user), 1800);
 
   useEffect(() => {
     let active = true;
@@ -62,12 +63,8 @@ export default function DashboardPage() {
     };
   }, [router]);
 
-  if (!ready || !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-[#f0f4ff] dark:bg-background">
-        <p className="text-sm text-muted">{t.common.loading}</p>
-      </div>
-    );
+  if (showSplash || !ready || !user) {
+    return <BrandSplash />;
   }
 
   if (showOnboarding) {

@@ -1,31 +1,34 @@
 import type { AuthUser } from '@/types/auth.types';
+import { getCookie, removeCookie, setCookie } from './cookies';
 
 const USER_KEY = 'legalmind_user';
 const TOKEN_KEY = 'legalmind_token';
 const REFRESH_KEY = 'legalmind_refresh_token';
+const REMEMBER_KEY = 'legalmind_remember';
 
-type BrowserStorage = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
+/** ~7 days when "remember me" is enabled */
+const REMEMBER_MAX_AGE = 60 * 60 * 24 * 7;
+/** Access token cookie lifetime when not remembering (browser session-like, 1 day) */
+const SESSION_MAX_AGE = 60 * 60 * 24;
 
 function canUseDom() {
   return typeof window !== 'undefined';
 }
 
-function readFrom(storages: BrowserStorage[], key: string): string | null {
-  for (const storage of storages) {
-    const value = storage.getItem(key);
-    if (value) return value;
-  }
-  return null;
-}
-
-function writeTo(storage: BrowserStorage, key: string, value: string) {
-  storage.setItem(key, value);
-}
-
-function removeFromAll(key: string) {
+function clearLegacyStorage() {
   if (!canUseDom()) return;
-  window.localStorage.removeItem(key);
-  window.sessionStorage.removeItem(key);
+  window.localStorage.removeItem(USER_KEY);
+  window.localStorage.removeItem(TOKEN_KEY);
+  window.localStorage.removeItem(REFRESH_KEY);
+  window.sessionStorage.removeItem(USER_KEY);
+  window.sessionStorage.removeItem(TOKEN_KEY);
+  window.sessionStorage.removeItem(REFRESH_KEY);
+}
+
+function cookieOptions(rememberMe: boolean) {
+  return rememberMe
+    ? { maxAgeSeconds: REMEMBER_MAX_AGE }
+    : { maxAgeSeconds: SESSION_MAX_AGE };
 }
 
 export type PersistSessionOptions = {
@@ -35,18 +38,15 @@ export type PersistSessionOptions = {
 
 export const sessionStore = {
   getAccessToken(): string | null {
-    if (!canUseDom()) return null;
-    return readFrom([window.localStorage, window.sessionStorage], TOKEN_KEY);
+    return getCookie(TOKEN_KEY);
   },
 
   getRefreshToken(): string | null {
-    if (!canUseDom()) return null;
-    return readFrom([window.localStorage, window.sessionStorage], REFRESH_KEY);
+    return getCookie(REFRESH_KEY);
   },
 
   getUser(): AuthUser | null {
-    if (!canUseDom()) return null;
-    const raw = readFrom([window.localStorage, window.sessionStorage], USER_KEY);
+    const raw = getCookie(USER_KEY);
     if (!raw) return null;
     try {
       const user = JSON.parse(raw) as AuthUser;
@@ -67,27 +67,28 @@ export const sessionStore = {
   persist(user: AuthUser, accessToken: string, options: PersistSessionOptions = {}) {
     if (!canUseDom()) return;
 
-    const rememberMe = options.rememberMe ?? Boolean(window.localStorage.getItem(TOKEN_KEY));
-    const primary = rememberMe ? window.localStorage : window.sessionStorage;
-    const secondary = rememberMe ? window.sessionStorage : window.localStorage;
+    const rememberMe =
+      options.rememberMe ?? getCookie(REMEMBER_KEY) === '1';
+    const opts = cookieOptions(rememberMe);
 
-    secondary.removeItem(USER_KEY);
-    secondary.removeItem(TOKEN_KEY);
-    secondary.removeItem(REFRESH_KEY);
+    clearLegacyStorage();
 
-    writeTo(primary, USER_KEY, JSON.stringify(user));
-    writeTo(primary, TOKEN_KEY, accessToken);
+    setCookie(REMEMBER_KEY, rememberMe ? '1' : '0', opts);
+    setCookie(USER_KEY, JSON.stringify(user), opts);
+    setCookie(TOKEN_KEY, accessToken, opts);
 
     if (options.refreshToken) {
-      writeTo(primary, REFRESH_KEY, options.refreshToken);
+      setCookie(REFRESH_KEY, options.refreshToken, opts);
     } else {
-      primary.removeItem(REFRESH_KEY);
+      removeCookie(REFRESH_KEY);
     }
   },
 
   clear() {
-    removeFromAll(USER_KEY);
-    removeFromAll(TOKEN_KEY);
-    removeFromAll(REFRESH_KEY);
+    removeCookie(USER_KEY);
+    removeCookie(TOKEN_KEY);
+    removeCookie(REFRESH_KEY);
+    removeCookie(REMEMBER_KEY);
+    clearLegacyStorage();
   },
 };

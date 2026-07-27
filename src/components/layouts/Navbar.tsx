@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { useScroll } from "@/hooks/useScroll";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useThemeContext } from "@/lib/providers/ThemeProvider";
@@ -10,6 +9,7 @@ import { Button } from "@/components/ui";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Logo } from "../common/logo";
+import AuthEntryLink from "../common/AuthEntryLink";
 
 export default function Navbar() {
   const scrolled = useScroll(20);
@@ -68,11 +68,11 @@ export default function Navbar() {
 
           <div className="hidden lg:flex items-center gap-3">
             <ThemeSwitch theme={theme} onToggle={toggleTheme} />
-            <Link href={ROUTES.login}>
+            <AuthEntryLink>
               <Button variant="primary" size="sm">
                 {t.common.getStarted}
               </Button>
-            </Link>
+            </AuthEntryLink>
           </div>
 
           <button
@@ -149,15 +149,14 @@ export default function Navbar() {
                   <ThemeSwitch theme={theme} onToggle={toggleTheme} fullWidth />
                 </div>
 
-                <Link
-                  href={ROUTES.login}
-                  onClick={() => setIsOpen(false)}
+                <AuthEntryLink
+                  onNavigate={() => setIsOpen(false)}
                   className="block pt-1"
                 >
                   <Button variant="primary" fullWidth>
                     {t.common.getStarted}
                   </Button>
-                </Link>
+                </AuthEntryLink>
               </div>
             </motion.aside>
           </motion.div>

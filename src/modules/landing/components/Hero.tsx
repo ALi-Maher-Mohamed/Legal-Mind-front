@@ -2,12 +2,11 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useThemeContext } from "@/lib/providers/ThemeProvider";
 import { Button } from "@/components/ui";
-import { ROUTES } from "@/config/routes";
+import AuthEntryLink from "@/components/common/AuthEntryLink";
 import { Shield, FileText, Scale, Activity } from "lucide-react";
 
 export default function Hero() {
@@ -47,7 +46,7 @@ export default function Hero() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 w-full sm:w-auto sm:self-center lg:self-start">
-              <Link href={ROUTES.login} className="w-full sm:w-auto">
+              <AuthEntryLink className="w-full sm:w-auto">
                 <Button
                   variant="primary"
                   size="lg"
@@ -55,7 +54,7 @@ export default function Hero() {
                 >
                   {t.hero.ctaStart}
                 </Button>
-              </Link>
+              </AuthEntryLink>
             </div>
           </motion.div>
 

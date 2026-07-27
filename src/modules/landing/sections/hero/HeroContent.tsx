@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button } from '@/components/ui';
+import AuthEntryLink from '@/components/common/AuthEntryLink';
 
 export default function HeroContent() {
   const { t } = useLanguage();
@@ -44,7 +45,11 @@ export default function HeroContent() {
         transition={{ duration: 0.6, delay: 0.3 }}
         className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
       >
-        <Button variant="primary" size="lg" className="w-full sm:w-auto">{t.hero.ctaStart}</Button>
+        <AuthEntryLink className="w-full sm:w-auto">
+          <Button variant="primary" size="lg" className="w-full sm:w-auto">
+            {t.hero.ctaStart}
+          </Button>
+        </AuthEntryLink>
         <Button variant="secondary" size="lg" className="w-full sm:w-auto">{t.hero.ctaDemo}</Button>
       </motion.div>
     </div>

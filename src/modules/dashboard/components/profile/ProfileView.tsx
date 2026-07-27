@@ -1,26 +1,31 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   BadgeCheck,
   Briefcase,
   CalendarClock,
   FileText,
   IdCard,
+  LogOut,
   Mail,
   Phone,
   RefreshCw,
   Scale,
+  ShieldAlert,
   ShieldCheck,
   UserRound,
 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { ROUTES } from '@/config/routes';
 import { authService } from '@/services/auth.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 import { resolveMediaUrl } from '@/lib/api/media';
 import type { AuthUser } from '@/types/auth.types';
 import { dashPanel } from '../../lib/panelStyles';
 import { formatProfileDate, roleLabel, teamSizeLabel } from '../../lib/profileLabels';
+import ConfirmModal from '../ui/ConfirmModal';
 import ProfileField from './ProfileField';
 
 type Props = {
@@ -30,7 +35,10 @@ type Props = {
 
 export default function ProfileView({ user, onUserUpdate }: Props) {
   const { t } = useLanguage();
+  const router = useRouter();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [logoutAllOpen, setLogoutAllOpen] = useState(false);
+  const [isLoggingOutAll, setIsLoggingOutAll] = useState(false);
   const [docFailed, setDocFailed] = useState(false);
 
   const documentUrl = resolveMediaUrl(user.lawyerIdDocument);
@@ -55,6 +63,19 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
       toastApiError(error, t.dashboard.profileRefreshError);
     } finally {
       setIsRefreshing(false);
+    }
+  };
+
+  const logoutAllDevices = async () => {
+    setIsLoggingOutAll(true);
+    try {
+      const result = await authService.logoutAll();
+      toastApiSuccess(result.message || t.dashboard.profileLogoutAllTitle);
+      router.replace(ROUTES.login);
+    } catch (error) {
+      toastApiError(error, t.dashboard.profileLogoutAllError);
+      setIsLoggingOutAll(false);
+      setLogoutAllOpen(false);
     }
   };
 
@@ -226,6 +247,47 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
           </div>
         </div>
       </section>
+
+      <section className={`${dashPanel} overflow-hidden`}>
+        <div className="flex items-center gap-2 border-b border-brand/10 px-5 py-4 sm:px-6 dark:border-white/10">
+          <ShieldAlert className="h-4 w-4 text-danger" />
+          <h2 className="text-base font-bold text-foreground">{t.dashboard.profileSecurity}</h2>
+        </div>
+        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+          <div className="min-w-0 text-start">
+            <p className="text-sm font-semibold text-foreground">
+              {t.dashboard.profileLogoutAllTitle}
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-muted">
+              {t.dashboard.profileLogoutAllDesc}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setLogoutAllOpen(true)}
+            disabled={isLoggingOutAll}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-2.5 text-sm font-semibold text-danger transition hover:bg-danger/15 disabled:opacity-60 cursor-pointer"
+          >
+            <LogOut className="h-4 w-4" />
+            {t.dashboard.profileLogoutAllBtn}
+          </button>
+        </div>
+      </section>
+
+      <ConfirmModal
+        open={logoutAllOpen}
+        title={t.dashboard.profileLogoutAllTitle}
+        description={t.dashboard.profileLogoutAllConfirm}
+        confirmLabel={t.dashboard.profileLogoutAllBtn}
+        cancelLabel={t.dashboard.cancel}
+        isLoading={isLoggingOutAll}
+        tone="danger"
+        icon={ShieldAlert}
+        onCancel={() => {
+          if (!isLoggingOutAll) setLogoutAllOpen(false);
+        }}
+        onConfirm={() => void logoutAllDevices()}
+      />
     </div>
   );
 }

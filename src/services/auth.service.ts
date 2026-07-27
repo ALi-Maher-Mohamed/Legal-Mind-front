@@ -134,6 +134,14 @@ export const authService = {
     }
   },
 
+  async logoutAll(): Promise<{ message: string }> {
+    const response = await api.post<unknown>("/api/auth/logout-all", undefined, {
+      auth: true,
+    });
+    sessionStore.clear();
+    return { message: response.message };
+  },
+
   persistSession(
     user: AuthUser,
     token: string,

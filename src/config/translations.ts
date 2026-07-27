@@ -14,6 +14,7 @@ export const translations = {
     subscribe: "اشترك الآن",
     emailPlaceholder: "أدخل بريدك الإلكتروني",
     loading: "جاري المعالجة...",
+    loadingBrand: "جاري تحميل مساحة ليجال مايند...",
     uploadFile: "رفع عقد / مستند قانوني",
     searchPlaceholder: "ابحث في الأسئلة الشائعة...",
     monthly: "شهرياً",
@@ -25,6 +26,10 @@ export const translations = {
     attachmentLabel: "الملف المرفق: ",
     brandName: "ليجال مايند",
     brandSuffix: "AI",
+    notFoundTitle: "الصفحة غير موجودة",
+    notFoundDesc:
+      "يبدو أن الرابط غير صحيح أو أن الصفحة نُقلت. عد إلى الرئيسية أو ادخل إلى مساحة عملك.",
+    notFoundHome: "العودة للرئيسية",
   },
   nav: {
     services: "خدماتنا",
@@ -207,6 +212,12 @@ export const translations = {
     stat2Title: "قضايا نشطة",
     stat3Title: "مسودات جاهزة",
     logout: "تسجيل الخروج",
+    logoutConfirmTitle: "تسجيل الخروج من هذا الجهاز",
+    logoutConfirmDesc:
+      "سيتم إنهاء جلستك الحالية على هذا الجهاز فقط. يمكنك تسجيل الدخول مجدداً في أي وقت.",
+    logoutSuccess: "تم تسجيل الخروج بنجاح",
+    logoutError: "تعذّر تسجيل الخروج",
+    cancel: "إلغاء",
     workspace: "مساحة العمل",
     comingSoon: "هذه الوحدة قيد التطوير قريباً.",
     backDesk: "العودة للمكتب",
@@ -240,6 +251,14 @@ export const translations = {
     profileRefresh: "تحديث البيانات",
     profileRefreshed: "تم تحديث بيانات الملف الشخصي",
     profileRefreshError: "تعذّر تحديث بيانات الملف الشخصي",
+    profileSecurity: "أمان الحساب",
+    profileLogoutAllTitle: "الخروج من جميع الأجهزة",
+    profileLogoutAllDesc:
+      "إنهاء جميع جلسات تسجيل الدخول المرتبطة بحسابك على كل الأجهزة والمتصفحات. ستحتاج لتسجيل الدخول مجدداً هنا.",
+    profileLogoutAllBtn: "تسجيل الخروج من جميع الأجهزة",
+    profileLogoutAllConfirm:
+      "سيتم إنهاء جميع جلسات تسجيل الدخول المرتبطة بحسابك على كل الأجهزة والمتصفحات، وستخرج من الحساب فوراً على هذا الجهاز أيضاً.",
+    profileLogoutAllError: "تعذّر تسجيل الخروج من جميع الأجهزة",
   },
   auth: {
     backHome: "العودة للرئيسية",
