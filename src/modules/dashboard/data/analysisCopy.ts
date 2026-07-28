@@ -43,7 +43,6 @@ export const analysisCopy = {
   retryUpload: 'ارفع عقداً جديداً',
   category: 'الفئة',
   auditedBadge: 'مستند تم تدقيقه',
-  shareAudit: 'فتح الملف الأصلي',
   downloadReport: 'تحميل التقرير',
   downloadSuccess: 'تم بدء تحميل التقرير',
   downloadError: 'تعذّر تحميل التقرير',
