@@ -5,28 +5,58 @@ import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/hooks/useLanguage';
 import { ROUTES } from '@/config/routes';
 import { authService } from '@/services/auth.service';
+import { usersService } from '@/services/users.service';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
-import type { AuthUser } from '@/types/auth.types';
+import type { AuthUser, TeamSizeValue, UpdateProfilePayload } from '@/types/auth.types';
+import { validateAvatarFile } from '../lib/avatarUpload';
 
 export function useProfileActions(
   onUserUpdate: (user: AuthUser) => void,
 ) {
   const { t } = useLanguage();
   const router = useRouter();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const [logoutAllOpen, setLogoutAllOpen] = useState(false);
   const [isLoggingOutAll, setIsLoggingOutAll] = useState(false);
 
-  const refreshProfile = async () => {
-    setIsRefreshing(true);
+  const saveProfile = async (payload: UpdateProfilePayload) => {
+    setIsSaving(true);
     try {
-      const fresh = await authService.me();
-      onUserUpdate(fresh);
-      toastApiSuccess(t.dashboard.profileRefreshed);
+      const result = await usersService.updateProfile(payload);
+      onUserUpdate(result.user);
+      toastApiSuccess(result.message || t.dashboard.profileSaveSuccess);
+      return true;
     } catch (error) {
-      toastApiError(error, t.dashboard.profileRefreshError);
+      toastApiError(error, t.dashboard.profileSaveError);
+      return false;
     } finally {
-      setIsRefreshing(false);
+      setIsSaving(false);
+    }
+  };
+
+  const uploadAvatar = async (file: File) => {
+    const validationKey = validateAvatarFile(file);
+    if (validationKey === 'avatarTypeError') {
+      toastApiError(null, t.dashboard.profileAvatarTypeError);
+      return false;
+    }
+    if (validationKey === 'avatarSizeError') {
+      toastApiError(null, t.dashboard.profileAvatarSizeError);
+      return false;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const result = await usersService.uploadAvatar(file);
+      onUserUpdate(result.user);
+      toastApiSuccess(result.message || t.dashboard.profileAvatarSuccess);
+      return true;
+    } catch (error) {
+      toastApiError(error, t.dashboard.profileAvatarError);
+      return false;
+    } finally {
+      setIsUploadingAvatar(false);
     }
   };
 
@@ -44,11 +74,21 @@ export function useProfileActions(
   };
 
   return {
-    isRefreshing,
+    isSaving,
+    isUploadingAvatar,
     logoutAllOpen,
     isLoggingOutAll,
     setLogoutAllOpen,
-    refreshProfile,
+    saveProfile,
+    uploadAvatar,
     logoutAllDevices,
   };
 }
+
+export type ProfileEditDraft = {
+  fullName: string;
+  officeName: string;
+  barAssociationNumber: string;
+  phone: string;
+  teamSize: TeamSizeValue;
+};

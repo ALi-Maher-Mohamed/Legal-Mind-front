@@ -3,6 +3,7 @@
 import { LogOut } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { AuthUser } from '@/types/auth.types';
+import UserAvatar from '../profile/UserAvatar';
 
 type Props = {
   user: AuthUser;
@@ -15,9 +16,7 @@ export default function SidebarUser({ user, onLogout }: Props) {
   return (
     <div className="space-y-2 border-t border-brand/15 p-3 dark:border-white/10">
       <div className="flex items-center gap-2 px-2 py-1">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/15 text-xs font-bold text-brand">
-          {user.name.charAt(0).toUpperCase()}
-        </div>
+        <UserAvatar user={user} className="h-8 w-8 shrink-0" textClassName="text-xs" />
         <div className="min-w-0 flex-1">
           <p className="truncate text-xs font-semibold text-foreground">{user.name}</p>
           <p className="truncate text-[10px] text-muted">{user.email}</p>

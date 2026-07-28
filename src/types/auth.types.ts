@@ -40,9 +40,18 @@ export type ApiUser = {
   isActive: boolean;
   isEmailVerified: boolean;
   phone?: string;
+  avatar?: string;
   createdAt?: string;
   updatedAt?: string;
   lastLogin?: string;
+};
+
+export type UpdateProfilePayload = {
+  fullName: string;
+  officeName: string;
+  barAssociationNumber: string;
+  phone: string;
+  teamSize: TeamSizeValue;
 };
 
 export type RegisterDraft = {

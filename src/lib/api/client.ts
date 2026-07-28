@@ -132,6 +132,18 @@ export const api = {
       formData: body?.formData,
     }),
 
+  patch: <T>(
+    path: string,
+    body?: { json?: unknown; formData?: FormData },
+    options?: Omit<RequestOptions, 'method' | 'json' | 'formData'>,
+  ) =>
+    apiRequest<T>(path, {
+      ...options,
+      method: 'PATCH',
+      json: body?.json,
+      formData: body?.formData,
+    }),
+
   delete: <T>(path: string, options?: Omit<RequestOptions, 'method' | 'json' | 'formData'>) =>
     apiRequest<T>(path, { ...options, method: 'DELETE' }),
 

@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Briefcase, FileText } from "lucide-react";
-import { useLanguage } from "@/hooks/useLanguage";
-import { resolveMediaUrl } from "@/lib/api/media";
-import type { AuthUser } from "@/types/auth.types";
-import ProfileImagePreview from "./ProfileImagePreview";
-import ProfileSection from "./ProfileSection";
+import { useState } from 'react';
+import { useLanguage } from '@/hooks/useLanguage';
+import { resolveMediaUrl } from '@/lib/api/media';
+import type { AuthUser } from '@/types/auth.types';
+import { PROFILE_ASSETS } from './lib/profileAssets';
+import ProfileImagePreview from './ProfileImagePreview';
 
 type Props = {
   user: AuthUser;
@@ -22,38 +21,68 @@ export default function ProfileDocumentCard({ user }: Props) {
 
   return (
     <>
-      <ProfileSection title={t.dashboard.profileIdDocument} icon={FileText}>
+      <section className="rounded-2xl border border-[rgba(79,70,51,0.3)] bg-[rgba(23,31,51,0.7)] p-[25px] backdrop-blur-[6px]">
+        <div className="mb-6 flex items-center justify-end gap-3">
+          <h2 className="text-xl font-bold text-[#dae2fd]">{t.dashboard.profileIdDocument}</h2>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={PROFILE_ASSETS.iconDocument}
+            alt=""
+            className="h-8 w-9"
+            width={36}
+            height={32}
+          />
+        </div>
+
         {canPreview && documentUrl ? (
           <button
             type="button"
             onClick={() => setPreviewOpen(true)}
-            className="group relative block w-full overflow-hidden rounded-xl border border-brand/10 text-start transition hover:border-brand/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 dark:border-white/10 cursor-pointer"
-            aria-label={t.dashboard.profilePreviewCta}
+            className="group relative flex min-h-[280px] w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(79,70,51,0.5)] bg-[#2d3449] cursor-pointer"
+            aria-label={t.dashboard.profilePreviewIdDoc}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={documentUrl}
               alt={t.dashboard.profileIdDocument}
-              className="h-52 w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+              className="absolute inset-0 size-full object-cover opacity-60 transition duration-300 group-hover:scale-[1.02] group-hover:opacity-70"
               onError={() => setFailedPath(user.lawyerIdDocument || null)}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0b1326]/70 via-[#0b1326]/10 to-transparent opacity-80 transition group-hover:opacity-100" />
+            <div className="relative z-10 flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-[rgba(11,19,38,0.8)] px-6 py-6 backdrop-blur-[6px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={PROFILE_ASSETS.iconEye}
+                alt=""
+                className="h-[30px] w-11"
+                width={44}
+                height={30}
+              />
+              <span className="text-base font-bold text-[#dae2fd]">
+                {t.dashboard.profilePreviewIdDoc}
+              </span>
+            </div>
           </button>
         ) : (
-          <div className="flex h-52 flex-col items-center justify-center rounded-xl border border-dashed border-brand/20 bg-[#f0f4ff] text-center dark:border-white/10 dark:bg-white/5">
-            <Briefcase className="mb-2 h-6 w-6 text-brand" />
-            <p className="text-sm text-muted">
-              {t.dashboard.profileNoDocument}
-            </p>
+          <div className="flex min-h-[280px] flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[rgba(79,70,51,0.5)] bg-[#2d3449] text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PROFILE_ASSETS.iconDocument}
+              alt=""
+              className="mb-3 h-8 w-9 opacity-70"
+              width={36}
+              height={32}
+            />
+            <p className="text-sm text-[#d3c5ac]">{t.dashboard.profileNoDocument}</p>
           </div>
         )}
-      </ProfileSection>
+      </section>
 
       {documentUrl ? (
         <ProfileImagePreview
           open={previewOpen}
           src={documentUrl}
           alt={t.dashboard.profileIdDocument}
+          title={t.dashboard.profilePreviewTitle}
           onClose={() => setPreviewOpen(false)}
         />
       ) : null}

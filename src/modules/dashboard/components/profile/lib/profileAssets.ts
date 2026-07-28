@@ -1,0 +1,16 @@
+export const PROFILE_ASSETS = {
+  iconEdit: '/images/profile/icon-edit.svg',
+  iconCheck: '/images/profile/icon-check.svg',
+  iconLawyer: '/images/profile/icon-lawyer.svg',
+  iconMail: '/images/profile/icon-mail.svg',
+  iconCamera: '/images/profile/icon-camera.svg',
+  iconDetails: '/images/profile/icon-details.svg',
+  iconDocument: '/images/profile/icon-document.svg',
+  iconTeam: '/images/profile/icon-team.svg',
+  iconEye: '/images/profile/icon-eye.svg',
+  iconAccount: '/images/profile/icon-account.svg',
+  iconRefresh: '/images/profile/icon-refresh.svg',
+  iconLogout: '/images/profile/icon-logout.svg',
+  iconSecurity: '/images/profile/icon-security.svg',
+  iconSecurityBg: '/images/profile/icon-security-bg.svg',
+} as const;

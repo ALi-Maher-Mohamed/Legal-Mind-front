@@ -8,11 +8,13 @@ type Props = {
   open: boolean;
   src: string;
   alt: string;
+  title?: string;
   onClose: () => void;
 };
 
-export default function ProfileImagePreview({ open, src, alt, onClose }: Props) {
+export default function ProfileImagePreview({ open, src, alt, title, onClose }: Props) {
   const { t } = useLanguage();
+  const dialogTitle = title || t.dashboard.profilePreviewTitle;
 
   useEffect(() => {
     if (!open) return;
@@ -38,7 +40,7 @@ export default function ProfileImagePreview({ open, src, alt, onClose }: Props) 
       className="fixed inset-0 z-[90] flex items-center justify-center p-4 sm:p-8"
       role="dialog"
       aria-modal="true"
-      aria-label={t.dashboard.profilePreviewTitle}
+      aria-label={dialogTitle}
     >
       <button
         type="button"
@@ -53,7 +55,7 @@ export default function ProfileImagePreview({ open, src, alt, onClose }: Props) 
             <ZoomIn className="h-4 w-4 shrink-0 text-accent" />
             <div className="min-w-0">
               <p className="truncate text-sm font-semibold text-white">
-                {t.dashboard.profilePreviewTitle}
+                {dialogTitle}
               </p>
               <p className="truncate text-[11px] text-[#c4c6cf]">{alt}</p>
             </div>

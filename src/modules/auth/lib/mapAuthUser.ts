@@ -1,5 +1,5 @@
+import { resolveMediaUrl } from '@/lib/api/media';
 import type { ApiUser, AuthUser } from '@/types/auth.types';
-import { DEFAULT_AVATAR } from '../data/onboarding.data';
 
 export function mapApiUserToAuthUser(
   user: ApiUser,
@@ -13,7 +13,7 @@ export function mapApiUserToAuthUser(
     firmName: user.officeName || '',
     barId: user.barAssociationNumber || '',
     phone: user.phone || '',
-    avatarUrl: DEFAULT_AVATAR,
+    avatarUrl: resolveMediaUrl(user.avatar) || '',
     practiceAreas,
     teamSize: user.teamSize || 'small',
     isEmailVerified: Boolean(user.isEmailVerified),

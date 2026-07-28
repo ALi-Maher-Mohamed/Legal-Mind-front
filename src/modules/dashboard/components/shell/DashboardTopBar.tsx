@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
 import { ROUTES } from '@/config/routes';
 import type { AuthUser } from '@/types/auth.types';
+import UserAvatar from '../profile/UserAvatar';
 
 type Props = {
   user: AuthUser;
@@ -38,9 +39,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
           className="hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-[#f0f4ff] dark:hover:bg-white/5 cursor-pointer sm:flex"
           aria-label={t.dashboard.navProfile}
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/15 text-xs font-bold text-brand">
-            {user.name.charAt(0).toUpperCase()}
-          </div>
+          <UserAvatar user={user} className="h-8 w-8 shrink-0" textClassName="text-xs" />
           <div className="min-w-0 max-w-[10rem] text-start">
             <p className="truncate text-xs font-semibold text-foreground">{user.name}</p>
             <p className="truncate text-[10px] text-muted">{user.email}</p>

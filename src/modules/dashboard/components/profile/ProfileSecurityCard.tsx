@@ -1,9 +1,9 @@
 'use client';
 
-import { LogOut, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import ConfirmModal from '../ui/ConfirmModal';
-import ProfileSection from './ProfileSection';
+import { PROFILE_ASSETS } from './lib/profileAssets';
+import { ShieldAlert } from 'lucide-react';
 
 type Props = {
   logoutAllOpen: boolean;
@@ -24,31 +24,54 @@ export default function ProfileSecurityCard({
 
   return (
     <>
-      <ProfileSection
-        title={t.dashboard.profileSecurity}
-        icon={ShieldAlert}
-        iconClassName="text-danger"
-      >
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0 text-start">
-            <p className="text-sm font-semibold text-foreground">
-              {t.dashboard.profileLogoutAllTitle}
-            </p>
-            <p className="mt-1 text-xs leading-relaxed text-muted">
-              {t.dashboard.profileLogoutAllDesc}
-            </p>
-          </div>
+      <section className="relative overflow-hidden rounded-2xl border border-[rgba(255,180,171,0.2)] bg-[rgba(255,180,171,0.05)] p-[25px] backdrop-blur-[6px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={PROFILE_ASSETS.iconSecurityBg}
+          alt=""
+          className="pointer-events-none absolute -bottom-12 -end-12 size-[167px] opacity-5"
+          width={167}
+          height={167}
+        />
+
+        <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
           <button
             type="button"
             onClick={onOpenLogoutAll}
             disabled={isLoggingOutAll}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-danger/25 bg-danger/10 px-4 py-2.5 text-sm font-semibold text-danger transition hover:bg-danger/15 disabled:opacity-60 cursor-pointer"
+            className="inline-flex shrink-0 items-center justify-center gap-3 rounded-lg border-2 border-[#ffb4ab] px-[34px] py-3.5 text-base font-bold text-[#ffb4ab] transition hover:bg-[rgba(255,180,171,0.08)] disabled:opacity-60 cursor-pointer order-2 sm:order-1"
           >
-            <LogOut className="h-4 w-4" />
-            {t.dashboard.profileLogoutAllBtn}
+            <span>{t.dashboard.profileLogoutAllBtn}</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PROFILE_ASSETS.iconLogout}
+              alt=""
+              className="size-[18px]"
+              width={18}
+              height={18}
+            />
           </button>
+
+          <div className="flex items-center gap-4 order-1 sm:order-2">
+            <div className="min-w-0 text-start sm:text-end">
+              <h2 className="text-xl font-bold text-[#dae2fd]">
+                {t.dashboard.profileSecurity}
+              </h2>
+              <p className="mt-1 text-sm leading-5 text-[#d3c5ac]">
+                {t.dashboard.profileLogoutAllDesc}
+              </p>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PROFILE_ASSETS.iconSecurity}
+              alt=""
+              className="h-[51px] w-[45px] shrink-0"
+              width={45}
+              height={51}
+            />
+          </div>
         </div>
-      </ProfileSection>
+      </section>
 
       <ConfirmModal
         open={logoutAllOpen}

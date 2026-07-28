@@ -1,85 +1,179 @@
 'use client';
 
-import { BadgeCheck, RefreshCw, Scale, ShieldCheck, UserRound } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { AuthUser } from '@/types/auth.types';
-import { dashPanel } from '../../lib/panelStyles';
 import { roleLabel } from '../../lib/profileLabels';
-import { getInitials } from './lib/getInitials';
+import { AVATAR_ACCEPT } from './lib/avatarUpload';
+import { PROFILE_ASSETS } from './lib/profileAssets';
+import ProfileImagePreview from './ProfileImagePreview';
+import UserAvatar from './UserAvatar';
 
 type Props = {
   user: AuthUser;
-  isRefreshing: boolean;
-  onRefresh: () => void;
+  isUploadingAvatar: boolean;
+  onEditProfile: () => void;
+  onAvatarSelected: (file: File) => void;
 };
 
-export default function ProfileHero({ user, isRefreshing, onRefresh }: Props) {
+export default function ProfileHero({
+  user,
+  isUploadingAvatar,
+  onEditProfile,
+  onAvatarSelected,
+}: Props) {
   const { t } = useLanguage();
-  const initials = getInitials(user.displayName || user.name);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const canPreview = Boolean(user.avatarUrl);
 
   return (
-    <section className={`relative overflow-hidden ${dashPanel}`}>
-      <div className="absolute inset-0 bg-gradient-to-l from-[#0b1326] via-[#132347] to-[#0038b6]" />
-      <div className="absolute -start-16 top-0 h-56 w-56 rounded-full bg-brand/30 blur-3xl" />
-      <div className="absolute -end-10 bottom-0 h-44 w-44 rounded-full bg-accent/20 blur-3xl" />
-      <div className="absolute inset-x-0 bottom-0 h-1 bg-accent" />
+    <>
+      <section className="relative overflow-hidden rounded-2xl border border-[rgba(155,143,121,0.15)] bg-[#0b1326] shadow-[0_0_20px_rgba(234,179,8,0.05)] backdrop-blur-[6px]">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 20% 50%, rgba(234,179,8,0.1), transparent 50%), radial-gradient(circle at 80% 80%, rgba(68,226,205,0.05), transparent 50%)',
+          }}
+        />
 
-      <div className="relative z-10 flex flex-col gap-6 p-6 sm:p-8 md:flex-row md:items-end md:justify-between">
-        <div className="flex items-start gap-4">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-2xl font-bold text-white shadow-lg backdrop-blur-sm">
-            {initials || <UserRound className="h-8 w-8" />}
+        <div className="relative z-10 flex flex-col items-center gap-8 p-6 sm:flex-row sm:items-center sm:p-8">
+          <div className="relative shrink-0">
+            <button
+              type="button"
+              onClick={() => canPreview && setPreviewOpen(true)}
+              disabled={!canPreview}
+              className={`relative size-32 overflow-hidden rounded-2xl border-2 border-[#ffd165] p-0.5 shadow-[0_20px_25px_-5px_rgba(255,209,101,0.2)] ${
+                canPreview ? 'cursor-pointer' : 'cursor-default'
+              }`}
+              aria-label={canPreview ? t.dashboard.profilePreviewCta : undefined}
+            >
+              <UserAvatar
+                user={user}
+                className="size-full bg-[#132347]"
+                textClassName="text-3xl text-[#ffd165]"
+                roundedClassName="rounded-[14px]"
+              />
+            </button>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={isUploadingAvatar}
+              className="absolute -bottom-2 -start-2 flex size-9 items-center justify-center rounded-xl border border-[#4f4633] bg-[#31394d] shadow-lg transition hover:bg-[#3a435a] disabled:opacity-60 cursor-pointer"
+              aria-label={t.dashboard.profileAvatarChange}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={PROFILE_ASSETS.iconCamera}
+                alt=""
+                className="size-[17px]"
+                width={17}
+                height={15}
+              />
+            </button>
+            <input
+              ref={inputRef}
+              type="file"
+              accept={AVATAR_ACCEPT}
+              className="sr-only"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                e.target.value = '';
+                if (file) onAvatarSelected(file);
+              }}
+            />
           </div>
-          <div className="min-w-0 text-start">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+
+          <div className="min-w-0 flex-1 text-center sm:text-start">
+            <p className="text-xs tracking-[0.6px] text-[#ffd165]">
               {t.dashboard.profileBadge}
             </p>
-            <h1 className="mt-2 text-2xl font-bold tracking-tight text-white sm:text-3xl">
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#dae2fd] sm:text-[32px] sm:leading-10">
               {user.displayName || user.name}
             </h1>
-            <p className="mt-1 text-sm text-[#c4c6cf]">
+            <p className="mt-1 text-base text-[#d3c5ac]">
               {user.firmName || t.dashboard.workspace}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold text-white">
-                <Scale className="h-3.5 w-3.5 text-accent" />
-                {roleLabel(user.role)}
-              </span>
+
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
               <span
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold ${
-                  user.isEmailVerified
-                    ? 'border-emerald-400/30 bg-emerald-400/15 text-emerald-200'
-                    : 'border-amber-300/30 bg-amber-300/15 text-amber-100'
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1 text-[11px] ${
+                  user.isActive
+                    ? 'border-[rgba(34,197,94,0.3)] bg-[rgba(34,197,94,0.1)] text-[#4ade80]'
+                    : 'border-[rgba(255,180,171,0.3)] bg-[rgba(255,180,171,0.1)] text-[#ffb4ab]'
                 }`}
               >
-                <BadgeCheck className="h-3.5 w-3.5" />
+                {user.isActive ? t.dashboard.profileActive : t.dashboard.profileInactive}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={PROFILE_ASSETS.iconCheck}
+                  alt=""
+                  className="size-[12px]"
+                  width={12}
+                  height={12}
+                />
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-xl border border-[rgba(255,209,101,0.3)] bg-[rgba(255,209,101,0.1)] px-3 py-1 text-[11px] text-[#ffd165]">
+                {roleLabel(user.role)}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={PROFILE_ASSETS.iconLawyer}
+                  alt=""
+                  className="size-[12px]"
+                  width={12}
+                  height={12}
+                />
+              </span>
+              <span
+                className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-1 text-[11px] ${
+                  user.isEmailVerified
+                    ? 'border-[rgba(68,226,205,0.3)] bg-[rgba(68,226,205,0.1)] text-[#44e2cd]'
+                    : 'border-[rgba(255,209,101,0.3)] bg-[rgba(255,209,101,0.1)] text-[#ffd165]'
+                }`}
+              >
                 {user.isEmailVerified
                   ? t.dashboard.profileEmailVerified
                   : t.dashboard.profileEmailUnverified}
-              </span>
-              <span
-                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold ${
-                  user.isActive
-                    ? 'border-sky-300/30 bg-sky-300/15 text-sky-100'
-                    : 'border-rose-300/30 bg-rose-300/15 text-rose-100'
-                }`}
-              >
-                <ShieldCheck className="h-3.5 w-3.5" />
-                {user.isActive ? t.dashboard.profileActive : t.dashboard.profileInactive}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={PROFILE_ASSETS.iconMail}
+                  alt=""
+                  className="h-[12px] w-[13px]"
+                  width={13}
+                  height={12}
+                />
               </span>
             </div>
           </div>
-        </div>
 
-        <button
-          type="button"
-          onClick={onRefresh}
-          disabled={isRefreshing}
-          className="inline-flex items-center justify-center gap-2 self-start rounded-xl border border-white/15 bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/15 disabled:opacity-60 cursor-pointer md:self-auto"
-        >
-          <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-          {t.dashboard.profileRefresh}
-        </button>
-      </div>
-    </section>
+          <button
+            type="button"
+            onClick={onEditProfile}
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded bg-[#ffd165] px-6 py-2.5 text-base font-bold text-[#604700] shadow-[0_10px_15px_-3px_rgba(255,209,101,0.2)] transition hover:brightness-105 cursor-pointer"
+          >
+            <span>{t.dashboard.profileEditProfile}</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={PROFILE_ASSETS.iconEdit}
+              alt=""
+              className="size-[18px]"
+              width={18}
+              height={18}
+            />
+          </button>
+        </div>
+      </section>
+
+      {user.avatarUrl ? (
+        <ProfileImagePreview
+          open={previewOpen}
+          src={user.avatarUrl}
+          alt={user.displayName || user.name}
+          title={t.dashboard.profileAvatarPreviewTitle}
+          onClose={() => setPreviewOpen(false)}
+        />
+      ) : null}
+    </>
   );
 }
