@@ -259,6 +259,7 @@ export const translations = {
     profileEditProfile: "تعديل الملف",
     profileEdit: "تعديل البيانات",
     profileCancelEdit: "إلغاء",
+    profileSaveAction: "حفظ",
     profileSave: "حفظ التغييرات",
     profileSaving: "جاري الحفظ...",
     profileSaveSuccess: "تم تحديث الملف الشخصي بنجاح",
@@ -267,7 +268,8 @@ export const translations = {
     profileAvatarUploading: "جاري رفع الصورة...",
     profileAvatarSuccess: "تم رفع الصورة بنجاح",
     profileAvatarError: "تعذّر رفع صورة الملف الشخصي",
-    profileAvatarTypeError: "صيغة الصورة غير مدعومة. استخدم JPEG أو PNG أو WEBP",
+    profileAvatarTypeError:
+      "صيغة الصورة غير مدعومة. استخدم JPEG أو PNG أو WEBP",
     profileAvatarSizeError: "حجم الصورة يجب ألا يتجاوز 2 ميجابايت",
     profileAvatarHint: "JPEG أو PNG أو WEBP — حد أقصى 2MB",
     profileAvatarPreviewTitle: "معاينة صورة الملف الشخصي",
@@ -288,7 +290,6 @@ export const translations = {
     subtitle: "سجّل الدخول إلى مساحة عمل ليجال مايند",
     emailPlaceholder: "البريد الإلكتروني المهني...",
     passwordPlaceholder: "كلمة المرور...",
-    rememberMe: "البقاء متصلاً",
     forgotPassword: "نسيت كلمة المرور؟",
     forgotAlert: "يجب استعادة كلمة المرور عبر لوحة الإدارة.",
     forgotTitle: "استعادة كلمة المرور",
@@ -296,7 +297,8 @@ export const translations = {
     sendCodeBtn: "إرسال رمز التحقق",
     sendResetLinkBtn: "إرسال رابط الاستعادة",
     forgotSentTitle: "تحقق من بريدك",
-    forgotSentSubtitle: "إن وُجد حساب مرتبط بـ {email} فستصلك رسالة برابط إعادة تعيين كلمة المرور.",
+    forgotSentSubtitle:
+      "إن وُجد حساب مرتبط بـ {email} فستصلك رسالة برابط إعادة تعيين كلمة المرور.",
     otpTitle: "أدخل رمز التحقق",
     otpSubtitle: "أرسلنا رمزاً من ٦ أرقام إلى {email}",
     otpPlaceholder: "أدخل الرمز",
@@ -306,12 +308,14 @@ export const translations = {
     resetTitle: "إنشاء كلمة مرور جديدة",
     resetSubtitle: "اختر كلمة مرور قوية لمساحة عمل ليجال مايند.",
     resetMissingTitle: "رابط إعادة التعيين غير مكتمل",
-    resetMissingDesc: "افتح الرابط كاملاً من رسالة البريد لإعادة تعيين كلمة المرور.",
+    resetMissingDesc:
+      "افتح الرابط كاملاً من رسالة البريد لإعادة تعيين كلمة المرور.",
     newPasswordPlaceholder: "كلمة المرور الجديدة...",
     confirmPasswordPlaceholder: "تأكيد كلمة المرور...",
     resetBtn: "تحديث كلمة المرور",
     resetSuccess: "تم تحديث كلمة المرور بنجاح.",
-    passwordWeak: "يجب ألا تقل كلمة المرور عن 8 أحرف وأن تحتوي على حرف كبير وصغير ورقم.",
+    passwordWeak:
+      "يجب ألا تقل كلمة المرور عن 8 أحرف وأن تحتوي على حرف كبير وصغير ورقم.",
     passwordStepTitle: "إنشاء كلمة المرور",
     passwordStepSubtitle: "اختر كلمة مرور قوية لحماية مساحة عملك.",
     backToLogin: "العودة لتسجيل الدخول",
@@ -330,7 +334,8 @@ export const translations = {
     checkEmailTitle: "تحقق من بريدك الإلكتروني",
     checkEmailSubtitle:
       "أرسلنا رابط تفعيل إلى {email}. افتح الرسالة واضغط على الرابط لإكمال إنشاء حسابك.",
-    checkEmailHint: "لم تصلك الرسالة؟ راجع مجلد الرسائل غير المرغوب فيها أو أعد الإرسال.",
+    checkEmailHint:
+      "لم تصلك الرسالة؟ راجع مجلد الرسائل غير المرغوب فيها أو أعد الإرسال.",
     resendVerificationBtn: "إعادة إرسال رابط التفعيل",
     otpInvalid: "رمز غير صالح أو منتهٍ. جرّب 123456 في العرض التجريبي.",
     passwordMismatch: "كلمتا المرور غير متطابقتين.",

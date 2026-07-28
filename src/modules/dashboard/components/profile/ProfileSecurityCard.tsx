@@ -1,9 +1,9 @@
 'use client';
 
+import { ShieldAlert } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import ConfirmModal from '../ui/ConfirmModal';
 import { PROFILE_ASSETS } from './lib/profileAssets';
-import { ShieldAlert } from 'lucide-react';
 
 type Props = {
   logoutAllOpen: boolean;
@@ -24,7 +24,7 @@ export default function ProfileSecurityCard({
 
   return (
     <>
-      <section className="relative overflow-hidden rounded-2xl border border-[rgba(255,180,171,0.2)] bg-[rgba(255,180,171,0.05)] p-[25px] backdrop-blur-[6px]">
+      <section className="relative overflow-hidden rounded-2xl border border-danger/20 bg-danger/[0.04] p-[25px] shadow-[0_2px_8px_rgba(0,62,199,0.04)] dark:border-[rgba(255,180,171,0.2)] dark:bg-[rgba(255,180,171,0.05)] dark:shadow-none dark:backdrop-blur-[6px]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={PROFILE_ASSETS.iconSecurityBg}
@@ -39,7 +39,7 @@ export default function ProfileSecurityCard({
             type="button"
             onClick={onOpenLogoutAll}
             disabled={isLoggingOutAll}
-            className="inline-flex shrink-0 items-center justify-center gap-3 rounded-lg border-2 border-[#ffb4ab] px-[34px] py-3.5 text-base font-bold text-[#ffb4ab] transition hover:bg-[rgba(255,180,171,0.08)] disabled:opacity-60 cursor-pointer order-2 sm:order-1"
+            className="order-2 inline-flex shrink-0 items-center justify-center gap-3 rounded-lg border-2 border-danger px-[34px] py-3.5 text-base font-bold text-danger transition hover:bg-danger/5 disabled:opacity-60 cursor-pointer sm:order-1 dark:border-[#ffb4ab] dark:text-[#ffb4ab] dark:hover:bg-[rgba(255,180,171,0.08)]"
           >
             <span>{t.dashboard.profileLogoutAllBtn}</span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -52,12 +52,12 @@ export default function ProfileSecurityCard({
             />
           </button>
 
-          <div className="flex items-center gap-4 order-1 sm:order-2">
+          <div className="order-1 flex items-center gap-4 sm:order-2">
             <div className="min-w-0 text-start sm:text-end">
-              <h2 className="text-xl font-bold text-[#dae2fd]">
+              <h2 className="text-xl font-bold text-foreground dark:text-[#dae2fd]">
                 {t.dashboard.profileSecurity}
               </h2>
-              <p className="mt-1 text-sm leading-5 text-[#d3c5ac]">
+              <p className="mt-1 text-sm leading-5 text-muted dark:text-[#d3c5ac]">
                 {t.dashboard.profileLogoutAllDesc}
               </p>
             </div>

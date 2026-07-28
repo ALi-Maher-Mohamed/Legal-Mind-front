@@ -1,10 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { AuthUser } from '@/types/auth.types';
 import { useProfileActions } from './hooks/useProfileActions';
+import { profilePage } from './lib/profileStyles';
 import ProfileActivityCard from './ProfileActivityCard';
-import ProfileDetailsCard from './ProfileDetailsCard';
+import ProfileDetailsCard, {
+  type ProfileDetailsHandle,
+} from './ProfileDetailsCard';
 import ProfileDocumentCard from './ProfileDocumentCard';
 import ProfileHero from './ProfileHero';
 import ProfileSecurityCard from './ProfileSecurityCard';
@@ -16,6 +19,7 @@ type Props = {
 
 export default function ProfileView({ user, onUserUpdate }: Props) {
   const [editing, setEditing] = useState(false);
+  const detailsRef = useRef<ProfileDetailsHandle>(null);
   const {
     isSaving,
     isUploadingAvatar,
@@ -28,18 +32,24 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
   } = useProfileActions(onUserUpdate);
 
   return (
-    <div className="-mx-4 -my-2 min-h-full bg-[#0b1326] px-4 py-6 sm:-mx-6 sm:px-6 sm:py-8">
+    <div className={profilePage}>
       <div className="mx-auto flex max-w-5xl flex-col gap-8">
         <ProfileHero
           user={user}
+          editing={editing}
+          isSaving={isSaving}
           isUploadingAvatar={isUploadingAvatar}
           onEditProfile={() => setEditing(true)}
+          onSaveProfile={() => {
+            void detailsRef.current?.save();
+          }}
           onAvatarSelected={(file) => void uploadAvatar(file)}
         />
 
         <section className="grid items-start gap-6 lg:grid-cols-3">
           <div className="flex flex-col gap-6 lg:col-span-2">
             <ProfileDetailsCard
+              ref={detailsRef}
               user={user}
               isSaving={isSaving}
               editing={editing}
