@@ -56,7 +56,7 @@ function ToolBtn({
       disabled={disabled}
       onMouseDown={(e) => e.preventDefault()}
       onClick={onClick}
-      className={`inline-flex h-8 min-w-8 items-center justify-center rounded-md px-1.5 text-[11px] font-bold transition cursor-pointer disabled:opacity-35 ${
+      className={`inline-flex h-8 min-w-8 shrink-0 items-center justify-center rounded-md px-1.5 text-[11px] font-bold transition cursor-pointer disabled:opacity-35 ${
         active
           ? 'bg-brand text-on-brand'
           : 'text-muted hover:bg-brand/10 hover:text-foreground'
@@ -68,7 +68,7 @@ function ToolBtn({
 }
 
 function Sep() {
-  return <span className="mx-0.5 h-5 w-px shrink-0 bg-brand/15 dark:bg-white/15" />;
+  return <span className="mx-0.5 hidden h-5 w-px shrink-0 bg-brand/15 sm:block dark:bg-white/15" />;
 }
 
 export default function EditorToolbar({ editor, onInsertLawCite }: Props) {
@@ -84,8 +84,8 @@ export default function EditorToolbar({ editor, onInsertLawCite }: Props) {
   };
 
   return (
-    <div className="flex shrink-0 flex-wrap items-center gap-0.5 border-b border-brand/10 pb-3 dark:border-white/10">
-      <span className="me-1 border-e border-brand/15 pe-2 text-xs font-bold text-foreground dark:border-white/15">
+    <div className="-mx-0.5 flex shrink-0 items-center gap-0.5 overflow-x-auto overscroll-x-contain border-b border-brand/10 px-0.5 pb-2.5 [-ms-overflow-style:none] [scrollbar-width:none] sm:pb-3 [&::-webkit-scrollbar]:hidden dark:border-white/10">
+      <span className="me-1 hidden shrink-0 border-e border-brand/15 pe-2 text-xs font-bold text-foreground sm:inline dark:border-white/15">
         {c.sheet}
       </span>
 

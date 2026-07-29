@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 import {
   generateService,
@@ -57,8 +57,9 @@ export function useDraftersStudio() {
   const [wizardValues, setWizardValues] = useState<Record<string, string>>({});
   const [editorTitle, setEditorTitle] = useState('مسودة اتفاقية');
   const [editorContent, setEditorContent] = useState('');
-  const [showAiAssist, setShowAiAssist] = useState(true);
-  const [showRiskScanner, setShowRiskScanner] = useState(true);
+  // Closed by default on phone/tablet so the editor owns the viewport; open on desktop.
+  const [showAiAssist, setShowAiAssist] = useState(false);
+  const [showRiskScanner, setShowRiskScanner] = useState(false);
   const [editorHistory, setEditorHistory] = useState<DraftVersion[]>([
     { v: 'v1.0.0', date: TODAY, content: '' },
   ]);
@@ -129,6 +130,13 @@ export function useDraftersStudio() {
       toastApiError(error, c.jobsOpenFail);
     } finally {
       setIsLoadingJobs(false);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      setShowAiAssist(true);
+      setShowRiskScanner(true);
     }
   }, []);
 

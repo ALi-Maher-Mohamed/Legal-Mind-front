@@ -12,7 +12,7 @@ type Props = {
   activeVersion: string;
   onRestore: (v: string) => void;
   onCommitVersion: () => void;
-  spanClass: string;
+  spanClass?: string;
   editable?: boolean;
 };
 
@@ -23,36 +23,40 @@ export default function EditorSheet({
   activeVersion,
   onRestore,
   onCommitVersion,
-  spanClass,
+  spanClass = '',
   editable = true,
 }: Props) {
   return (
-    <div className={`${dashPanel} flex h-full flex-col justify-between overflow-hidden p-4 sm:p-6 ${spanClass}`}>
+    <div
+      className={`${dashPanel} flex h-full min-h-0 flex-col overflow-hidden p-3 sm:p-4 md:p-5 lg:p-6 ${spanClass}`}
+    >
       <ContractRichEditor content={content} onChange={onChange} editable={editable} />
 
-      <div className="mt-4 flex shrink-0 flex-col items-start justify-between gap-3 border-t border-brand/10 pt-4 text-xs dark:border-white/10 sm:flex-row sm:items-center">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-muted">{c.history}</span>
-          {history.map((hist) => (
-            <button
-              key={hist.v}
-              type="button"
-              title={hist.date}
-              onClick={() => onRestore(hist.v)}
-              className={`rounded border px-2 py-0.5 font-mono text-[10px] cursor-pointer ${
-                hist.v === activeVersion
-                  ? 'border-brand bg-brand text-on-brand'
-                  : 'border-brand/20 bg-white text-muted hover:border-brand dark:border-white/15 dark:bg-white/5'
-              }`}
-            >
-              {hist.v}
-            </button>
-          ))}
+      <div className="mt-3 flex shrink-0 flex-col items-stretch justify-between gap-2.5 border-t border-brand/10 pt-3 text-xs dark:border-white/10 sm:mt-4 sm:flex-row sm:items-center sm:gap-3 sm:pt-4">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <span className="shrink-0 text-muted">{c.history}</span>
+          <div className="flex max-w-full gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {history.map((hist) => (
+              <button
+                key={hist.v}
+                type="button"
+                title={hist.date}
+                onClick={() => onRestore(hist.v)}
+                className={`shrink-0 rounded border px-2 py-0.5 font-mono text-[10px] cursor-pointer ${
+                  hist.v === activeVersion
+                    ? 'border-brand bg-brand text-on-brand'
+                    : 'border-brand/20 bg-white text-muted hover:border-brand dark:border-white/15 dark:bg-white/5'
+                }`}
+              >
+                {hist.v}
+              </button>
+            ))}
+          </div>
         </div>
         <button
           type="button"
           onClick={onCommitVersion}
-          className="font-bold uppercase tracking-wider text-[10px] text-brand hover:opacity-80 cursor-pointer"
+          className="shrink-0 text-start font-bold uppercase tracking-wider text-[10px] text-brand hover:opacity-80 sm:text-end cursor-pointer"
         >
           {c.commitVersion} ({activeVersion})
         </button>

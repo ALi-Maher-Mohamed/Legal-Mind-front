@@ -38,7 +38,7 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
                 type="button"
                 onClick={() => onInsert(clause.title, clause.text)}
                 disabled={isRewriting}
-                className="mt-2.5 text-[9px] font-bold uppercase text-brand opacity-0 transition group-hover:opacity-100 hover:opacity-80 disabled:opacity-40 cursor-pointer"
+                className="mt-2.5 text-[9px] font-bold uppercase text-brand opacity-100 transition hover:opacity-80 disabled:opacity-40 sm:opacity-0 sm:group-hover:opacity-100 cursor-pointer"
               >
                 {c.insertBottom}
               </button>

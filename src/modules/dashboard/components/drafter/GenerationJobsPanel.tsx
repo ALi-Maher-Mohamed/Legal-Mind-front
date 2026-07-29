@@ -63,14 +63,14 @@ export default function GenerationJobsPanel({
   onDelete,
 }: Props) {
   return (
-    <section className={`${dashPanel} p-5 sm:p-6`}>
-      <div className="mb-4 flex items-center justify-between gap-3 border-b border-brand/10 pb-3 dark:border-white/10">
-        <h3 className="text-lg font-bold uppercase text-foreground">{c.jobsTitle}</h3>
+    <section className={`${dashPanel} p-4 sm:p-5 md:p-6`}>
+      <div className="mb-4 flex items-center justify-between gap-2 border-b border-brand/10 pb-3 dark:border-white/10">
+        <h3 className="text-base font-bold uppercase text-foreground sm:text-lg">{c.jobsTitle}</h3>
         <button
           type="button"
           onClick={onRefresh}
           disabled={isLoading}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-brand/15 bg-[#f0f4ff] px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand/15 bg-[#f0f4ff] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 sm:px-3 dark:border-white/10 dark:bg-white/5 cursor-pointer"
         >
           {isLoading ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -94,10 +94,12 @@ export default function GenerationJobsPanel({
                 key={job.jobId}
                 className="flex flex-col gap-3 rounded-xl border border-brand/15 bg-[#f8faff] p-3 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-white/5"
               >
-                <div className="min-w-0 flex items-start gap-2.5">
+                <div className="flex min-w-0 items-start gap-2.5">
                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-brand" />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-bold text-foreground">{jobTitle(job)}</p>
+                    <p className="line-clamp-2 text-sm font-bold text-foreground sm:truncate">
+                      {jobTitle(job)}
+                    </p>
                     <p className="mt-0.5 text-[11px] text-muted">
                       <span className={statusTone(String(job.status))}>
                         {statusLabel(String(job.status))}
@@ -107,12 +109,12 @@ export default function GenerationJobsPanel({
                     </p>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2">
+                <div className="grid grid-cols-2 gap-2 sm:flex sm:shrink-0 sm:items-center">
                   <button
                     type="button"
                     onClick={() => onOpen(job)}
                     disabled={busy}
-                    className="rounded-lg bg-brand px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-50 cursor-pointer"
+                    className="rounded-lg bg-brand px-3 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-50 sm:py-1.5 cursor-pointer"
                   >
                     {c.jobsOpen}
                   </button>
@@ -120,7 +122,7 @@ export default function GenerationJobsPanel({
                     type="button"
                     onClick={() => onDelete(job)}
                     disabled={busy}
-                    className="inline-flex items-center gap-1 rounded-lg border border-danger/30 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-danger hover:bg-danger/5 disabled:opacity-50 cursor-pointer"
+                    className="inline-flex items-center justify-center gap-1 rounded-lg border border-danger/30 px-3 py-2 text-[10px] font-bold uppercase tracking-wider text-danger hover:bg-danger/5 disabled:opacity-50 sm:py-1.5 cursor-pointer"
                   >
                     {busy ? (
                       <Loader2 className="h-3.5 w-3.5 animate-spin" />

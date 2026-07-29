@@ -28,11 +28,15 @@ type Props = {
 
 export default function LibraryView(props: Props) {
   return (
-    <div className="space-y-8">
-      <header>
-        <span className="block text-xs font-bold uppercase tracking-widest text-brand">{c.eyebrow}</span>
-        <h2 className="mt-1 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">{c.title}</h2>
-        <p className="mt-1 text-sm text-muted">{c.subtitle}</p>
+    <div className="mx-auto w-full max-w-[1400px] space-y-5 sm:space-y-7 lg:space-y-8">
+      <header className="space-y-1">
+        <span className="block text-[11px] font-bold uppercase tracking-widest text-brand sm:text-xs">
+          {c.eyebrow}
+        </span>
+        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl md:text-3xl">
+          {c.title}
+        </h2>
+        <p className="max-w-3xl text-sm leading-relaxed text-muted">{c.subtitle}</p>
       </header>
 
       <AiDraftPanel
@@ -56,10 +60,10 @@ export default function LibraryView(props: Props) {
       />
 
       <section>
-        <h3 className="mb-6 border-b border-brand/15 pb-3 text-lg font-bold uppercase text-foreground dark:border-white/10">
+        <h3 className="mb-4 border-b border-brand/15 pb-2.5 text-base font-bold uppercase text-foreground dark:border-white/10 sm:mb-6 sm:pb-3 sm:text-lg">
           {c.templatesTitle}
         </h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 xl:grid-cols-3 xl:gap-6">
           {DRAFTER_TEMPLATES.map((tmpl) => (
             <TemplateCard key={tmpl.id} template={tmpl} onSelect={props.onOpenWizard} />
           ))}

@@ -155,9 +155,16 @@ body {
 .contract-editor-prose {
   min-height: 100%;
   color: var(--lm-foreground);
-  font-size: 0.875rem;
-  line-height: 1.9;
+  font-size: 0.8125rem;
+  line-height: 1.85;
   outline: none;
+}
+
+@media (min-width: 640px) {
+  .contract-editor-prose {
+    font-size: 0.875rem;
+    line-height: 1.9;
+  }
 }
 
 .contract-editor-prose p {
