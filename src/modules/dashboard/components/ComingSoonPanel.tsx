@@ -24,7 +24,7 @@ export default function ComingSoonPanel({ view, onBack }: Props) {
 
   return (
     <DashPanel className="mx-auto max-w-lg !p-10 text-center">
-      <h2 className="text-xl font-bold text-foreground">{t.dashboard[TITLE_KEY[view]]}</h2>
+      {/* <h2 className="text-xl font-bold text-foreground">{t.dashboard[TITLE_KEY[view]]}</h2> */}
       <p className="mt-2 text-sm text-muted">{t.dashboard.comingSoon}</p>
       <button
         type="button"
@@ -32,7 +32,7 @@ export default function ComingSoonPanel({ view, onBack }: Props) {
         className="mt-6 rounded-lg bg-brand px-5 py-2.5 text-sm font-semibold text-on-brand hover:opacity-90 cursor-pointer"
       >
         {t.dashboard.backDesk}
-      </button>
+      </button>  
     </DashPanel>
   );
 }

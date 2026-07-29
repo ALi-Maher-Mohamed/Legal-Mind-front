@@ -1,32 +1,34 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { authService } from '@/services/auth.service';
-import { ROUTES } from '@/config/routes';
-import { toastApiError } from '@/lib/api/toast';
-import BrandSplash from '@/components/common/BrandSplash';
-import { useSplashGate } from '@/hooks/useSplashGate';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { authService } from "@/services/auth.service";
+import { ROUTES } from "@/config/routes";
+import { toastApiError } from "@/lib/api/toast";
+import BrandSplash from "@/components/common/BrandSplash";
+import { useSplashGate } from "@/hooks/useSplashGate";
 import {
   hasCompletedOnboarding,
   markOnboardingCompleted,
-} from '@/modules/auth/lib/onboardingStorage';
-import type { AuthUser } from '@/types/auth.types';
-import type { DashboardView } from '@/types/dashboard.types';
-import { MOCK_DOCUMENTS } from '../data/mockDocuments';
-import DashboardShell from '../components/shell/DashboardShell';
-import DashboardHome from '../components/home/DashboardHome';
-import AnalysisRoom from '../components/analysis/AnalysisRoom';
-import ConsultationRoom from '../components/consultation/ConsultationRoom';
-import DraftersStudio from '../components/drafter/DraftersStudio';
-import ProfileView from '../components/profile/ProfileView';
-import ComingSoonPanel from '../components/ComingSoonPanel';
-import DashboardOnboarding from '../components/onboarding/DashboardOnboarding';
+} from "@/modules/auth/lib/onboardingStorage";
+import type { AuthUser } from "@/types/auth.types";
+import type { DashboardView } from "@/types/dashboard.types";
+import { MOCK_DOCUMENTS } from "../data/mockDocuments";
+import DashboardShell from "../components/shell/DashboardShell";
+import DashboardHome from "../components/home/DashboardHome";
+import AnalysisRoom from "../components/analysis/AnalysisRoom";
+import ConsultationRoom from "../components/consultation/ConsultationRoom";
+import DraftersStudio from "../components/drafter/DraftersStudio";
+import ProfileView from "../components/profile/ProfileView";
+import GazetteView from "../components/gazette/GazetteView";
+
+import ComingSoonPanel from "../components/ComingSoonPanel";
+import DashboardOnboarding from "../components/onboarding/DashboardOnboarding";
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [view, setView] = useState<DashboardView>('dashboard');
+  const [view, setView] = useState<DashboardView>("dashboard");
   const [ready, setReady] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const showSplash = useSplashGate(ready && Boolean(user), 1800);
@@ -52,7 +54,7 @@ export default function DashboardPage() {
         setShowOnboarding(!hasCompletedOnboarding(freshUser.id));
       } catch (error) {
         authService.clearSession();
-        toastApiError(error, 'انتهت الجلسة. سجّل الدخول مجدداً');
+        toastApiError(error, "انتهت الجلسة. سجّل الدخول مجدداً");
         router.replace(ROUTES.login);
       }
     };
@@ -80,18 +82,26 @@ export default function DashboardPage() {
 
   return (
     <DashboardShell user={user} view={view} onNavigate={setView}>
-      {view === 'dashboard' ? (
-        <DashboardHome user={user} documents={MOCK_DOCUMENTS} onNavigate={setView} />
-      ) : view === 'analysis' ? (
+      {view === "dashboard" ? (
+        <DashboardHome
+          user={user}
+          documents={MOCK_DOCUMENTS}
+          onNavigate={setView}
+        />
+      ) : view === "analysis" ? (
         <AnalysisRoom />
-      ) : view === 'consultation' ? (
+      ) : view === "gazette" ? (
+        <GazetteView />
+      ) : view === "consultation" ? (
         <ConsultationRoom />
-      ) : view === 'drafter' ? (
+      ) : view === "drafter" ? (
         <DraftersStudio />
-      ) : view === 'profile' ? (
+      ) : view === "profile" ? (
         <ProfileView user={user} onUserUpdate={setUser} />
+    ) : view === "gazette" ? (
+      <GazetteView />
       ) : (
-        <ComingSoonPanel view={view} onBack={() => setView('dashboard')} />
+        <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}
     </DashboardShell>
   );
