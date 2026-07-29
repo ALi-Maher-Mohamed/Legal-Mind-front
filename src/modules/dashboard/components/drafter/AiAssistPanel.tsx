@@ -8,9 +8,10 @@ import { dashPanel } from '../../lib/panelStyles';
 type Props = {
   onInsert: (title: string, text: string) => void;
   onRewrite: () => void;
+  isRewriting?: boolean;
 };
 
-export default function AiAssistPanel({ onInsert, onRewrite }: Props) {
+export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false }: Props) {
   return (
     <aside className={`${dashPanel} flex h-full flex-col justify-between overflow-hidden p-4`}>
       <div className="flex-1 space-y-4 overflow-y-auto pe-1">
@@ -45,9 +46,10 @@ export default function AiAssistPanel({ onInsert, onRewrite }: Props) {
         <button
           type="button"
           onClick={onRewrite}
-          className="w-full rounded-lg border border-brand/10 bg-[#f0f4ff] py-2 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          disabled={isRewriting}
+          className="w-full rounded-lg border border-brand/10 bg-[#f0f4ff] py-2 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
         >
-          {c.rewriteCta}
+          {isRewriting ? c.rewriting : c.rewriteCta}
         </button>
       </div>
     </aside>

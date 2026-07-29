@@ -12,6 +12,7 @@ type Props = {
   language: DraftOutputLang;
   onLanguageChange: (v: DraftOutputLang) => void;
   isDrafting: boolean;
+  draftProgress?: { progress: number; stage: string } | null;
   onSubmit: () => void;
 };
 
@@ -23,6 +24,7 @@ export default function AiDraftPanel({
   language,
   onLanguageChange,
   isDrafting,
+  draftProgress = null,
   onSubmit,
 }: Props) {
   return (
@@ -88,10 +90,28 @@ export default function AiDraftPanel({
             disabled={!prompt.trim() || isDrafting}
             className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-40 sm:w-auto cursor-pointer"
           >
-            {isDrafting ? c.drafting : c.draftCta}
+            {isDrafting
+              ? draftProgress
+                ? `${draftProgress.stage || c.drafting} ${draftProgress.progress}%`
+                : c.drafting
+              : c.draftCta}
             {!isDrafting && <Sparkles className="h-3.5 w-3.5 text-accent" />}
           </button>
         </div>
+
+        {isDrafting && draftProgress ? (
+          <div className="space-y-1.5">
+            <div className="h-1.5 overflow-hidden rounded-full bg-brand/10 dark:bg-white/10">
+              <div
+                className="h-full rounded-full bg-brand transition-all duration-500"
+                style={{ width: `${Math.min(100, Math.max(0, draftProgress.progress))}%` }}
+              />
+            </div>
+            <p className="text-[10px] text-muted">
+              {draftProgress.stage || c.drafting} — {draftProgress.progress}%
+            </p>
+          </div>
+        ) : null}
       </form>
     </div>
   );

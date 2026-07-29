@@ -32,13 +32,21 @@ export default function DraftersStudio() {
         onToggleAi={() => d.setShowAiAssist((v) => !v)}
         onToggleRisk={() => d.setShowRiskScanner((v) => !v)}
         onBack={d.goLibrary}
-        onSave={d.saveDraft}
+        onSave={() => void d.saveDraft()}
+        onDownload={() => void d.downloadDraft()}
+        canDownload={Boolean(d.activeJobId || d.reportUrl)}
+        isSaving={d.isSaving}
+        isRewriting={d.isRewriting}
+        validation={d.validation}
+        isValidating={d.isValidating}
+        canValidate={Boolean(d.activeJobId)}
+        onValidate={() => void d.runValidation()}
         history={d.editorHistory}
         activeVersion={d.activeVersion}
         onRestore={d.restoreVersion}
         onCommitVersion={d.commitVersion}
         onInsertClause={d.insertClause}
-        onRewrite={d.rewriteDraft}
+        onRewrite={() => void d.rewriteDraft()}
       />
     );
   }
@@ -50,6 +58,7 @@ export default function DraftersStudio() {
       language={d.selectedLanguage}
       onLanguageChange={d.setSelectedLanguage}
       isDrafting={d.isDrafting}
+      draftProgress={d.draftProgress}
       onAiSubmit={() => void d.submitAiDraft()}
       onOpenWizard={d.openWizard}
     />

@@ -1,6 +1,7 @@
 'use client';
 
 import type { DraftVersion } from '@/types/drafter.types';
+import type { GenerateValidationResult } from '@/types/generate.types';
 import EditorHeader from './EditorHeader';
 import AiAssistPanel from './AiAssistPanel';
 import EditorSheet from './EditorSheet';
@@ -17,6 +18,14 @@ type Props = {
   onToggleRisk: () => void;
   onBack: () => void;
   onSave: () => void;
+  onDownload: () => void;
+  canDownload: boolean;
+  isSaving: boolean;
+  isRewriting: boolean;
+  validation: GenerateValidationResult | null;
+  isValidating: boolean;
+  canValidate: boolean;
+  onValidate: () => void;
   history: DraftVersion[];
   activeVersion: string;
   onRestore: (v: string) => void;
@@ -40,16 +49,23 @@ export default function EditorView(props: Props) {
         onTitleChange={props.onTitleChange}
         showAiAssist={props.showAiAssist}
         showRiskScanner={props.showRiskScanner}
+        isSaving={props.isSaving || props.isRewriting}
+        canDownload={props.canDownload}
         onToggleAi={props.onToggleAi}
         onToggleRisk={props.onToggleRisk}
         onBack={props.onBack}
         onSave={props.onSave}
+        onDownload={props.onDownload}
       />
 
       <div className="grid h-[min(70vh,550px)] grid-cols-1 gap-4 overflow-hidden lg:grid-cols-12 lg:gap-6">
         {props.showAiAssist && (
           <div className="h-full min-h-[280px] lg:col-span-3 lg:min-h-0">
-            <AiAssistPanel onInsert={props.onInsertClause} onRewrite={props.onRewrite} />
+            <AiAssistPanel
+              onInsert={props.onInsertClause}
+              onRewrite={props.onRewrite}
+              isRewriting={props.isRewriting}
+            />
           </div>
         )}
         <EditorSheet
@@ -63,7 +79,12 @@ export default function EditorView(props: Props) {
         />
         {props.showRiskScanner && (
           <div className="h-full min-h-[280px] lg:col-span-3 lg:min-h-0">
-            <RiskScannerPanel />
+            <RiskScannerPanel
+              validation={props.validation}
+              isValidating={props.isValidating}
+              canValidate={props.canValidate}
+              onValidate={props.onValidate}
+            />
           </div>
         )}
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Download } from 'lucide-react';
 import { drafterCopy as c } from '../../data/drafterCopy';
 
 type Props = {
@@ -8,10 +8,13 @@ type Props = {
   onTitleChange: (v: string) => void;
   showAiAssist: boolean;
   showRiskScanner: boolean;
+  isSaving?: boolean;
+  canDownload?: boolean;
   onToggleAi: () => void;
   onToggleRisk: () => void;
   onBack: () => void;
   onSave: () => void;
+  onDownload?: () => void;
 };
 
 export default function EditorHeader({
@@ -19,10 +22,13 @@ export default function EditorHeader({
   onTitleChange,
   showAiAssist,
   showRiskScanner,
+  isSaving = false,
+  canDownload = false,
   onToggleAi,
   onToggleRisk,
   onBack,
   onSave,
+  onDownload,
 }: Props) {
   const toggleCls = (on: boolean) =>
     `rounded-lg border px-3 py-1.5 text-xs font-bold uppercase tracking-wider cursor-pointer ${
@@ -56,12 +62,24 @@ export default function EditorHeader({
         <button type="button" onClick={onToggleRisk} className={toggleCls(showRiskScanner)}>
           {c.riskScanner}
         </button>
+        {onDownload ? (
+          <button
+            type="button"
+            onClick={onDownload}
+            disabled={!canDownload || isSaving}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-brand/15 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:border-brand disabled:opacity-40 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          >
+            <Download className="h-3.5 w-3.5" />
+            {c.downloadCta}
+          </button>
+        ) : null}
         <button
           type="button"
           onClick={onSave}
-          className="rounded-lg bg-brand px-5 py-2 text-xs font-bold uppercase tracking-wider text-on-brand hover:opacity-90 cursor-pointer"
+          disabled={isSaving}
+          className="rounded-lg bg-brand px-5 py-2 text-xs font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-50 cursor-pointer"
         >
-          {c.commit}
+          {isSaving ? c.saving : c.commit}
         </button>
       </div>
     </div>

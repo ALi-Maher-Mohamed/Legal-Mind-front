@@ -132,6 +132,18 @@ export const api = {
       formData: body?.formData,
     }),
 
+  put: <T>(
+    path: string,
+    body?: { json?: unknown; formData?: FormData },
+    options?: Omit<RequestOptions, 'method' | 'json' | 'formData'>,
+  ) =>
+    apiRequest<T>(path, {
+      ...options,
+      method: 'PUT',
+      json: body?.json,
+      formData: body?.formData,
+    }),
+
   patch: <T>(
     path: string,
     body?: { json?: unknown; formData?: FormData },

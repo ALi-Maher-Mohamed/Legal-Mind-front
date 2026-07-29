@@ -12,6 +12,7 @@ type Props = {
   language: DraftOutputLang;
   onLanguageChange: (v: DraftOutputLang) => void;
   isDrafting: boolean;
+  draftProgress?: { progress: number; stage: string } | null;
   onAiSubmit: () => void;
   onOpenWizard: (tmpl: ContractTemplate) => void;
 };
@@ -31,6 +32,7 @@ export default function LibraryView(props: Props) {
         language={props.language}
         onLanguageChange={props.onLanguageChange}
         isDrafting={props.isDrafting}
+        draftProgress={props.draftProgress}
         onSubmit={props.onAiSubmit}
       />
 
