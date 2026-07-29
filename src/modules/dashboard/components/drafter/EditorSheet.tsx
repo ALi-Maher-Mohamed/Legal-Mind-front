@@ -3,6 +3,7 @@
 import type { DraftVersion } from '@/types/drafter.types';
 import { drafterCopy as c } from '../../data/drafterCopy';
 import { dashPanel } from '../../lib/panelStyles';
+import ContractRichEditor from './editor/ContractRichEditor';
 
 type Props = {
   content: string;
@@ -12,6 +13,7 @@ type Props = {
   onRestore: (v: string) => void;
   onCommitVersion: () => void;
   spanClass: string;
+  editable?: boolean;
 };
 
 export default function EditorSheet({
@@ -22,27 +24,11 @@ export default function EditorSheet({
   onRestore,
   onCommitVersion,
   spanClass,
+  editable = true,
 }: Props) {
   return (
     <div className={`${dashPanel} flex h-full flex-col justify-between overflow-hidden p-4 sm:p-6 ${spanClass}`}>
-      <div className="mb-4 flex shrink-0 flex-wrap items-center gap-2 border-b border-brand/10 pb-3 text-xs text-muted dark:border-white/10">
-        <span className="border-e border-brand/15 pe-2 font-bold text-foreground dark:border-white/15">
-          {c.sheet}
-        </span>
-        <button type="button" className="px-1 font-bold hover:text-foreground">B</button>
-        <button type="button" className="px-1 italic hover:text-foreground">I</button>
-        <button type="button" className="px-1 underline hover:text-foreground">U</button>
-        <span className="mx-1 h-4 border-e border-brand/15 dark:border-white/15" />
-        <button type="button" className="px-1 text-[10px] hover:text-foreground">{c.paragraph}</button>
-        <button type="button" className="px-1 text-[10px] hover:text-foreground">{c.lawIndex}</button>
-      </div>
-
-      <textarea
-        value={content}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={c.editorPlaceholder}
-        className="min-h-0 flex-1 w-full resize-none bg-transparent text-xs leading-loose text-foreground focus:outline-none sm:text-sm"
-      />
+      <ContractRichEditor content={content} onChange={onChange} editable={editable} />
 
       <div className="mt-4 flex shrink-0 flex-col items-start justify-between gap-3 border-t border-brand/10 pt-4 text-xs dark:border-white/10 sm:flex-row sm:items-center">
         <div className="flex flex-wrap items-center gap-2">

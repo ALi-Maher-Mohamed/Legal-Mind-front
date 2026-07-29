@@ -150,3 +150,121 @@ body {
     transparent
   );
 }
+
+/* Contract rich editor (TipTap) */
+.contract-editor-prose {
+  min-height: 100%;
+  color: var(--lm-foreground);
+  font-size: 0.875rem;
+  line-height: 1.9;
+  outline: none;
+}
+
+.contract-editor-prose p {
+  margin-block: 0.55em;
+}
+
+.contract-editor-prose h1 {
+  margin-block: 0.8em 0.4em;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.contract-editor-prose h2 {
+  margin-block: 0.75em 0.35em;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.contract-editor-prose h3 {
+  margin-block: 0.7em 0.3em;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.contract-editor-prose ul {
+  list-style: disc;
+  padding-inline-start: 1.35rem;
+  margin-block: 0.5em;
+}
+
+.contract-editor-prose ol {
+  list-style: decimal;
+  padding-inline-start: 1.35rem;
+  margin-block: 0.5em;
+}
+
+.contract-editor-prose li {
+  margin-block: 0.2em;
+}
+
+.contract-editor-prose blockquote {
+  margin-block: 0.75em;
+  padding: 0.65rem 0.9rem;
+  border-inline-start: 3px solid var(--lm-brand);
+  background: color-mix(in srgb, var(--lm-brand) 6%, transparent);
+  border-radius: 0 0.75rem 0.75rem 0;
+  color: var(--lm-muted-foreground, var(--lm-muted));
+}
+
+.contract-editor-prose hr {
+  margin-block: 1rem;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--lm-brand) 22%, transparent);
+}
+
+.contract-editor-prose a {
+  color: var(--lm-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.contract-editor-prose mark {
+  background: color-mix(in srgb, var(--lm-accent) 35%, transparent);
+  border-radius: 0.2rem;
+  padding-inline: 0.1rem;
+}
+
+.contract-editor-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block: 0.85em;
+  font-size: 0.8rem;
+}
+
+.contract-editor-prose th,
+.contract-editor-prose td {
+  border: 1px solid color-mix(in srgb, var(--lm-brand) 20%, transparent);
+  padding: 0.4rem 0.55rem;
+  vertical-align: top;
+}
+
+.contract-editor-prose th {
+  background: color-mix(in srgb, var(--lm-brand) 8%, transparent);
+  font-weight: 700;
+}
+
+.contract-editor-prose p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: right;
+  color: var(--lm-muted);
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
+}
+
+.dark .contract-editor-prose blockquote {
+  background: color-mix(in srgb, white 5%, transparent);
+}
+
+.dark .contract-editor-prose th,
+.dark .contract-editor-prose td {
+  border-color: color-mix(in srgb, white 16%, transparent);
+}
+
+.dark .contract-editor-prose th {
+  background: color-mix(in srgb, white 6%, transparent);
+}

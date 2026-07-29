@@ -58,7 +58,7 @@ export default function EditorView(props: Props) {
         onDownload={props.onDownload}
       />
 
-      <div className="grid h-[min(70vh,550px)] grid-cols-1 gap-4 overflow-hidden lg:grid-cols-12 lg:gap-6">
+      <div className="grid h-[min(78vh,720px)] grid-cols-1 gap-4 overflow-hidden lg:grid-cols-12 lg:gap-6">
         {props.showAiAssist && (
           <div className="h-full min-h-[280px] lg:col-span-3 lg:min-h-0">
             <AiAssistPanel
@@ -76,6 +76,7 @@ export default function EditorView(props: Props) {
           onRestore={props.onRestore}
           onCommitVersion={props.onCommitVersion}
           spanClass={span}
+          editable={!props.isRewriting && !props.isSaving}
         />
         {props.showRiskScanner && (
           <div className="h-full min-h-[280px] lg:col-span-3 lg:min-h-0">
