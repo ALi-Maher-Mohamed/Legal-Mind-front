@@ -21,6 +21,7 @@ import type {
 } from '@/types/generate.types';
 import { drafterCopy as c } from '../data/drafterCopy';
 import { compileTemplateDraft } from '../lib/compileDraft';
+import { exportContractPdf } from '../lib/exportContractPdf';
 
 const TODAY = new Date().toLocaleDateString('ar-EG', {
   day: 'numeric',
@@ -68,6 +69,7 @@ export function useDraftersStudio() {
   const [isSaving, setIsSaving] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [jobs, setJobs] = useState<GenerateJobListItem[]>([]);
   const [isLoadingJobs, setIsLoadingJobs] = useState(false);
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
@@ -423,20 +425,27 @@ export function useDraftersStudio() {
   }, [activeJobId, editorContent, isValidating]);
 
   const downloadDraft = useCallback(async () => {
-    if (reportUrl) {
-      window.open(reportUrl, '_blank', 'noopener,noreferrer');
-      return;
-    }
-    if (!activeJobId) {
+    if (!editorContent.trim()) {
       toastApiError(null, c.downloadUnavailable);
       return;
     }
+    if (isDownloading) return;
+
+    setIsDownloading(true);
     try {
-      await generateService.downloadContract(activeJobId, `${editorTitle || 'contract'}.md`);
+      await exportContractPdf({
+        title: editorTitle,
+        content: editorContent,
+        jobId: activeJobId,
+        fileName: editorTitle,
+      });
+      toastApiSuccess(c.downloadOk);
     } catch (error) {
       toastApiError(error, c.downloadFail);
+    } finally {
+      setIsDownloading(false);
     }
-  }, [activeJobId, editorTitle, reportUrl]);
+  }, [activeJobId, editorContent, editorTitle, isDownloading]);
 
   return {
     viewMode,
@@ -465,6 +474,7 @@ export function useDraftersStudio() {
     isSaving,
     isValidating,
     isRewriting,
+    isDownloading,
     jobs,
     isLoadingJobs,
     deletingJobId,

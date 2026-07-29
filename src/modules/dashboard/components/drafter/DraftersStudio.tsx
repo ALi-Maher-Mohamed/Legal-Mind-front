@@ -32,8 +32,9 @@ export default function DraftersStudio() {
         onBack={d.goLibrary}
         onSave={() => void d.saveDraft()}
         onDownload={() => void d.downloadDraft()}
-        canDownload={Boolean(d.activeJobId || d.reportUrl)}
+        canDownload={Boolean(d.editorContent.trim())}
         isSaving={d.isSaving}
+        isDownloading={d.isDownloading}
         isRewriting={d.isRewriting}
         validation={d.validation}
         isValidating={d.isValidating}

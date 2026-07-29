@@ -9,6 +9,7 @@ type Props = {
   showAiAssist: boolean;
   showRiskScanner: boolean;
   isSaving?: boolean;
+  isDownloading?: boolean;
   canDownload?: boolean;
   onToggleAi: () => void;
   onToggleRisk: () => void;
@@ -23,6 +24,7 @@ export default function EditorHeader({
   showAiAssist,
   showRiskScanner,
   isSaving = false,
+  isDownloading = false,
   canDownload = false,
   onToggleAi,
   onToggleRisk,
@@ -66,11 +68,11 @@ export default function EditorHeader({
           <button
             type="button"
             onClick={onDownload}
-            disabled={!canDownload || isSaving}
+            disabled={!canDownload || isSaving || isDownloading}
             className="inline-flex items-center gap-1.5 rounded-lg border border-brand/15 bg-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-foreground hover:border-brand disabled:opacity-40 dark:border-white/10 dark:bg-white/5 cursor-pointer"
           >
-            <Download className="h-3.5 w-3.5" />
-            {c.downloadCta}
+            <Download className={`h-3.5 w-3.5 ${isDownloading ? 'animate-pulse' : ''}`} />
+            {isDownloading ? c.downloading : c.downloadCta}
           </button>
         ) : null}
         <button

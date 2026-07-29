@@ -21,6 +21,7 @@ type Props = {
   onDownload: () => void;
   canDownload: boolean;
   isSaving: boolean;
+  isDownloading?: boolean;
   isRewriting: boolean;
   validation: GenerateValidationResult | null;
   isValidating: boolean;
@@ -50,6 +51,7 @@ export default function EditorView(props: Props) {
         showAiAssist={props.showAiAssist}
         showRiskScanner={props.showRiskScanner}
         isSaving={props.isSaving || props.isRewriting}
+        isDownloading={props.isDownloading}
         canDownload={props.canDownload}
         onToggleAi={props.onToggleAi}
         onToggleRisk={props.onToggleRisk}
