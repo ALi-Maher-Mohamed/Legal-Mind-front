@@ -77,3 +77,42 @@ export type GenerateProgressState = {
   stage: string;
   step: string;
 };
+
+export type GenerateProgressLog = {
+  step?: string;
+  phase?: string;
+  message?: string;
+  timestamp?: string;
+  progress?: number;
+  currentStage?: string;
+  currentStep?: string;
+  status?: string;
+};
+
+export type GenerateProgressLogsResponse = {
+  jobId: string;
+  logs: GenerateProgressLog[];
+  totalLogs?: number;
+};
+
+export type GenerateStreamEvent = GenerateProgressLog & {
+  jobId?: string;
+  error?: string;
+};
+
+export type GenerateJobListItem = {
+  jobId: string;
+  status: GenerateJobStatus | string;
+  language?: string;
+  contractType?: string;
+  createdAt?: string;
+  completedAt?: string;
+  progress?: number;
+  currentStage?: string;
+  error?: string;
+  prompt?: string;
+  result?: GenerateResult | null;
+  files?: {
+    report?: string;
+  };
+};

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import { drafterCopy as c } from '../../data/drafterCopy';
 import { APPROVED_CLAUSES } from '../../data/drafterClauses.data';
@@ -7,11 +8,13 @@ import { dashPanel } from '../../lib/panelStyles';
 
 type Props = {
   onInsert: (title: string, text: string) => void;
-  onRewrite: () => void;
+  onRewrite: (instructions: string) => void;
   isRewriting?: boolean;
 };
 
 export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false }: Props) {
+  const [instructions, setInstructions] = useState('');
+
   return (
     <aside className={`${dashPanel} flex h-full flex-col justify-between overflow-hidden p-4`}>
       <div className="flex-1 space-y-4 overflow-y-auto pe-1">
@@ -34,7 +37,8 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
               <button
                 type="button"
                 onClick={() => onInsert(clause.title, clause.text)}
-                className="mt-2.5 text-[9px] font-bold uppercase text-brand opacity-0 transition group-hover:opacity-100 hover:opacity-80 cursor-pointer"
+                disabled={isRewriting}
+                className="mt-2.5 text-[9px] font-bold uppercase text-brand opacity-0 transition group-hover:opacity-100 hover:opacity-80 disabled:opacity-40 cursor-pointer"
               >
                 {c.insertBottom}
               </button>
@@ -42,11 +46,27 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
           ))}
         </div>
       </div>
-      <div className="mt-3 border-t border-brand/10 pt-3 dark:border-white/10">
+      <div className="mt-3 space-y-2 border-t border-brand/10 pt-3 dark:border-white/10">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-muted">
+          {c.rewriteInstructions}
+        </label>
+        <textarea
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+          placeholder={c.rewritePlaceholder}
+          rows={3}
+          disabled={isRewriting}
+          className="w-full rounded-lg border border-brand/15 bg-[#f8faff] p-2 text-[10px] leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5"
+        />
         <button
           type="button"
-          onClick={onRewrite}
-          disabled={isRewriting}
+          onClick={() => {
+            const value = instructions.trim();
+            if (!value) return;
+            onRewrite(value);
+            setInstructions('');
+          }}
+          disabled={isRewriting || !instructions.trim()}
           className="w-full rounded-lg border border-brand/10 bg-[#f0f4ff] py-2 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
         >
           {isRewriting ? c.rewriting : c.rewriteCta}

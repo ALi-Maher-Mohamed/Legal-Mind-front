@@ -1,6 +1,6 @@
 'use client';
 
-import { Sparkles } from 'lucide-react';
+import { Sparkles, X } from 'lucide-react';
 import type { DraftOutputLang } from '@/types/drafter.types';
 import { drafterCopy as c } from '../../data/drafterCopy';
 import { DRAFTER_PROMPTS } from '../../data/drafterClauses.data';
@@ -14,6 +14,7 @@ type Props = {
   isDrafting: boolean;
   draftProgress?: { progress: number; stage: string } | null;
   onSubmit: () => void;
+  onCancel?: () => void;
 };
 
 const LANGS: DraftOutputLang[] = ['Arabic', 'English', 'Bilingual'];
@@ -26,6 +27,7 @@ export default function AiDraftPanel({
   isDrafting,
   draftProgress = null,
   onSubmit,
+  onCancel,
 }: Props) {
   return (
     <div className={`${dashPanel} relative overflow-hidden p-5 sm:p-8`}>
@@ -48,7 +50,8 @@ export default function AiDraftPanel({
           placeholder={c.aiPlaceholder}
           required
           rows={4}
-          className="w-full rounded-xl border border-brand/20 bg-[#f8faff] p-4 text-xs leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none dark:border-white/10 dark:bg-white/5 sm:text-sm"
+          disabled={isDrafting}
+          className="w-full rounded-xl border border-brand/20 bg-[#f8faff] p-4 text-xs leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5 sm:text-sm"
         />
 
         <div className="flex flex-wrap items-center gap-2">
@@ -58,7 +61,8 @@ export default function AiDraftPanel({
               key={ex.label}
               type="button"
               onClick={() => onPromptChange(ex.text)}
-              className="rounded-lg border border-brand/15 bg-[#f0f4ff] px-2 py-1 text-[10px] italic text-brand hover:border-accent dark:border-white/10 dark:bg-white/5 cursor-pointer"
+              disabled={isDrafting}
+              className="rounded-lg border border-brand/15 bg-[#f0f4ff] px-2 py-1 text-[10px] italic text-brand hover:border-accent disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
             >
               {ex.label}
             </button>
@@ -74,7 +78,8 @@ export default function AiDraftPanel({
                   key={lang}
                   type="button"
                   onClick={() => onLanguageChange(lang)}
-                  className={`px-3 py-1.5 cursor-pointer ${
+                  disabled={isDrafting}
+                  className={`px-3 py-1.5 cursor-pointer disabled:opacity-50 ${
                     language === lang
                       ? 'bg-brand font-semibold text-on-brand'
                       : 'bg-white text-muted hover:text-foreground dark:bg-white/5'
@@ -85,18 +90,30 @@ export default function AiDraftPanel({
               ))}
             </div>
           </div>
-          <button
-            type="submit"
-            disabled={!prompt.trim() || isDrafting}
-            className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-40 sm:w-auto cursor-pointer"
-          >
-            {isDrafting
-              ? draftProgress
-                ? `${draftProgress.stage || c.drafting} ${draftProgress.progress}%`
-                : c.drafting
-              : c.draftCta}
-            {!isDrafting && <Sparkles className="h-3.5 w-3.5 text-accent" />}
-          </button>
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
+            {isDrafting && onCancel ? (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-danger/30 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-danger hover:bg-danger/5 sm:w-auto cursor-pointer"
+              >
+                <X className="h-3.5 w-3.5" />
+                {c.cancelDraft}
+              </button>
+            ) : null}
+            <button
+              type="submit"
+              disabled={!prompt.trim() || isDrafting}
+              className="inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-brand px-6 py-2.5 text-xs font-bold uppercase tracking-wider text-on-brand hover:opacity-90 disabled:opacity-40 sm:w-auto cursor-pointer"
+            >
+              {isDrafting
+                ? draftProgress
+                  ? `${draftProgress.stage || c.drafting} ${draftProgress.progress}%`
+                  : c.drafting
+                : c.draftCta}
+              {!isDrafting && <Sparkles className="h-3.5 w-3.5 text-accent" />}
+            </button>
+          </div>
         </div>
 
         {isDrafting && draftProgress ? (

@@ -1,9 +1,11 @@
 'use client';
 
 import type { ContractTemplate, DraftOutputLang } from '@/types/drafter.types';
+import type { GenerateJobListItem } from '@/types/generate.types';
 import { drafterCopy as c } from '../../data/drafterCopy';
 import { DRAFTER_TEMPLATES } from '../../data/drafterTemplates.data';
 import AiDraftPanel from './AiDraftPanel';
+import GenerationJobsPanel from './GenerationJobsPanel';
 import TemplateCard from './TemplateCard';
 
 type Props = {
@@ -14,7 +16,14 @@ type Props = {
   isDrafting: boolean;
   draftProgress?: { progress: number; stage: string } | null;
   onAiSubmit: () => void;
+  onCancelDraft?: () => void;
   onOpenWizard: (tmpl: ContractTemplate) => void;
+  jobs: GenerateJobListItem[];
+  isLoadingJobs: boolean;
+  deletingJobId: string | null;
+  onRefreshJobs: () => void;
+  onOpenJob: (job: GenerateJobListItem) => void;
+  onDeleteJob: (job: GenerateJobListItem) => void;
 };
 
 export default function LibraryView(props: Props) {
@@ -34,6 +43,16 @@ export default function LibraryView(props: Props) {
         isDrafting={props.isDrafting}
         draftProgress={props.draftProgress}
         onSubmit={props.onAiSubmit}
+        onCancel={props.onCancelDraft}
+      />
+
+      <GenerationJobsPanel
+        jobs={props.jobs}
+        isLoading={props.isLoadingJobs}
+        deletingId={props.deletingJobId}
+        onRefresh={props.onRefreshJobs}
+        onOpen={props.onOpenJob}
+        onDelete={props.onDeleteJob}
       />
 
       <section>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 import {
   generateService,
@@ -14,6 +14,8 @@ import type {
   DraftVersion,
 } from '@/types/drafter.types';
 import type {
+  GenerateJob,
+  GenerateJobListItem,
   GenerateProgressState,
   GenerateValidationResult,
 } from '@/types/generate.types';
@@ -34,6 +36,14 @@ function buildPromptWithLanguage(prompt: string, language: DraftOutputLang): str
     return `${prompt.trim()}\n\nPlease generate the contract in bilingual Arabic and English.`;
   }
   return prompt.trim();
+}
+
+function toProgress(job: GenerateJob, fallbackStage: string): GenerateProgressState {
+  return {
+    progress: typeof job.progress === 'number' ? job.progress : 0,
+    stage: job.currentStage || fallbackStage,
+    step: job.currentStep || '',
+  };
 }
 
 export function useDraftersStudio() {
@@ -58,7 +68,12 @@ export function useDraftersStudio() {
   const [isSaving, setIsSaving] = useState(false);
   const [isValidating, setIsValidating] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
+  const [jobs, setJobs] = useState<GenerateJobListItem[]>([]);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
+  const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
+  const [jobPendingDelete, setJobPendingDelete] = useState<GenerateJobListItem | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+  const draftingJobIdRef = useRef<string | null>(null);
 
   const openWizard = useCallback((tmpl: ContractTemplate) => {
     setSelectedTemplate(tmpl);
@@ -69,15 +84,22 @@ export function useDraftersStudio() {
   const goLibrary = useCallback(() => {
     abortRef.current?.abort();
     abortRef.current = null;
+    draftingJobIdRef.current = null;
+    setIsDrafting(false);
+    setDraftProgress(null);
     setViewMode('library');
   }, []);
 
   const openEditor = useCallback(
-    (title: string, content: string, options?: {
-      jobId?: string | null;
-      validation?: GenerateValidationResult | null;
-      reportUrl?: string | null;
-    }) => {
+    (
+      title: string,
+      content: string,
+      options?: {
+        jobId?: string | null;
+        validation?: GenerateValidationResult | null;
+        reportUrl?: string | null;
+      },
+    ) => {
       setEditorTitle(title);
       setEditorContent(content);
       setEditorHistory([{ v: 'v1.0.0', date: TODAY, content }]);
@@ -88,6 +110,65 @@ export function useDraftersStudio() {
       setViewMode('editor');
     },
     [],
+  );
+
+  const refreshJobs = useCallback(async () => {
+    setIsLoadingJobs(true);
+    try {
+      const list = await generateService.listJobs();
+      setJobs(
+        [...list].sort((a, b) => {
+          const aTime = new Date(a.createdAt || a.completedAt || 0).getTime();
+          const bTime = new Date(b.createdAt || b.completedAt || 0).getTime();
+          return bTime - aTime;
+        }),
+      );
+    } catch (error) {
+      toastApiError(error, c.jobsOpenFail);
+    } finally {
+      setIsLoadingJobs(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (viewMode === 'library') {
+      void refreshJobs();
+    }
+  }, [viewMode, refreshJobs]);
+
+  const openCompletedJob = useCallback(
+    (job: GenerateJob) => {
+      const content = resolveContractMarkdown(job);
+      if (!content) {
+        throw new Error('لا يوجد نص عقد لهذا الطلب');
+      }
+      const title = resolveContractTitle(job, `${c.customDraft}${c.draftSuffix}`);
+      openEditor(title, content, {
+        jobId: job.jobId,
+        validation: job.result?.validationResult ?? null,
+        reportUrl: job.files?.report ?? null,
+      });
+    },
+    [openEditor],
+  );
+
+  const waitAndOpen = useCallback(
+    async (jobId: string, controller: AbortController, fallbackStage: string) => {
+      draftingJobIdRef.current = jobId;
+      setActiveJobId(jobId);
+      setIsDrafting(true);
+      setDraftProgress({ progress: 0, stage: fallbackStage, step: '' });
+
+      const completed = await generateService.waitForCompletion(jobId, {
+        signal: controller.signal,
+        onProgress: (job) => setDraftProgress(toProgress(job, fallbackStage)),
+      });
+
+      openCompletedJob(completed);
+      toastApiSuccess(c.generateOk);
+      void refreshJobs();
+    },
+    [openCompletedJob, refreshJobs],
   );
 
   const submitAiDraft = useCallback(async () => {
@@ -103,44 +184,106 @@ export function useDraftersStudio() {
     try {
       const prompt = buildPromptWithLanguage(descriptionPrompt, selectedLanguage);
       const created = await generateService.createJob(prompt);
-      setActiveJobId(created.jobId);
-
-      const completed = await generateService.waitForCompletion(created.jobId, {
-        signal: controller.signal,
-        onProgress: (job) => {
-          setDraftProgress({
-            progress: typeof job.progress === 'number' ? job.progress : 0,
-            stage: job.currentStage || c.drafting,
-            step: job.currentStep || '',
-          });
-        },
-      });
-
-      const content = resolveContractMarkdown(completed);
-      if (!content) {
-        throw new Error('اكتمل التوليد بدون نص عقد');
-      }
-
-      const title = resolveContractTitle(
-        completed,
-        `${selectedTemplate?.name || c.customDraft}${c.draftSuffix}`,
-      );
-
-      openEditor(title, content, {
-        jobId: completed.jobId,
-        validation: completed.result?.validationResult ?? null,
-        reportUrl: completed.files?.report ?? null,
-      });
-      toastApiSuccess(c.generateOk);
+      await waitAndOpen(created.jobId, controller, c.drafting);
     } catch (error) {
       if (controller.signal.aborted) return;
+      const message = error instanceof Error ? error.message : '';
+      if (message === 'تم إلغاء التوليد' || message === 'تم إلغاء انتظار التوليد') {
+        toastApiSuccess(c.cancelOk);
+        return;
+      }
       toastApiError(error, c.aiFail);
     } finally {
       if (abortRef.current === controller) abortRef.current = null;
+      draftingJobIdRef.current = null;
       setIsDrafting(false);
       setDraftProgress(null);
     }
-  }, [descriptionPrompt, isDrafting, selectedLanguage, selectedTemplate, openEditor]);
+  }, [descriptionPrompt, isDrafting, selectedLanguage, waitAndOpen]);
+
+  const cancelDraft = useCallback(async () => {
+    const jobId = draftingJobIdRef.current || activeJobId;
+    abortRef.current?.abort();
+    abortRef.current = null;
+
+    if (jobId) {
+      try {
+        const message = await generateService.cancelJob(jobId);
+        toastApiSuccess(message || c.cancelOk);
+      } catch (error) {
+        toastApiError(error, c.cancelFail);
+      }
+    }
+
+    draftingJobIdRef.current = null;
+    setIsDrafting(false);
+    setDraftProgress(null);
+    void refreshJobs();
+  }, [activeJobId, refreshJobs]);
+
+  const openJob = useCallback(
+    async (item: GenerateJobListItem) => {
+      const status = String(item.status).toLowerCase();
+
+      if (status === 'queued' || status === 'processing' || status === 'pending') {
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+
+        try {
+          await waitAndOpen(item.jobId, controller, c.jobsResume);
+        } catch (error) {
+          if (controller.signal.aborted) return;
+          const message = error instanceof Error ? error.message : '';
+          if (message === 'تم إلغاء التوليد' || message === 'تم إلغاء انتظار التوليد') {
+            toastApiSuccess(c.cancelOk);
+            return;
+          }
+          toastApiError(error, c.jobsOpenFail);
+        } finally {
+          if (abortRef.current === controller) abortRef.current = null;
+          draftingJobIdRef.current = null;
+          setIsDrafting(false);
+          setDraftProgress(null);
+        }
+        return;
+      }
+
+      try {
+        const job = await generateService.getJob(item.jobId);
+        openCompletedJob(job);
+      } catch (error) {
+        toastApiError(error, c.jobsOpenFail);
+      }
+    },
+    [openCompletedJob, waitAndOpen],
+  );
+
+  const requestDeleteJob = useCallback((job: GenerateJobListItem) => {
+    setJobPendingDelete(job);
+  }, []);
+
+  const cancelDeleteJob = useCallback(() => {
+    if (deletingJobId) return;
+    setJobPendingDelete(null);
+  }, [deletingJobId]);
+
+  const confirmDeleteJob = useCallback(async () => {
+    if (!jobPendingDelete || deletingJobId) return;
+    const jobId = jobPendingDelete.jobId;
+    setDeletingJobId(jobId);
+    try {
+      await generateService.deleteJob(jobId);
+      setJobs((prev) => prev.filter((job) => job.jobId !== jobId));
+      if (activeJobId === jobId) setActiveJobId(null);
+      setJobPendingDelete(null);
+      toastApiSuccess(c.jobsDeleteOk);
+    } catch (error) {
+      toastApiError(error, c.jobsDeleteFail);
+    } finally {
+      setDeletingJobId(null);
+    }
+  }, [jobPendingDelete, deletingJobId, activeJobId]);
 
   const submitWizard = useCallback(() => {
     if (!selectedTemplate) return;
@@ -164,7 +307,6 @@ export function useDraftersStudio() {
       const message = await generateService.updateContract(activeJobId, editorContent);
       toastApiSuccess(message || c.saveOk);
 
-      // Refresh validation after save when possible.
       try {
         setIsValidating(true);
         const validated = await generateService.validate(activeJobId);
@@ -206,54 +348,64 @@ export function useDraftersStudio() {
     toastApiSuccess(c.insertOk);
   }, []);
 
-  const rewriteDraft = useCallback(async () => {
-    const instructions = window.prompt(c.rewritePrompt);
-    if (!instructions?.trim()) return;
+  const rewriteDraft = useCallback(
+    async (instructions: string) => {
+      if (!instructions.trim()) return;
 
-    if (!activeJobId) {
-      setEditorContent(
-        (prev) =>
-          `# شروط تعاقدية معدلة بالذكاء الاصطناعي\n\n*(مسودة معدلة استناداً إلى: "${instructions}")*\n\n${prev}`,
-      );
-      toastApiSuccess(c.rewriteLocalOk);
-      return;
-    }
-
-    if (isRewriting) return;
-    setIsRewriting(true);
-    setDraftProgress({ progress: 0, stage: c.rewriting, step: '' });
-
-    try {
-      // Persist current edits before regenerate when possible.
-      try {
-        await generateService.updateContract(activeJobId, editorContent);
-      } catch {
-        // continue regenerate even if interim save fails
+      if (!activeJobId) {
+        setEditorContent(
+          (prev) =>
+            `# شروط تعاقدية معدلة بالذكاء الاصطناعي\n\n*(مسودة معدلة استناداً إلى: "${instructions}")*\n\n${prev}`,
+        );
+        toastApiSuccess(c.rewriteLocalOk);
+        return;
       }
 
-      await generateService.regenerate(activeJobId, instructions);
-      const completed = await generateService.waitForCompletion(activeJobId, {
-        onProgress: (job) => {
-          setDraftProgress({
-            progress: typeof job.progress === 'number' ? job.progress : 0,
-            stage: job.currentStage || c.rewriting,
-            step: job.currentStep || '',
-          });
-        },
-      });
+      if (isRewriting) return;
+      setIsRewriting(true);
+      setDraftProgress({ progress: 0, stage: c.rewriting, step: '' });
 
-      const content = resolveContractMarkdown(completed);
-      if (content) setEditorContent(content);
-      setValidation(completed.result?.validationResult ?? null);
-      setReportUrl(completed.files?.report ?? null);
-      toastApiSuccess(c.rewriteOk);
-    } catch (error) {
-      toastApiError(error, c.rewriteFail);
-    } finally {
-      setIsRewriting(false);
-      setDraftProgress(null);
-    }
-  }, [activeJobId, editorContent, isRewriting]);
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      draftingJobIdRef.current = activeJobId;
+
+      try {
+        try {
+          await generateService.updateContract(activeJobId, editorContent);
+        } catch {
+          // continue regenerate even if interim save fails
+        }
+
+        await generateService.regenerate(activeJobId, instructions);
+        const completed = await generateService.waitForCompletion(activeJobId, {
+          signal: controller.signal,
+          onProgress: (job) => setDraftProgress(toProgress(job, c.rewriting)),
+        });
+
+        const content = resolveContractMarkdown(completed);
+        if (content) setEditorContent(content);
+        setValidation(completed.result?.validationResult ?? null);
+        setReportUrl(completed.files?.report ?? null);
+        toastApiSuccess(c.rewriteOk);
+        void refreshJobs();
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        const message = error instanceof Error ? error.message : '';
+        if (message === 'تم إلغاء التوليد' || message === 'تم إلغاء انتظار التوليد') {
+          toastApiSuccess(c.cancelOk);
+          return;
+        }
+        toastApiError(error, c.rewriteFail);
+      } finally {
+        if (abortRef.current === controller) abortRef.current = null;
+        draftingJobIdRef.current = null;
+        setIsRewriting(false);
+        setDraftProgress(null);
+      }
+    },
+    [activeJobId, editorContent, isRewriting, refreshJobs],
+  );
 
   const runValidation = useCallback(async () => {
     if (!activeJobId || isValidating) return;
@@ -313,9 +465,14 @@ export function useDraftersStudio() {
     isSaving,
     isValidating,
     isRewriting,
+    jobs,
+    isLoadingJobs,
+    deletingJobId,
+    jobPendingDelete,
     openWizard,
     goLibrary,
     submitAiDraft,
+    cancelDraft,
     submitWizard,
     saveDraft,
     commitVersion,
@@ -324,5 +481,10 @@ export function useDraftersStudio() {
     rewriteDraft,
     runValidation,
     downloadDraft,
+    refreshJobs,
+    openJob,
+    requestDeleteJob,
+    cancelDeleteJob,
+    confirmDeleteJob,
   };
 }

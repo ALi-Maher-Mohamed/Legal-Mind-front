@@ -31,7 +31,7 @@ type Props = {
   onRestore: (v: string) => void;
   onCommitVersion: () => void;
   onInsertClause: (title: string, text: string) => void;
-  onRewrite: () => void;
+  onRewrite: (instructions: string) => void;
 };
 
 export default function EditorView(props: Props) {
@@ -63,7 +63,7 @@ export default function EditorView(props: Props) {
           <div className="h-full min-h-[280px] lg:col-span-3 lg:min-h-0">
             <AiAssistPanel
               onInsert={props.onInsertClause}
-              onRewrite={props.onRewrite}
+              onRewrite={(instructions) => props.onRewrite(instructions)}
               isRewriting={props.isRewriting}
             />
           </div>
