@@ -24,6 +24,12 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
     setIsLoading(true);
     try {
       const result = await authService.login({ email, password, rememberMe });
+
+      const data: any = result;
+      const theToken = data.token || data.accessToken || data.user?.token;
+      if (theToken) {
+        localStorage.setItem("token", theToken);
+      }
       toastApiSuccess(result.message);
       onSuccess(result.user);
     } catch (error) {
