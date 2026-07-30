@@ -47,6 +47,9 @@ export default function CreateBlogPage() {
     e.preventDefault();
     setIsSubmitting(true);
     setError("");
+
+    // const token = localStorage.getItem("userToken")?.replace(/"/g, "");
+
     const token = localStorage.getItem("token")?.replace(/"/g, "");
     console.log("Token:", token);
 

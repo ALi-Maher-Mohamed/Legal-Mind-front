@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+
 import Link from "next/link";
 import {
   Heart,
   Edit,
   Trash2,
   ArrowRight,
-  Image as ImageIcon,
+  Clock,
+  Volume2,
+  User,
 } from "lucide-react";
-import DashPanel from "@/modules/dashboard/components/ui/DashPanel";
 
 interface Blog {
   _id: string;
@@ -40,7 +42,7 @@ export default function BlogDetailsPage() {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `http://localhost:5001/api/blogs/${blogId}`,
+          `http://localhost:5001/api/blogs/${blogId}`
         );
         const result = await response.json();
 
@@ -79,27 +81,23 @@ export default function BlogDetailsPage() {
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
-      "هل أنت متأكد من حذف هذا المقال نهائياً؟",
+      "هل أنت متأكد من حذف هذا المقال نهائياً؟"
     );
     if (!confirmDelete) return;
 
     try {
       setIsDeleting(true);
-
-      // 1. هنجيب التوكن من المكان اللي مسجلاه فيه (غالباً localStorage)
-      // اتأكدي بس إن اسم المفتاح 'token' متطابق مع اللي بتستخدميه وقت تسجيل الدخول
       const token = localStorage.getItem("token");
 
-      // 2. هنبعت التوكن في الـ Headers
       const response = await fetch(
         `http://localhost:5001/api/blogs/${blogId}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ده السطر اللي هيدي الصلاحية للحذف
+            Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       const result = await response.json();
@@ -119,123 +117,124 @@ export default function BlogDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-4xl mx-auto p-6" dir="rtl">
-        <DashPanel className="h-96 animate-pulse bg-slate-200/50">
-          <div className="w-full h-full"></div>
-        </DashPanel>
+      <div className="min-h-screen  py-12" dir="rtl">
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-6">
+          <div className="bg-white border border-[#e5e0d8] shadow-sm h-96 animate-pulse w-full"></div>
+        </div>
       </div>
     );
   }
 
   if (error || !blog) {
     return (
-      <div className="w-full max-w-4xl mx-auto p-6 text-center" dir="rtl">
-        <DashPanel className="py-20 ">
-          <p className="text-red-500 font-medium text-lg mb-4">{error}</p>
-          <button
-            onClick={() => router.push("/dashboard/gazette")}
-            className="text-blue-600 underline  "
-          >
-            العودة للجريدة
-          </button>
-        </DashPanel>
+      <div className="min-h-screen bg-[#f4f1ea] py-12" dir="rtl">
+        <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 text-center">
+          <div className="bg-white border border-[#e5e0d8] shadow-sm py-20">
+            <p className="text-red-800 font-serif font-bold text-lg mb-4">{error}</p>
+            <button
+              onClick={() => router.push("/dashboard/gazette")}
+              className="text-slate-600 uppercase tracking-widest text-xs font-bold underline"
+            >
+              العودة للجريدة
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="flex flex-col gap-6 w-full max-w-4xl mx-auto pb-10"
-      dir="rtl"
-    >
-      <button
-        onClick={() => router.push("/dashboard")}
-        className="pt-5 flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors w-fit font-medium"
-      >
-        <ArrowRight className="w-5 h-5" />
-        <span>العودة للجريدة</span>
-      </button>
+    <div className="min-h-screen  text-slate-900 py-8 md:py-12 px-4 sm:px-6" dir="rtl">
+      
+      <div className="w-full max-w-3xl mx-auto bg-white border border-blue-200 shadow-sm p-6 sm:p-10 md:p-14">
+        
+       
+        <button
+          onClick={() => router.push("/dashboard")}
+          className="flex items-center gap-2 text-[10px] sm:text-xs font-bold tracking-[0.15em] text-slate-500 hover:text-blue-500 uppercase mb-8 transition-colors"
+        >
+          <ArrowRight className="w-3.5 h-3.5" />
+          <span>العودة لـ فهرس الجريدة</span>
+        </button>
 
-      <DashPanel padded={false} className="overflow-hidden">
-        <div className="h-64 md:h-80 w-full bg-slate-100 relative">
-          {blog.coverImage ? (
+        <div className="text-[10px] sm:text-xs font-bold tracking-[0.2em] text-slate-500 uppercase mb-3">
+          {blog.category}
+        </div>
+
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-slate-900 mb-6 leading-snug uppercase">
+          {blog.title}
+        </h1>
+
+      
+
+        {blog.coverImage && (
+          <div className="w-full mb-10">
             <img
               src={blog.coverImage}
               alt={blog.title}
-              className="w-full h-full object-cover"
+              className="w-full h-auto object-cover grayscale-[15%]"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
             />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <ImageIcon className="w-16 h-16 text-slate-300" />
-            </div>
-          )}
-          <div className="absolute top-4 right-4 bg-white/95 text-blue-700 text-sm font-bold px-4 py-1.5 rounded-full shadow">
-            {blog.category}
           </div>
+        )}
+
+        <div className="prose prose-sm sm:prose-base md:prose-lg prose-slate max-w-none font-serif text-slate-800 leading-loose whitespace-pre-wrap mb-12">
+          {blog.content}
         </div>
 
-        <div className="p-6 md:p-8">
-          {/* العنوان */}
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-6 leading-relaxed">
-            {blog.title}
-          </h1>
-
-          {/* شريط الأدوات (لايك، تعديل، حذف) */}
-          <div className="flex flex-wrap items-center justify-between border-y border-slate-100 py-4 mb-8">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={handleLike}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-                  isLiked
-                    ? "bg-red-50 text-red-600"
-                    : "bg-slate-50 text-slate-600 hover:bg-slate-100"
-                }`}
+        {blog.tags && blog.tags.length > 0 && (
+          <div className="mt-8 mb-12 flex flex-wrap gap-2">
+            {blog.tags.map((tag, index) => (
+              <span
+                key={index}
+                className="px-2 py-1 border border-slate-200 text-slate-500 text-[10px] sm:text-xs font-bold tracking-wider uppercase"
               >
-                <Heart className={`w-5 h-5 ${isLiked ? "fill-red-600" : ""}`} />
-                <span>{likesCount > 0 ? likesCount : "إعجاب"}</span>
-              </button>
-            </div>
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
 
-            <div className="flex items-center gap-3">
-              {/* زرار التعديل (هياخدك لصفحة تانية لسه هتعمليها) */}
+        <div className="border-t border-slate-200 pt-8 mt-8">
+      
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <button
+              onClick={handleLike}
+              className={`flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold tracking-wider uppercase border transition-all ${
+                isLiked
+                  ? "bg-slate-100 border-slate-300 text-slate-900"
+                  : "bg-white border-slate-200 text-slate-500 hover:bg-slate-50"
+              }`}
+            >
+              <Heart className={`w-4 h-4 ${isLiked ? "fill-slate-900" : ""}`} />
+              <span>{likesCount > 0 ? `${likesCount} إعجاب` : "إعجاب"}</span>
+            </button>
+
+            <div className="flex items-center gap-13 md:gap-3">
               <Link
                 href={`/dashboard/gazette/edit/${blog._id}`}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-600 rounded-xl font-medium hover:bg-blue-100 transition-colors"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-slate-200 text-slate-700 text-xs font-bold tracking-wider uppercase hover:bg-slate-50 transition-colors"
               >
-                <Edit className="w-4 h-4" />
+                <Edit className="w-3.5 h-3.5" />
                 <span>تعديل</span>
               </Link>
 
-              {/* زرار الحذف */}
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                className="flex items-center justify-center gap-2 px-5 py-2.5 bg-white border border-red-200 text-red-700 text-xs font-bold tracking-wider uppercase hover:bg-red-50 transition-colors disabled:opacity-50"
               >
-                <Trash2 className="w-4 h-4" />
-                <span>{isDeleting ? "جاري الحذف..." : "حذف"}</span>
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{isDeleting ? "جاري..." : "حذف"}</span>
               </button>
             </div>
           </div>
-
-          <div className="prose prose-slate max-w-none text-slate-700 leading-loose whitespace-pre-wrap">
-            {blog.content}
-          </div>
-
-          {blog.tags && blog.tags.length > 0 && (
-            <div className="mt-10 flex flex-wrap gap-2">
-              {blog.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-slate-100 text-slate-600 text-sm rounded-lg"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
         </div>
-      </DashPanel>
+
+      </div>
     </div>
   );
 }
