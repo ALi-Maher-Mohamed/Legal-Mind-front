@@ -15,8 +15,8 @@ type Props = {
 
 export default function WizardView({ template, values, onChange, onBack, onSubmit }: Props) {
   return (
-    <div className={`${dashPanel} mx-auto max-w-2xl p-5 sm:p-8`}>
-      <div className="mb-6 flex items-center justify-between border-b border-brand/10 pb-4 dark:border-white/10">
+    <div className={`${dashPanel} mx-auto w-full max-w-2xl p-4 sm:p-6 md:p-8`}>
+      <div className="mb-5 flex flex-col gap-2 border-b border-brand/10 pb-4 dark:border-white/10 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
           onClick={onBack}
@@ -25,15 +25,17 @@ export default function WizardView({ template, values, onChange, onBack, onSubmi
           <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
           {c.backLibrary}
         </button>
-        <span className="text-xs font-bold uppercase text-muted">{c.wizardSetup}</span>
+        <span className="text-[11px] font-bold uppercase text-muted sm:text-xs">{c.wizardSetup}</span>
       </div>
 
-      <div className="mb-6">
-        <span className="block text-xs font-bold uppercase tracking-widest text-brand">{c.params}</span>
-        <h3 className="mt-1 text-xl font-bold uppercase text-foreground sm:text-2xl">
+      <div className="mb-5 sm:mb-6">
+        <span className="block text-[11px] font-bold uppercase tracking-widest text-brand sm:text-xs">
+          {c.params}
+        </span>
+        <h3 className="mt-1 text-lg font-bold uppercase leading-snug text-foreground sm:text-xl md:text-2xl">
           {c.setupOf}: {template.name}
         </h3>
-        <p className="mt-1 text-xs italic text-muted">{c.wizardHint}</p>
+        <p className="mt-1 text-xs italic leading-relaxed text-muted">{c.wizardHint}</p>
       </div>
 
       <form

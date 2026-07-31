@@ -1,6 +1,8 @@
 'use client';
 
 import { useDraftersStudio } from '../../hooks/useDraftersStudio';
+import { drafterCopy as c } from '../../data/drafterCopy';
+import ConfirmModal from '../ui/ConfirmModal';
 import LibraryView from './LibraryView';
 import WizardView from './WizardView';
 import EditorView from './EditorView';
@@ -8,8 +10,8 @@ import EditorView from './EditorView';
 export default function DraftersStudio() {
   const d = useDraftersStudio();
 
-  if (d.viewMode === 'wizard' && d.selectedTemplate) {
-    return (
+  const body =
+    d.viewMode === 'wizard' && d.selectedTemplate ? (
       <WizardView
         template={d.selectedTemplate}
         values={d.wizardValues}
@@ -17,11 +19,7 @@ export default function DraftersStudio() {
         onBack={d.goLibrary}
         onSubmit={d.submitWizard}
       />
-    );
-  }
-
-  if (d.viewMode === 'editor') {
-    return (
+    ) : d.viewMode === 'editor' ? (
       <EditorView
         title={d.editorTitle}
         onTitleChange={d.setEditorTitle}
@@ -32,26 +30,56 @@ export default function DraftersStudio() {
         onToggleAi={() => d.setShowAiAssist((v) => !v)}
         onToggleRisk={() => d.setShowRiskScanner((v) => !v)}
         onBack={d.goLibrary}
-        onSave={d.saveDraft}
+        onSave={() => void d.saveDraft()}
+        onDownload={() => void d.downloadDraft()}
+        canDownload={Boolean(d.editorContent.trim())}
+        isSaving={d.isSaving}
+        isDownloading={d.isDownloading}
+        isRewriting={d.isRewriting}
+        validation={d.validation}
+        isValidating={d.isValidating}
+        canValidate={Boolean(d.activeJobId)}
+        onValidate={() => void d.runValidation()}
         history={d.editorHistory}
         activeVersion={d.activeVersion}
         onRestore={d.restoreVersion}
         onCommitVersion={d.commitVersion}
         onInsertClause={d.insertClause}
-        onRewrite={d.rewriteDraft}
+        onRewrite={(instructions) => void d.rewriteDraft(instructions)}
+      />
+    ) : (
+      <LibraryView
+        prompt={d.descriptionPrompt}
+        onPromptChange={d.setDescriptionPrompt}
+        language={d.selectedLanguage}
+        onLanguageChange={d.setSelectedLanguage}
+        isDrafting={d.isDrafting}
+        draftProgress={d.draftProgress}
+        onAiSubmit={() => void d.submitAiDraft()}
+        onCancelDraft={() => void d.cancelDraft()}
+        onOpenWizard={d.openWizard}
+        jobs={d.jobs}
+        isLoadingJobs={d.isLoadingJobs}
+        deletingJobId={d.deletingJobId}
+        onRefreshJobs={() => void d.refreshJobs()}
+        onOpenJob={(job) => void d.openJob(job)}
+        onDeleteJob={d.requestDeleteJob}
       />
     );
-  }
 
   return (
-    <LibraryView
-      prompt={d.descriptionPrompt}
-      onPromptChange={d.setDescriptionPrompt}
-      language={d.selectedLanguage}
-      onLanguageChange={d.setSelectedLanguage}
-      isDrafting={d.isDrafting}
-      onAiSubmit={() => void d.submitAiDraft()}
-      onOpenWizard={d.openWizard}
-    />
+    <>
+      {body}
+      <ConfirmModal
+        open={Boolean(d.jobPendingDelete)}
+        title={c.jobsDeleteTitle}
+        description={c.jobsDeleteDesc}
+        confirmLabel={c.jobsDeleteConfirm}
+        cancelLabel={c.jobsDeleteCancel}
+        isLoading={Boolean(d.deletingJobId)}
+        onConfirm={() => void d.confirmDeleteJob()}
+        onCancel={d.cancelDeleteJob}
+      />
+    </>
   );
 }
