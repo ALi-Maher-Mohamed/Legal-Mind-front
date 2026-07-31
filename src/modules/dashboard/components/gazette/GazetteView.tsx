@@ -1,17 +1,19 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ChevronDown, ImageIcon, Plus } from 'lucide-react';
 import { toastApiError } from '@/lib/api/toast';
 import { blogsService } from '@/services/blogs.service';
 import type { Blog, BlogCategory, BlogPagination } from '@/types/blog.types';
 import { gazetteCopy as c } from '../../data/gazetteCopy';
-import { collectTags } from '../../lib/blogHelpers';
+import { collectTags, getBlogId } from '../../lib/blogHelpers';
 import GazetteArticleCard from './GazetteArticleCard';
 import GazetteSidebar from './GazetteSidebar';
 
 type FeedMode = 'latest' | 'trending';
+
+const PAGE_LIMIT = 20;
 
 export default function GazetteView() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -24,6 +26,8 @@ export default function GazetteView() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+  const requestIdRef = useRef(0);
 
   const categoryLabel = useCallback(
     (value: string) => categories.find((item) => item.value === value)?.label || value,
@@ -32,13 +36,16 @@ export default function GazetteView() {
 
   const loadBlogs = useCallback(
     async (nextPage: number, append: boolean) => {
+      const requestId = ++requestIdRef.current;
       if (append) setIsLoadingMore(true);
       else setIsLoading(true);
       setError('');
 
       try {
-        if (feedMode === 'trending' && nextPage === 1 && !append) {
-          const trending = await blogsService.getTrending(12);
+        if (feedMode === 'trending') {
+          const trending = await blogsService.getTrending(50);
+          if (requestId !== requestIdRef.current) return;
+
           const filtered = trending.filter((blog) => {
             const byCategory = !category || blog.category === category;
             const byTag = !tag || (blog.tags || []).includes(tag);
@@ -51,64 +58,77 @@ export default function GazetteView() {
             total: filtered.length,
             pages: 1,
           });
+          setPage(1);
           return;
         }
 
+        // الكل / بدون فلتر → /api/blogs?page=&limit=&sort=newest فقط
         const result = await blogsService.list({
           page: nextPage,
-          limit: 9,
+          limit: PAGE_LIMIT,
           sort: 'newest',
-          category: category || undefined,
-          tags: tag || undefined,
+          ...(category ? { category } : {}),
+          ...(tag ? { tags: tag } : {}),
         });
+
+        if (requestId !== requestIdRef.current) return;
 
         setBlogs((prev) => (append ? [...prev, ...result.blogs] : result.blogs));
         setPagination(result.pagination);
         setPage(nextPage);
       } catch (err) {
+        if (requestId !== requestIdRef.current) return;
         if (!append) {
           setBlogs([]);
           setError(err instanceof Error ? err.message : 'تعذر جلب المقالات');
         }
         toastApiError(err, 'تعذر جلب المقالات');
       } finally {
-        setIsLoading(false);
-        setIsLoadingMore(false);
+        if (requestId === requestIdRef.current) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
     },
     [category, feedMode, tag],
   );
 
   useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const list = await blogsService.getCategories();
-        if (!cancelled) setCategories(list);
-      } catch {
-        if (!cancelled) setCategories([]);
-      }
-    })();
+    let active = true;
+    void blogsService
+      .getCategories()
+      .then((list) => {
+        if (active) setCategories(list);
+      })
+      .catch(() => {
+        if (active) setCategories([]);
+      });
     return () => {
-      cancelled = true;
+      active = false;
     };
   }, []);
 
+  // إعادة الجلب عند تغيير الفلاتر أو الضغط على «الكل»
   useEffect(() => {
-    let cancelled = false;
-    void Promise.resolve().then(() => {
-      if (!cancelled) void loadBlogs(1, false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [loadBlogs]);
+    const timer = window.setTimeout(() => {
+      void loadBlogs(1, false);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [loadBlogs, reloadKey]);
 
   const tags = useMemo(() => collectTags(blogs), [blogs]);
   const featured = blogs[0] || null;
   const rest = blogs.slice(1);
   const canLoadMore =
     feedMode === 'latest' && pagination != null && pagination.page < pagination.pages;
+
+  const resetToAllPosts = () => {
+    setCategory('');
+    setTag('');
+    setFeedMode('latest');
+    setPage(1);
+    setReloadKey((key) => key + 1);
+  };
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 pb-10 text-start" dir="rtl">
@@ -131,12 +151,15 @@ export default function GazetteView() {
       </section>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
-        {/* Mobile: content first. Desktop RTL: sidebar on the right via order */}
         <div className="order-2 lg:order-1 lg:col-span-4 xl:col-span-3">
           <GazetteSidebar
             categories={categories}
             activeCategory={category}
             onCategoryChange={(value) => {
+              if (!value) {
+                resetToAllPosts();
+                return;
+              }
               setCategory(value);
               setPage(1);
             }}
@@ -183,6 +206,13 @@ export default function GazetteView() {
               <ImageIcon className="mb-4 h-12 w-12 opacity-40" />
               <h2 className="mb-1 text-lg font-bold text-foreground">{c.empty}</h2>
               <p className="text-xs uppercase tracking-wider">{c.emptyHint}</p>
+              <button
+                type="button"
+                onClick={resetToAllPosts}
+                className="mt-4 text-xs font-bold text-[#002045] underline cursor-pointer dark:text-foreground"
+              >
+                {c.allCategories}
+              </button>
             </div>
           ) : (
             <>
@@ -197,7 +227,7 @@ export default function GazetteView() {
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {rest.map((blog) => (
                   <GazetteArticleCard
-                    key={blog._id}
+                    key={getBlogId(blog)}
                     blog={blog}
                     categoryLabel={categoryLabel(blog.category)}
                   />

@@ -14,9 +14,13 @@ function buildQuery(params: BlogListParams = {}) {
   if (params.page) query.set('page', String(params.page));
   if (params.limit) query.set('limit', String(params.limit));
   if (params.sort) query.set('sort', params.sort);
-  if (params.search?.trim()) query.set('search', params.search.trim());
-  if (params.category?.trim()) query.set('category', params.category.trim());
-  if (params.tags?.trim()) query.set('tags', params.tags.trim());
+  // Only append filters when they have a real value (empty = all posts)
+  const search = params.search?.trim();
+  const category = params.category?.trim();
+  const tags = params.tags?.trim();
+  if (search) query.set('search', search);
+  if (category) query.set('category', category);
+  if (tags) query.set('tags', tags);
   const qs = query.toString();
   return qs ? `?${qs}` : '';
 }
@@ -36,14 +40,28 @@ type CategoriesEnvelope = {
 
 export const blogsService = {
   async list(params: BlogListParams = {}): Promise<BlogListResult> {
-    const response = await api.get<ListResponse>(`/api/blogs${buildQuery(params)}`);
+    const response = await api.get<ListResponse | Blog[]>(`/api/blogs${buildQuery(params)}`);
+    const data = response.data;
+
+    if (Array.isArray(data)) {
+      return {
+        blogs: data,
+        pagination: {
+          page: params.page ?? 1,
+          limit: params.limit ?? data.length,
+          total: data.length,
+          pages: 1,
+        },
+      };
+    }
+
     return {
-      blogs: response.data?.blogs ?? [],
-      pagination: response.data?.pagination ?? {
+      blogs: data?.blogs ?? [],
+      pagination: data?.pagination ?? {
         page: params.page ?? 1,
         limit: params.limit ?? 10,
-        total: 0,
-        pages: 0,
+        total: data?.blogs?.length ?? 0,
+        pages: 1,
       },
     };
   },
