@@ -1,223 +1,234 @@
+'use client';
 
-"use client";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Save } from "lucide-react";
-import DashPanel from "@/modules/dashboard/components/ui/DashPanel";
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { ArrowRight, Save } from 'lucide-react';
+import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { blogsService } from '@/services/blogs.service';
+import type { BlogCategory } from '@/types/blog.types';
+import { gazetteCopy as c } from '@/modules/dashboard/data/gazetteCopy';
+import { dashPageBg, dashPanel } from '@/modules/dashboard/lib/panelStyles';
 
-export default function CreateBlogPage() {
+function CreateBlogForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('edit');
 
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [coverImage, setCoverImage] = useState("");
-  const [category, setCategory] = useState("");
-  const [tags, setTags] = useState("");
-
-  const [categories, setCategories] = useState<string[]>([]);
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [category, setCategory] = useState('');
+  const [tags, setTags] = useState('');
+  const [status, setStatus] = useState<'published' | 'draft'>('published');
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(Boolean(editId));
+  const [error, setError] = useState('');
+
+  const pageTitle = useMemo(() => (editId ? c.editTitle : c.createTitle), [editId]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const bootstrap = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5001/api/blogs/categories",
-        );
-
-        const result = await response.json();
-        if (result.success && result.data && Array.isArray(result.data.categories)) {
-          const cats = result.data.categories.map((c: any) => c.value); 
-          setCategories(cats);
-        } else if (Array.isArray(result)) {
-          setCategories(result);
-        } else {
-          setCategories([]);
-        }
-      } catch (err) {
-        console.error("Fetch Categories Error:", err);
+        const cats = await blogsService.getCategories();
+        setCategories(cats);
+      } catch {
         setCategories([]);
+      }
+
+      if (!editId) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const blog = await blogsService.getById(editId);
+        setTitle(blog.title || '');
+        setContent(blog.content || '');
+        setCoverImage(blog.coverImage || '');
+        setCategory(blog.category || '');
+        setTags((blog.tags || []).join(', '));
+        setStatus(blog.status === 'draft' ? 'draft' : 'published');
+      } catch (err) {
+        setError(err instanceof Error ? err.message : c.createFail);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchCategories();
-  }, []);
+    void bootstrap();
+  }, [editId]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError("");
-
-    // const token = localStorage.getItem("userToken")?.replace(/"/g, "");
-
-    const token = localStorage.getItem("token")?.replace(/"/g, "");
-    console.log("Token:", token);
-
-    if (!token) {
-      setError("لم يتم العثور على Token");
-      setIsSubmitting(false);
-      return;
-    }
+    setError('');
 
     const tagsArray = tags
-      .split(",")
+      .split(',')
       .map((tag) => tag.trim())
-      .filter((tag) => tag !== "");
+      .filter(Boolean);
 
-    const newBlogData = {
-      title,
-      content,
-      coverImage,
+    const payload = {
+      title: title.trim(),
+      content: content.trim(),
       category,
+      coverImage: coverImage.trim() || undefined,
       tags: tagsArray,
+      status,
     };
 
     try {
-      const response = await fetch("http://localhost:5001/api/blogs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(newBlogData),
-      });
-
-      console.log("Status:", response.status);
-
-      const result = await response.json();
-
-      console.log("Response:", result);
-
-      if (response.ok) {
-        router.push("/dashboard");
+      if (editId) {
+        const blog = await blogsService.update(editId, payload);
+        toastApiSuccess(c.updateOk);
+        router.push(`/dashboard/gazette/${blog._id || editId}`);
       } else {
-        setError(result.message || "حدث خطأ أثناء إضافة المقال.");
-        setIsSubmitting(false);
+        const blog = await blogsService.create(payload);
+        toastApiSuccess(c.createOk);
+        router.push(`/dashboard/gazette/${blog._id || blog.id}`);
       }
     } catch (err) {
-      console.error("Create Blog Error:", err);
-      setError("فشل الاتصال بالخادم.");
+      const message = err instanceof Error ? err.message : c.createFail;
+      setError(message);
+      toastApiError(err, c.createFail);
       setIsSubmitting(false);
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className={`min-h-screen ${dashPageBg} px-4 py-10`} dir="rtl">
+        <div className="mx-auto h-80 max-w-4xl animate-pulse rounded-2xl bg-white dark:bg-card" />
+      </div>
+    );
+  }
+
   return (
-    <div
-      className="flex flex-col gap-6 w-full max-w-4xl mx-auto pb-10"
-      dir="rtl"
-    >
-      <button
-        onClick={() => router.push("/dashboard")}
-        className="flex items-center gap-2 text-slate-500 hover:text-blue-600 transition-colors w-fit font-medium"
-      >
-        <ArrowRight className="w-5 h-5" />
-        <span>إلغاء والعودة للجريدة</span>
-      </button>
+    <div className={`min-h-screen ${dashPageBg} px-4 py-6 sm:px-6 sm:py-8`} dir="rtl">
+      <div className="mx-auto flex w-full max-w-4xl flex-col gap-5">
+        <button
+          type="button"
+          onClick={() =>
+            router.push(editId ? `/dashboard/gazette/${editId}` : '/dashboard?view=gazette')
+          }
+          className="inline-flex w-fit items-center gap-2 text-sm font-medium text-muted hover:text-brand cursor-pointer"
+        >
+          <ArrowRight className="h-4 w-4" />
+          {c.cancel}
+        </button>
 
-      <DashPanel className="p-6 md:p-8">
-        <h1 className="text-2xl font-bold text-slate-800 mb-6 border-b pb-4">
-          إنشاء مقال جديد
-        </h1>
+        <div className={`${dashPanel} p-5 sm:p-8`}>
+          <h1 className="mb-6 border-b border-brand/10 pb-4 text-2xl font-bold text-foreground dark:border-white/10">
+            {pageTitle}
+          </h1>
 
-        {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 text-sm">
-            {error}
-          </div>
-        )}
+          {error ? (
+            <div className="mb-6 rounded-xl bg-danger/5 p-4 text-sm text-danger">{error}</div>
+          ) : null}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <label className="text-slate-700 font-medium">عنوان المقال *</label>
-            <input
-              type="text"
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-              placeholder="اكتب عنواناً جذاباً لمقالك..."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={(e) => void handleSubmit(e)} className="flex flex-col gap-5">
             <div className="flex flex-col gap-2">
-              <label className="text-slate-700 font-medium">القسم *</label>
-              <select
-                required
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 bg-white"
-              >
-                <option value="" disabled>
-                  اختر القسم المناسب
-                </option>
-
-                {categories.map((cat, index) => (
-                  <option key={index} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-
-                {categories.length === 0 && (
-                  <>
-                    <option value="Criminal Law">Criminal Law</option>
-                    <option value="Civil Law">Civil Law</option>
-                  </>
-                )}
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-slate-700 font-medium">
-                رابط صورة الغلاف (URL)
-              </label>
-
+              <label className="text-sm font-medium text-foreground">{c.fieldTitle} *</label>
               <input
                 type="text"
-                value={coverImage}
-                onChange={(e) => setCoverImage(e.target.value)}
-                className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
-                placeholder="https://example.com/image.jpg"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-2.5 text-sm text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
               />
             </div>
-          </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-slate-700 font-medium">
-              الكلمات المفتاحية (Tags)
-            </label>
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">{c.fieldCategory} *</label>
+                <select
+                  required
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-2.5 text-sm text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
+                >
+                  <option value="" disabled>
+                    {c.chooseCategory}
+                  </option>
+                  {categories.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <input
-              type="text"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="px-4 py-2 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500"
-              placeholder="محكمة, قانون العمل, قضايا"
-            />
-          </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium text-foreground">{c.fieldStatus}</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value as 'published' | 'draft')}
+                  className="rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-2.5 text-sm text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
+                >
+                  <option value="published">{c.publish}</option>
+                  <option value="draft">{c.saveDraft}</option>
+                </select>
+              </div>
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-slate-700 font-medium">المحتوى *</label>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-foreground">{c.fieldCover}</label>
+              <input
+                type="url"
+                value={coverImage}
+                onChange={(e) => setCoverImage(e.target.value)}
+                placeholder="https://..."
+                className="rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-2.5 text-sm text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
+              />
+            </div>
 
-            <textarea
-              required
-              rows={10}
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              className="px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 resize-none leading-relaxed"
-              placeholder="اكتب محتوى المقال هنا..."
-            />
-          </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-foreground">{c.fieldTags}</label>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-2.5 text-sm text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex items-center justify-center gap-2 mt-4 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-50"
-          >
-            <Save className="w-5 h-5" />
-            <span>{isSubmitting ? "جاري النشر..." : "نشر المقال"}</span>
-          </button>
-        </form>
-      </DashPanel>
+            <div className="flex flex-col gap-2">
+              <label className="text-sm font-medium text-foreground">{c.fieldContent} *</label>
+              <textarea
+                required
+                rows={12}
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+                className="resize-y rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-3 text-sm leading-relaxed text-foreground outline-none focus:border-brand dark:border-white/10 dark:bg-white/5"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="mt-2 inline-flex items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-on-brand transition hover:opacity-90 disabled:opacity-50 cursor-pointer"
+            >
+              <Save className="h-4 w-4" />
+              {isSubmitting ? c.saving : editId ? c.saveChanges : c.publish}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
+  );
+}
+
+export default function CreateBlogPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className={`min-h-screen ${dashPageBg} px-4 py-10`} dir="rtl">
+          <div className="mx-auto h-80 max-w-4xl animate-pulse rounded-2xl bg-white dark:bg-card" />
+        </div>
+      }
+    >
+      <CreateBlogForm />
+    </Suspense>
   );
 }

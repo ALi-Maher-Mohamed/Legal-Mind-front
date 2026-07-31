@@ -1,152 +1,225 @@
+'use client';
 
-"use client";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
+import { ChevronDown, ImageIcon, Plus } from 'lucide-react';
+import { toastApiError } from '@/lib/api/toast';
+import { blogsService } from '@/services/blogs.service';
+import type { Blog, BlogCategory, BlogPagination } from '@/types/blog.types';
+import { gazetteCopy as c } from '../../data/gazetteCopy';
+import { collectTags } from '../../lib/blogHelpers';
+import GazetteArticleCard from './GazetteArticleCard';
+import GazetteSidebar from './GazetteSidebar';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Plus, Image as ImageIcon, ArrowLeft } from "lucide-react";
-
-interface Blog {
-  _id: string;
-  title: string;
-  content: string;
-  excerpt: string;
-  coverImage: string;
-  category: string;
-  tags: string[];
-}
-
-interface ApiResponse {
-  success: boolean;
-  message: string;
-  data: {
-    blogs: Blog[];
-  };
-}
+type FeedMode = 'latest' | 'trending';
 
 export default function GazetteView() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [pagination, setPagination] = useState<BlogPagination | null>(null);
+  const [page, setPage] = useState(1);
+  const [category, setCategory] = useState('');
+  const [tag, setTag] = useState('');
+  const [feedMode, setFeedMode] = useState<FeedMode>('latest');
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
+  const categoryLabel = useCallback(
+    (value: string) => categories.find((item) => item.value === value)?.label || value,
+    [categories],
+  );
+
+  const loadBlogs = useCallback(
+    async (nextPage: number, append: boolean) => {
+      if (append) setIsLoadingMore(true);
+      else setIsLoading(true);
+      setError('');
+
       try {
-        setIsLoading(true);
-        const response = await fetch(
-          "http://localhost:5001/api/blogs?limit=100&sort=newest",
-        );
-        const result: ApiResponse = await response.json();
-
-        if (result.success) {
-          setBlogs(result.data.blogs);
-        } else {
-          setError(result.message || "حدث خطأ أثناء جلب المقالات");
+        if (feedMode === 'trending' && nextPage === 1 && !append) {
+          const trending = await blogsService.getTrending(12);
+          const filtered = trending.filter((blog) => {
+            const byCategory = !category || blog.category === category;
+            const byTag = !tag || (blog.tags || []).includes(tag);
+            return byCategory && byTag;
+          });
+          setBlogs(filtered);
+          setPagination({
+            page: 1,
+            limit: filtered.length,
+            total: filtered.length,
+            pages: 1,
+          });
+          return;
         }
+
+        const result = await blogsService.list({
+          page: nextPage,
+          limit: 9,
+          sort: 'newest',
+          category: category || undefined,
+          tags: tag || undefined,
+        });
+
+        setBlogs((prev) => (append ? [...prev, ...result.blogs] : result.blogs));
+        setPagination(result.pagination);
+        setPage(nextPage);
       } catch (err) {
-        setError("تعذر الاتصال بالخادم. يرجى المحاولة لاحقاً.");
-        console.error("Fetch Blogs Error:", err);
+        if (!append) {
+          setBlogs([]);
+          setError(err instanceof Error ? err.message : 'تعذر جلب المقالات');
+        }
+        toastApiError(err, 'تعذر جلب المقالات');
       } finally {
         setIsLoading(false);
+        setIsLoadingMore(false);
       }
-    };
+    },
+    [category, feedMode, tag],
+  );
 
-    fetchBlogs();
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const list = await blogsService.getCategories();
+        if (!cancelled) setCategories(list);
+      } catch {
+        if (!cancelled) setCategories([]);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  return (
-    <div
-      className="flex flex-col gap-6 w-full max-w-7xl mx-auto pb-10 px-4 sm:px-6 lg:px-8"
-      dir="rtl"
-    >
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-slate-200 pb-5 mb-4 gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white uppercase tracking-wide">
-            فهرس الجريدة
-          </h1>
-          <p className="text-[10px] sm:text-xs font-bold tracking-[0.2em] text-slate-500 uppercase mt-2">
-            تصفح أحدث الإصدارات والتحليلات القانونية
-          </p>
-        </div>
-        <Link
-          href="/dashboard/gazette/create"
-          className="text-[11px] font-bold uppercase tracking-wider text-on-brand  inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-blue-600 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.15em] hover:bg-slate-800 transition-colors rounded-2xl border "
-        >
-          <Plus className="w-4 h-4" />
-          <span>إضافة مقال جديد</span>
-        </Link>
-      </div>
+  useEffect(() => {
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (!cancelled) void loadBlogs(1, false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [loadBlogs]);
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
-          {[1, 2, 3].map((n) => (
-            <div key={n} className="h-96 animate-pulse bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"></div>
-          ))}
-        </div>
-      ) : error ? (
-        <div className="border border-slate-200 bg-white dark:bg-slate-900 text-center py-20">
-          <p className="text-red-800 font-serif font-bold text-lg mb-4">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="text-slate-600 uppercase tracking-widest text-xs font-bold underline"
+  const tags = useMemo(() => collectTags(blogs), [blogs]);
+  const featured = blogs[0] || null;
+  const rest = blogs.slice(1);
+  const canLoadMore =
+    feedMode === 'latest' && pagination != null && pagination.page < pagination.pages;
+
+  return (
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 pb-10" dir="rtl">
+      <section className="relative overflow-hidden rounded-xl bg-[#1a365d] px-5 py-8 text-white sm:px-8 sm:py-10 md:px-12">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_45%)] opacity-40" />
+        <div className="relative ms-auto flex max-w-2xl flex-col items-end gap-3 text-end">
+          <span className="rounded-sm bg-[#fed488] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#785a1a]">
+            {c.eyebrow}
+          </span>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">{c.title}</h1>
+          <p className="text-sm leading-relaxed text-white/90 sm:text-base">{c.subtitle}</p>
+          <Link
+            href="/dashboard/gazette/create"
+            className="mt-2 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#002045] transition hover:bg-[#fed488]"
           >
-            حاول مرة أخرى
-          </button>
+            <Plus className="h-4 w-4" />
+            {c.addArticle}
+          </Link>
         </div>
-      ) : blogs.length === 0 ? (
-        <div className="border border-slate-200 bg-white dark:bg-slate-900 flex flex-col items-center justify-center py-24 text-slate-500">
-          <ImageIcon className="w-12 h-12 mb-6 text-slate-300" />
-          <h2 className="text-xl font-serif font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wide">
-            لا توجد وثائق حتى الآن
-          </h2>
-          <p className="text-xs font-bold tracking-[0.1em] uppercase text-slate-400">كن أول من يضيف محتوى للجريدة</p>
+      </section>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+        <div className="order-2 lg:order-1 lg:col-span-4 xl:col-span-3">
+          <GazetteSidebar
+            categories={categories}
+            activeCategory={category}
+            onCategoryChange={(value) => {
+              setCategory(value);
+              setPage(1);
+            }}
+            feedMode={feedMode}
+            onFeedModeChange={(mode) => {
+              setFeedMode(mode);
+              setPage(1);
+            }}
+            tags={tags}
+            activeTag={tag}
+            onTagChange={(value) => {
+              setTag(value);
+              setPage(1);
+            }}
+            onConsult={() => {
+              window.location.href = '/dashboard?view=consultation';
+            }}
+          />
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4">
-          {blogs.map((blog) => (
-            <div
-              key={blog._id}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col group hover:shadow-lg transition-all duration-300"
-            >
-              {blog.coverImage ? (
-                <div className="h-52 w-full border-b border-slate-200 dark:border-slate-800 overflow-hidden relative">
-                  <img
-                    src={blog.coverImage}
-                    alt={blog.title}
-                    className="w-full h-full object-cover grayscale-[15%] group-hover:grayscale-0 transition-all duration-500"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                </div>
+
+        <div className="order-1 space-y-5 lg:order-2 lg:col-span-8 xl:col-span-9">
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              {[1, 2, 3].map((n) => (
+                <div
+                  key={n}
+                  className={`h-72 animate-pulse rounded-xl bg-[#e8eef8] dark:bg-white/5 ${n === 1 ? 'md:col-span-2' : ''}`}
+                />
+              ))}
+            </div>
+          ) : error ? (
+            <div className="rounded-xl border border-[#c4c6cf] bg-white py-16 text-center dark:border-white/10 dark:bg-card">
+              <p className="mb-4 font-bold text-danger">{error}</p>
+              <button
+                type="button"
+                onClick={() => void loadBlogs(1, false)}
+                className="text-xs font-bold uppercase tracking-wider text-muted underline cursor-pointer"
+              >
+                {c.retry}
+              </button>
+            </div>
+          ) : blogs.length === 0 ? (
+            <div className="flex flex-col items-center justify-center rounded-xl border border-[#c4c6cf] bg-white py-20 text-muted dark:border-white/10 dark:bg-card">
+              <ImageIcon className="mb-4 h-12 w-12 opacity-40" />
+              <h2 className="mb-1 text-lg font-bold text-foreground">{c.empty}</h2>
+              <p className="text-xs uppercase tracking-wider">{c.emptyHint}</p>
+            </div>
+          ) : (
+            <>
+              {featured ? (
+                <GazetteArticleCard
+                  blog={featured}
+                  featured
+                  categoryLabel={categoryLabel(featured.category)}
+                />
               ) : null}
 
-              <div className="p-6 md:p-8 flex flex-col flex-grow">
-                <div className="text-[10px] font-bold tracking-[0.2em] text-blue-600 uppercase mb-4">
-                  {blog.category}
-                </div>
-
-                <h3 className="text-xl font-serif font-bold text-slate-900 dark:text-white mb-4 leading-snug uppercase line-clamp-2">
-                  {blog.title}
-                </h3>
-
-                <p className="text-sm font-serif text-slate-600 dark:text-slate-400 mb-8 line-clamp-3 leading-relaxed flex-grow">
-                  {blog.excerpt}
-                </p>
-
-                <div className="border-t border-slate-100 dark:border-slate-800 pt-5 mt-auto">
-                  <Link
-                    href={`/dashboard/gazette/${blog._id}`}
-                    className="flex items-center gap-2 text-[10px] font-bold tracking-[0.15em] text-slate-900 dark:text-white uppercase hover:text-blue-500 transition-colors w-fit"
-                  >
-                    <span>اقرأ الوثيقة</span>
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                {rest.map((blog) => (
+                  <GazetteArticleCard
+                    key={blog._id}
+                    blog={blog}
+                    categoryLabel={categoryLabel(blog.category)}
+                  />
+                ))}
               </div>
-            </div>
-          ))}
+
+              {canLoadMore ? (
+                <div className="flex justify-center pt-4">
+                  <button
+                    type="button"
+                    disabled={isLoadingMore}
+                    onClick={() => void loadBlogs(page + 1, true)}
+                    className="inline-flex items-center gap-2 rounded-md border border-[#002045] px-8 py-3 text-sm font-bold text-[#002045] transition hover:bg-[#002045] hover:text-white disabled:opacity-50 dark:border-white dark:text-white cursor-pointer"
+                  >
+                    {c.loadMore}
+                    <ChevronDown className={`h-4 w-4 ${isLoadingMore ? 'animate-bounce' : ''}`} />
+                  </button>
+                </div>
+              ) : null}
+            </>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

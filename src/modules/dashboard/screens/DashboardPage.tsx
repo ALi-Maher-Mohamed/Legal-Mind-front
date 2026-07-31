@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { authService } from "@/services/auth.service";
 import { ROUTES } from "@/config/routes";
 import { toastApiError } from "@/lib/api/toast";
@@ -25,13 +25,37 @@ import GazetteView from "../components/gazette/GazetteView";
 import ComingSoonPanel from "../components/ComingSoonPanel";
 import DashboardOnboarding from "../components/onboarding/DashboardOnboarding";
 
+const VIEW_QUERY_VALUES: DashboardView[] = [
+  "dashboard",
+  "analysis",
+  "gazette",
+  "consultation",
+  "drafter",
+  "profile",
+];
+
+function resolveViewParam(value: string | null): DashboardView | null {
+  if (!value) return null;
+  return VIEW_QUERY_VALUES.includes(value as DashboardView)
+    ? (value as DashboardView)
+    : null;
+}
+
 export default function DashboardPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [view, setView] = useState<DashboardView>("dashboard");
+  const [view, setView] = useState<DashboardView>(
+    () => resolveViewParam(searchParams.get("view")) || "dashboard",
+  );
   const [ready, setReady] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const showSplash = useSplashGate(ready && Boolean(user), 1800);
+
+  useEffect(() => {
+    const fromQuery = resolveViewParam(searchParams.get("view"));
+    if (fromQuery) setView(fromQuery);
+  }, [searchParams]);
 
   useEffect(() => {
     let active = true;
@@ -98,8 +122,6 @@ export default function DashboardPage() {
         <DraftersStudio />
       ) : view === "profile" ? (
         <ProfileView user={user} onUserUpdate={setUser} />
-    ) : view === "gazette" ? (
-      <GazetteView />
       ) : (
         <ComingSoonPanel view={view} onBack={() => setView("dashboard")} />
       )}

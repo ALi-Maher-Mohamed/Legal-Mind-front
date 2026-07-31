@@ -17,13 +17,10 @@ type Props = {
   onCancel?: () => void;
 };
 
-const LANGS: DraftOutputLang[] = ["Arabic", "English", "Bilingual"];
-
 export default function AiDraftPanel({
   prompt,
   onPromptChange,
-  language,
-  onLanguageChange,
+
   isDrafting,
   draftProgress = null,
   onSubmit,
@@ -105,7 +102,7 @@ export default function AiDraftPanel({
               )}
             </button>
           </div>
-        </div>  
+        </div>
 
         {isDrafting && draftProgress ? (
           <div className="space-y-1.5">
