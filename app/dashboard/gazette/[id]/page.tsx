@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
 import {
   ArrowRight,
   Bookmark,
@@ -14,12 +14,12 @@ import {
   Volume2,
   VolumeX,
   Pencil,
-} from 'lucide-react';
-import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
-import { sessionStore } from '@/lib/api/session';
-import { blogsService } from '@/services/blogs.service';
-import type { Blog, BlogCategory } from '@/types/blog.types';
-import { gazetteCopy as c } from '@/modules/dashboard/data/gazetteCopy';
+} from "lucide-react";
+import { toastApiError, toastApiSuccess } from "@/lib/api/toast";
+import { sessionStore } from "@/lib/api/session";
+import { blogsService } from "@/services/blogs.service";
+import type { Blog, BlogCategory } from "@/types/blog.types";
+import { gazetteCopy as c } from "@/modules/dashboard/data/gazetteCopy";
 import {
   formatBlogDate,
   getAuthorAvatar,
@@ -27,9 +27,12 @@ import {
   getBlogAuthor,
   getBlogId,
   getCoverImage,
-} from '@/modules/dashboard/lib/blogHelpers';
-import { dashPageBg } from '@/modules/dashboard/lib/panelStyles';
-import { BlogAuthorAvatar, BlogCover } from '@/modules/dashboard/components/gazette/BlogMedia';
+} from "@/modules/dashboard/lib/blogHelpers";
+import { dashPageBg } from "@/modules/dashboard/lib/panelStyles";
+import {
+  BlogAuthorAvatar,
+  BlogCover,
+} from "@/modules/dashboard/components/gazette/BlogMedia";
 
 export default function BlogDetailsPage() {
   const params = useParams();
@@ -40,15 +43,18 @@ export default function BlogDetailsPage() {
   const [related, setRelated] = useState<Blog[]>([]);
   const [categories, setCategories] = useState<BlogCategory[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
   const [isBookmarking, setIsBookmarking] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const categoryLabel = useMemo(() => {
-    if (!blog) return '';
-    return categories.find((item) => item.value === blog.category)?.label || blog.category;
+    if (!blog) return "";
+    return (
+      categories.find((item) => item.value === blog.category)?.label ||
+      blog.category
+    );
   }, [blog, categories]);
 
   const currentUser = sessionStore.getUser();
@@ -60,7 +66,7 @@ export default function BlogDetailsPage() {
 
   const load = useCallback(async () => {
     setIsLoading(true);
-    setError('');
+    setError("");
     try {
       const [detail, cats, trending] = await Promise.all([
         blogsService.getById(blogId),
@@ -74,16 +80,19 @@ export default function BlogDetailsPage() {
       );
       setBookmarked(Boolean(detail.isBookmarked));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'لم يتم العثور على المقال.');
+      setError(
+        err instanceof Error ? err.message : "لم يتم العثور على المقال.",
+      );
     } finally {
       setIsLoading(false);
     }
   }, [blogId]);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (blogId) void load();
     return () => {
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.cancel();
       }
     };
@@ -134,14 +143,17 @@ export default function BlogDetailsPage() {
   };
 
   const handleSpeech = () => {
-    if (typeof window === 'undefined' || !window.speechSynthesis || !blog) return;
+    if (typeof window === "undefined" || !window.speechSynthesis || !blog)
+      return;
     if (isSpeaking) {
       window.speechSynthesis.cancel();
       setIsSpeaking(false);
       return;
     }
-    const utter = new SpeechSynthesisUtterance(`${blog.title}. ${blog.content}`);
-    utter.lang = 'ar-EG';
+    const utter = new SpeechSynthesisUtterance(
+      `${blog.title}. ${blog.content}`,
+    );
+    utter.lang = "ar-EG";
     utter.rate = 0.95;
     utter.onend = () => setIsSpeaking(false);
     utter.onerror = () => setIsSpeaking(false);
@@ -155,9 +167,9 @@ export default function BlogDetailsPage() {
     try {
       const message = await blogsService.remove(blogId);
       toastApiSuccess(message || c.deleteOk);
-      router.push('/dashboard?view=gazette');
+      router.push("/dashboard?view=gazette");
     } catch (err) {
-      toastApiError(err, 'تعذّر حذف المقال');
+      toastApiError(err, "تعذّر حذف المقال");
       setIsDeleting(false);
     }
   };
@@ -174,8 +186,13 @@ export default function BlogDetailsPage() {
     return (
       <div className={`min-h-screen ${dashPageBg} px-4 py-10`} dir="rtl">
         <div className="mx-auto max-w-3xl rounded-xl border border-[#c4c6cf] bg-white py-16 text-center dark:border-white/10 dark:bg-card">
-          <p className="mb-4 font-bold text-danger">{error || 'لم يتم العثور على المقال.'}</p>
-          <Link href="/dashboard?view=gazette" className="text-sm font-bold text-brand underline">
+          <p className="mb-4 font-bold text-danger">
+            {error || "لم يتم العثور على المقال."}
+          </p>
+          <Link
+            href="/dashboard?view=gazette"
+            className="text-sm font-bold text-brand underline"
+          >
             {c.backToIndex}
           </Link>
         </div>
@@ -188,12 +205,15 @@ export default function BlogDetailsPage() {
   const authorName = getAuthorName(blog);
 
   return (
-    <div className={`min-h-screen ${dashPageBg} px-4 py-6 text-start sm:px-6 sm:py-8 lg:px-8`} dir="rtl">
+    <div
+      className={`min-h-screen ${dashPageBg} px-4 py-6 text-start sm:px-6 sm:py-8 lg:px-8`}
+      dir="rtl"
+    >
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-12">
         <article className="rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8 lg:col-span-8">
           <button
             type="button"
-            onClick={() => router.push('/dashboard?view=gazette')}
+            onClick={() => router.push("/dashboard?view=gazette")}
             className="mb-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand cursor-pointer"
           >
             <ArrowRight className="h-3.5 w-3.5" />
@@ -219,7 +239,9 @@ export default function BlogDetailsPage() {
                 iconClassName="h-4 w-4"
               />
               <div>
-                <p className="font-semibold text-[#181c1e] dark:text-foreground">{authorName}</p>
+                <p className="font-semibold text-[#181c1e] dark:text-foreground">
+                  {authorName}
+                </p>
                 {author?.officeName ? (
                   <p className="text-xs text-muted">{author.officeName}</p>
                 ) : null}
@@ -268,11 +290,13 @@ export default function BlogDetailsPage() {
                 disabled={isBookmarking}
                 className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-bold transition cursor-pointer ${
                   bookmarked
-                    ? 'border-[#002045] bg-[#002045] text-white'
-                    : 'border-[#c4c6cf] bg-white text-[#002045] hover:border-[#002045] dark:border-white/15 dark:bg-white/5 dark:text-foreground'
+                    ? "border-[#002045] bg-[#002045] text-white"
+                    : "border-[#c4c6cf] bg-white text-[#002045] hover:border-[#002045] dark:border-white/15 dark:bg-white/5 dark:text-foreground"
                 }`}
               >
-                <Bookmark className={`h-3.5 w-3.5 ${bookmarked ? 'fill-current' : ''}`} />
+                <Bookmark
+                  className={`h-3.5 w-3.5 ${bookmarked ? "fill-current" : ""}`}
+                />
                 {bookmarked ? c.saved : c.save}
               </button>
               <button
@@ -288,7 +312,11 @@ export default function BlogDetailsPage() {
                 onClick={handleSpeech}
                 className="inline-flex items-center gap-2 rounded-full border border-[#c4c6cf] px-4 py-2 text-xs font-bold text-[#002045] hover:border-[#002045] dark:border-white/15 dark:text-foreground cursor-pointer"
               >
-                {isSpeaking ? <VolumeX className="h-3.5 w-3.5" /> : <Volume2 className="h-3.5 w-3.5" />}
+                {isSpeaking ? (
+                  <VolumeX className="h-3.5 w-3.5" />
+                ) : (
+                  <Volume2 className="h-3.5 w-3.5" />
+                )}
                 {isSpeaking ? c.stopListen : c.listen}
               </button>
             </div>
@@ -351,7 +379,9 @@ export default function BlogDetailsPage() {
                             textClassName="text-[8px]"
                             iconClassName="h-2.5 w-2.5"
                           />
-                          <span className="truncate text-xs text-muted">{itemAuthor}</span>
+                          <span className="truncate text-xs text-muted">
+                            {itemAuthor}
+                          </span>
                         </div>
                       </div>
                     </Link>

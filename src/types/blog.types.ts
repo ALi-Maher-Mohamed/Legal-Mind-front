@@ -73,3 +73,16 @@ export type BookmarkResult = {
   bookmarked: boolean;
   action: 'added' | 'removed' | string;
 };
+
+/** Normalized bookmark row for profile "saved posts". */
+export type BlogBookmark = {
+  bookmarkId: string;
+  blogId: string;
+  blog: Blog;
+  createdAt?: string;
+};
+
+export type BlogBookmarksResult = {
+  bookmarks: BlogBookmark[];
+  pagination: BlogPagination;
+};
