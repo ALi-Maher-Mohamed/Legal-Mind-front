@@ -86,3 +86,26 @@ export type BlogBookmarksResult = {
   bookmarks: BlogBookmark[];
   pagination: BlogPagination;
 };
+
+export type BlogCommentAuthor = {
+  _id: string;
+  id?: string;
+  fullName?: string;
+  displayName?: string;
+  avatar?: string | null;
+};
+
+export type BlogComment = {
+  _id: string;
+  id?: string;
+  content: string;
+  author: BlogCommentAuthor | string | null;
+  blog: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type BlogCommentsResult = {
+  comments: BlogComment[];
+  pagination: BlogPagination;
+};

@@ -1,5 +1,5 @@
 import { resolveMediaUrl } from '@/lib/api/media';
-import type { Blog, BlogAuthor } from '@/types/blog.types';
+import type { Blog, BlogAuthor, BlogComment, BlogCommentAuthor } from '@/types/blog.types';
 import { gazetteCopy as c } from '../data/gazetteCopy';
 
 export function getBlogId(blog: Blog) {
@@ -43,6 +43,31 @@ export function formatBlogDate(value?: string) {
     month: 'long',
     year: 'numeric',
   });
+}
+
+export function getCommentId(comment: BlogComment) {
+  return comment._id || comment.id || '';
+}
+
+export function getCommentAuthor(comment: BlogComment): BlogCommentAuthor | null {
+  if (!comment.author || typeof comment.author === 'string') return null;
+  return comment.author;
+}
+
+export function getCommentAuthorId(comment: BlogComment) {
+  const author = getCommentAuthor(comment);
+  if (author) return author._id || author.id || '';
+  return typeof comment.author === 'string' ? comment.author : '';
+}
+
+export function getCommentAuthorName(comment: BlogComment) {
+  const author = getCommentAuthor(comment);
+  return author?.displayName || author?.fullName || c.unknownAuthor;
+}
+
+export function getCommentAuthorAvatar(comment: BlogComment) {
+  const author = getCommentAuthor(comment);
+  return resolveMediaUrl(author?.avatar) || null;
 }
 
 export function collectTags(blogs: Blog[], limit = 8) {

@@ -33,6 +33,7 @@ import {
   BlogAuthorAvatar,
   BlogCover,
 } from "@/modules/dashboard/components/gazette/BlogMedia";
+import BlogComments from "@/modules/dashboard/components/gazette/BlogComments";
 
 export default function BlogDetailsPage() {
   const params = useParams();
@@ -220,8 +221,8 @@ export default function BlogDetailsPage() {
             {c.backToIndex}
           </button>
 
-          <span className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-[#fed488]/40 px-2 py-1 text-[11px] font-bold text-[#785a1a]">
-            <FolderOpen className="h-3.5 w-3.5" />
+          <span className="mb-3 inline-flex items-center gap-1.5 rounded-md border border-[#002045]/15 bg-[#002045] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm dark:border-white/20 dark:bg-[#1a365d]">
+            <FolderOpen className="h-3.5 w-3.5 text-[#fed488]" />
             {categoryLabel}
           </span>
 
@@ -258,12 +259,14 @@ export default function BlogDetailsPage() {
             <span>{c.views(blog.views || 0)}</span>
           </div>
 
-          <BlogCover
-            src={cover}
-            alt={blog.title}
-            className="mb-8 h-52 w-full rounded-lg sm:h-64 md:h-72"
-            iconClassName="h-14 w-14"
-          />
+          {cover ? (
+            <BlogCover
+              src={cover}
+              alt={blog.title}
+              className="mb-8 h-52 w-full rounded-lg sm:h-64 md:h-72"
+              iconClassName="h-14 w-14"
+            />
+          ) : null}
 
           <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
             {blog.content}
@@ -342,6 +345,8 @@ export default function BlogDetailsPage() {
               </div>
             ) : null}
           </div>
+
+          <BlogComments blogId={blogId} />
         </article>
 
         <aside className="space-y-4 lg:col-span-4">
