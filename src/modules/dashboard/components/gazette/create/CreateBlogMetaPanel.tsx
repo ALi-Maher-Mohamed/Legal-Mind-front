@@ -2,7 +2,12 @@
 
 import type { BlogCategory } from '@/types/blog.types';
 import { gazetteCopy as c } from '../../../data/gazetteCopy';
-import { gazetteInputClass, gazetteLabelClass } from '../lib/formStyles';
+import {
+  gazetteInputClass,
+  gazetteLabelClass,
+  gazetteOptionClass,
+  gazetteSelectClass,
+} from '../lib/formStyles';
 
 type Props = {
   category: string;
@@ -65,13 +70,13 @@ export default function CreateBlogMetaPanel({
             required
             value={category}
             onChange={(e) => onCategoryChange(e.target.value)}
-            className={gazetteInputClass}
+            className={gazetteSelectClass}
           >
-            <option value="" disabled>
+            <option value="" disabled className={gazetteOptionClass}>
               {c.chooseCategory}
             </option>
             {categories.map((cat) => (
-              <option key={cat.value} value={cat.value}>
+              <option key={cat.value} value={cat.value} className={gazetteOptionClass}>
                 {cat.label}
               </option>
             ))}

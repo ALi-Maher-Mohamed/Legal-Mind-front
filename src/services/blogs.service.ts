@@ -101,7 +101,11 @@ export const blogsService = {
       { json: payload },
       { auth: true },
     );
-    return response.data.blog;
+    const blog = response.data?.blog;
+    if (!blog) {
+      throw new Error(response.message || 'تعذّر تحديث المقال');
+    }
+    return blog;
   },
 
   async remove(blogId: string): Promise<string> {

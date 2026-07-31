@@ -83,23 +83,26 @@ export function useCreateBlogForm() {
 
     setIsSubmitting(true);
 
+    const tagsArray = tags
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    // PUT /api/blogs/:blogId — تحديث مقال الكاتب
     const payload = {
       title: title.trim(),
       content: content.trim(),
-      category,
-      coverImage: coverImage.trim() || undefined,
-      tags: tags
-        .split(',')
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+      category: category.trim(),
       status,
+      ...(coverImage.trim() ? { coverImage: coverImage.trim() } : {}),
+      ...(tagsArray.length ? { tags: tagsArray } : {}),
     };
 
     try {
       if (editId) {
         const blog = await blogsService.update(editId, payload);
         toastApiSuccess(c.updateOk);
-        router.push(`/dashboard/gazette/${blog._id || editId}`);
+        router.push(`/dashboard/gazette/${blog._id || blog.id || editId}`);
         return;
       }
 
