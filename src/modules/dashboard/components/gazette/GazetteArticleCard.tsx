@@ -18,14 +18,18 @@ type Props = {
   blog: Blog;
   categoryLabel?: string;
   featured?: boolean;
+  /** Base path for article links. Default: dashboard gazette. */
+  hrefBase?: string;
 };
 
 export default function GazetteArticleCard({
   blog,
   categoryLabel,
   featured = false,
+  hrefBase = '/dashboard/gazette',
 }: Props) {
   const id = getBlogId(blog);
+  const href = `${hrefBase.replace(/\/$/, '')}/${id}`;
   const cover = getCoverImage(blog);
   const authorName = getAuthorName(blog);
   const avatar = getAuthorAvatar(blog);
@@ -35,7 +39,7 @@ export default function GazetteArticleCard({
   if (featured) {
     return (
       <Link
-        href={`/dashboard/gazette/${id}`}
+        href={href}
         className="group flex flex-col overflow-hidden rounded-xl border border-[#c4c6cf] bg-white shadow-[0_4px_20px_rgba(26,54,93,0.05)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card md:flex-row"
       >
         {/* In RTL: content on the right, cover on the left */}
@@ -69,7 +73,7 @@ export default function GazetteArticleCard({
 
   return (
     <Link
-      href={`/dashboard/gazette/${id}`}
+      href={href}
       className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#c4c6cf] bg-white shadow-[0_4px_20px_rgba(26,54,93,0.05)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card"
     >
       <BlogCover

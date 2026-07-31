@@ -19,9 +19,11 @@ import { BlogAuthorAvatar } from './BlogMedia';
 
 type Props = {
   blogId: string;
+  /** When guest tries to comment — show login gate instead of hint only */
+  onRequireLogin?: () => void;
 };
 
-export default function BlogComments({ blogId }: Props) {
+export default function BlogComments({ blogId, onRequireLogin }: Props) {
   const currentUser = sessionStore.getUser();
   const [comments, setComments] = useState<BlogComment[]>([]);
   const [page, setPage] = useState(1);
@@ -78,7 +80,7 @@ export default function BlogComments({ blogId }: Props) {
     const content = draft.trim();
     if (!content || isSubmitting) return;
     if (!currentUser) {
-      toastApiError(new Error(c.commentLoginHint), c.commentLoginHint);
+      onRequireLogin?.();
       return;
     }
 
@@ -174,7 +176,18 @@ export default function BlogComments({ blogId }: Props) {
             </div>
           </>
         ) : (
-          <p className="text-sm text-muted">{c.commentLoginHint}</p>
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm text-muted">{c.commentLoginHint}</p>
+            {onRequireLogin ? (
+              <button
+                type="button"
+                onClick={onRequireLogin}
+                className="rounded-lg bg-[#002045] px-4 py-2 text-xs font-bold text-white transition hover:opacity-90 cursor-pointer"
+              >
+                {c.commentSubmit}
+              </button>
+            ) : null}
+          </div>
         )}
       </div>
 

@@ -16,6 +16,7 @@ type Props = {
   activeTag: string;
   onTagChange: (tag: string) => void;
   onConsult?: () => void;
+  showFeedModes?: boolean;
 };
 
 export default function GazetteSidebar({
@@ -28,6 +29,7 @@ export default function GazetteSidebar({
   activeTag,
   onTagChange,
   onConsult,
+  showFeedModes = true,
 }: Props) {
   const navItem = (active: boolean) =>
     `flex w-full items-center gap-2 rounded-md px-2 py-2 text-start text-sm transition cursor-pointer ${
@@ -45,26 +47,30 @@ export default function GazetteSidebar({
             {c.library}
           </h4>
         </div>
-        <div className="space-y-1">
-          <button
-            type="button"
-            className={navItem(feedMode === 'latest')}
-            onClick={() => onFeedModeChange('latest')}
-          >
-            <Newspaper className="h-3.5 w-3.5 shrink-0" />
-            <span>{c.latest}</span>
-          </button>
-          <button
-            type="button"
-            className={navItem(feedMode === 'trending')}
-            onClick={() => onFeedModeChange('trending')}
-          >
-            <Flame className="h-3.5 w-3.5 shrink-0" />
-            <span>{c.trending}</span>
-          </button>
-        </div>
+        {showFeedModes ? (
+          <div className="space-y-1">
+            <button
+              type="button"
+              className={navItem(feedMode === 'latest')}
+              onClick={() => onFeedModeChange('latest')}
+            >
+              <Newspaper className="h-3.5 w-3.5 shrink-0" />
+              <span>{c.latest}</span>
+            </button>
+            <button
+              type="button"
+              className={navItem(feedMode === 'trending')}
+              onClick={() => onFeedModeChange('trending')}
+            >
+              <Flame className="h-3.5 w-3.5 shrink-0" />
+              <span>{c.trending}</span>
+            </button>
+          </div>
+        ) : null}
 
-        <div className="mt-4 space-y-1 border-t border-[#c4c6cf]/70 pt-4 dark:border-white/10">
+        <div
+          className={`space-y-1 ${showFeedModes ? 'mt-4 border-t border-[#c4c6cf]/70 pt-4 dark:border-white/10' : ''}`}
+        >
           <button
             type="button"
             className={navItem(!activeCategory)}

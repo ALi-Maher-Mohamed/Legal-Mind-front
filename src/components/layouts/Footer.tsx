@@ -10,6 +10,7 @@ export default function Footer() {
   const { t } = useLanguage();
   const productLinks = [
     { name: t.nav.services, href: ROUTES.services },
+    { name: t.nav.gazette, href: ROUTES.gazette },
     { name: t.nav.pricing, href: ROUTES.pricing },
   ];
 

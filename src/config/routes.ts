@@ -6,6 +6,8 @@ export const ROUTES = {
   pricing: "#pricing",
   about: "#about",
   faq: "#faq",
+  gazette: "/gazette",
+  gazetteArticle: (id: string) => `/gazette/${id}`,
   login: "/login",
   forgotPassword: "/forgot-password",
   verifyOtp: "/verify-otp",

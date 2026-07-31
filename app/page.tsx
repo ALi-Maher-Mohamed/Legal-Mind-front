@@ -8,6 +8,7 @@ import {
   FAQ,
   Pricing,
 } from "@/modules/landing";
+import GazetteTeaser from "@/modules/landing/sections/gazette/GazetteTeaser";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
         <Hero />
         <AIAssistantPreview />
         <ServicesList />
+        <GazetteTeaser />
         <Stats />
         <Pricing />
         <FAQ />
