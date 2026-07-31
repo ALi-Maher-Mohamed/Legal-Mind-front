@@ -34,6 +34,30 @@ export function getCoverImage(blog: Blog) {
   return resolveMediaUrl(cover) || cover;
 }
 
+export function looksLikeHtml(value?: string) {
+  if (!value?.trim()) return false;
+  return /^<[a-z][\s\S]*>/i.test(value.trim());
+}
+
+export function stripHtml(value?: string) {
+  if (!value) return '';
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+export function isEmptyRichContent(value?: string) {
+  return !stripHtml(value);
+}
+
+export function getBlogExcerpt(blog: Blog, max = 160) {
+  const raw = stripHtml(blog.excerpt || blog.content || '');
+  if (raw.length <= max) return raw;
+  return `${raw.slice(0, max).trim()}…`;
+}
+
 export function formatBlogDate(value?: string) {
   if (!value) return '—';
   const date = new Date(value);

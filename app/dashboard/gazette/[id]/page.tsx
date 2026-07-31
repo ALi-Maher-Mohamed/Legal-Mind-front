@@ -27,6 +27,8 @@ import {
   getBlogAuthor,
   getBlogId,
   getCoverImage,
+  looksLikeHtml,
+  stripHtml,
 } from "@/modules/dashboard/lib/blogHelpers";
 import { dashPageBg } from "@/modules/dashboard/lib/panelStyles";
 import {
@@ -152,7 +154,7 @@ export default function BlogDetailsPage() {
       return;
     }
     const utter = new SpeechSynthesisUtterance(
-      `${blog.title}. ${blog.content}`,
+      `${blog.title}. ${stripHtml(blog.content)}`,
     );
     utter.lang = "ar-EG";
     utter.rate = 0.95;
@@ -268,9 +270,16 @@ export default function BlogDetailsPage() {
             />
           ) : null}
 
-          <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
-            {blog.content}
-          </div>
+          {looksLikeHtml(blog.content) ? (
+            <div
+              className="contract-editor-prose blog-article-prose text-[#1f2937] dark:text-foreground/90"
+              dangerouslySetInnerHTML={{ __html: blog.content }}
+            />
+          ) : (
+            <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
+              {blog.content}
+            </div>
+          )}
 
           {blog.tags?.length ? (
             <div className="mt-8 flex flex-wrap gap-2">

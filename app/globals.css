@@ -275,3 +275,35 @@ body {
 .dark .contract-editor-prose th {
   background: color-mix(in srgb, white 6%, transparent);
 }
+
+/* Gazette article body (TipTap HTML) */
+.blog-editor-prose {
+  font-size: 0.9375rem;
+  line-height: 1.95;
+}
+
+.blog-article-prose {
+  font-size: 1rem;
+  line-height: 2;
+}
+
+.blog-article-prose p {
+  margin-block: 0.7em;
+}
+
+.blog-article-prose h2 {
+  margin-block: 1.1em 0.45em;
+  font-size: 1.35rem;
+  color: #002045;
+}
+
+.blog-article-prose h3 {
+  margin-block: 1em 0.4em;
+  font-size: 1.15rem;
+  color: #002045;
+}
+
+.dark .blog-article-prose h2,
+.dark .blog-article-prose h3 {
+  color: inherit;
+}

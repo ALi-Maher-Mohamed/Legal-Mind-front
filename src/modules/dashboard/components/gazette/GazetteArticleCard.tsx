@@ -8,6 +8,7 @@ import {
   formatBlogDate,
   getAuthorAvatar,
   getAuthorName,
+  getBlogExcerpt,
   getBlogId,
   getCoverImage,
 } from '../../lib/blogHelpers';
@@ -29,6 +30,7 @@ export default function GazetteArticleCard({
   const authorName = getAuthorName(blog);
   const avatar = getAuthorAvatar(blog);
   const label = categoryLabel || blog.category;
+  const excerpt = getBlogExcerpt(blog);
 
   if (featured) {
     return (
@@ -46,7 +48,7 @@ export default function GazetteArticleCard({
             {blog.title}
           </h3>
           <p className="mb-6 line-clamp-3 text-sm leading-relaxed text-[#43474e] dark:text-muted sm:text-base">
-            {blog.excerpt || blog.content}
+            {excerpt}
           </p>
           <div className="flex items-center justify-between gap-3 text-sm text-[#43474e] dark:text-muted">
             <div className="flex min-w-0 items-center gap-2">
@@ -81,7 +83,7 @@ export default function GazetteArticleCard({
           {blog.title}
         </h3>
         <p className="mb-3 line-clamp-2 text-sm leading-relaxed text-[#43474e] dark:text-muted">
-          {blog.excerpt || blog.content}
+          {excerpt}
         </p>
         <div className="mt-auto flex items-center justify-between gap-2 border-t border-[#c4c6cf] pt-3 text-sm text-[#43474e] dark:border-white/10 dark:text-muted">
           <div className="flex min-w-0 items-center gap-2">
