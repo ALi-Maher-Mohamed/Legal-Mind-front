@@ -1,5 +1,3 @@
-import PublicGazettePage from '@/modules/gazette/screens/PublicGazettePage';
+import { PublicGazettePage } from '@/modules/gazette';
 
-export default function GazettePage() {
-  return <PublicGazettePage />;
-}
+export default PublicGazettePage;

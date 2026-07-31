@@ -1,5 +1,3 @@
-import PublicBlogDetailsPage from '@/modules/gazette/screens/PublicBlogDetailsPage';
+import { PublicBlogDetailsPage } from '@/modules/gazette';
 
-export default function GazetteArticlePage() {
-  return <PublicBlogDetailsPage />;
-}
+export default PublicBlogDetailsPage;
