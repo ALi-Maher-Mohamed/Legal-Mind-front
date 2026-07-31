@@ -30,24 +30,28 @@ export default function GazetteSidebar({
   onConsult,
 }: Props) {
   const navItem = (active: boolean) =>
-    `flex w-full items-center justify-between rounded-md px-2 py-2 text-sm transition cursor-pointer ${
+    `flex w-full items-center gap-2 rounded-md px-2 py-2 text-start text-sm transition cursor-pointer ${
       active
         ? 'bg-[#fed488] font-bold text-[#002045]'
         : 'text-[#43474e] hover:bg-white/70 dark:text-muted dark:hover:bg-white/5'
     }`;
 
   return (
-    <aside className="flex w-full flex-col gap-4 lg:sticky lg:top-4">
+    <aside className="flex w-full flex-col gap-4 text-start lg:sticky lg:top-4" dir="rtl">
       <div className="rounded-xl bg-[#f1f4f6] p-5 dark:bg-white/5">
-        <div className="mb-4 flex items-center justify-end gap-2 border-e-4 border-[#002045] pe-3">
+        <div className="mb-4 flex items-center gap-2 border-s-4 border-[#002045] ps-3">
+          <Library className="h-4 w-4 shrink-0 text-[#002045] dark:text-foreground" />
           <h4 className="text-sm font-bold uppercase tracking-wide text-[#002045] dark:text-foreground">
             {c.library}
           </h4>
-          <Library className="h-4 w-4 text-[#002045] dark:text-foreground" />
         </div>
         <div className="space-y-1">
-          <button type="button" className={navItem(feedMode === 'latest')} onClick={() => onFeedModeChange('latest')}>
-            <Newspaper className="h-3.5 w-3.5" />
+          <button
+            type="button"
+            className={navItem(feedMode === 'latest')}
+            onClick={() => onFeedModeChange('latest')}
+          >
+            <Newspaper className="h-3.5 w-3.5 shrink-0" />
             <span>{c.latest}</span>
           </button>
           <button
@@ -55,7 +59,7 @@ export default function GazetteSidebar({
             className={navItem(feedMode === 'trending')}
             onClick={() => onFeedModeChange('trending')}
           >
-            <Flame className="h-3.5 w-3.5" />
+            <Flame className="h-3.5 w-3.5 shrink-0" />
             <span>{c.trending}</span>
           </button>
         </div>
@@ -66,7 +70,7 @@ export default function GazetteSidebar({
             className={navItem(!activeCategory)}
             onClick={() => onCategoryChange('')}
           >
-            <BookMarked className="h-3.5 w-3.5" />
+            <BookMarked className="h-3.5 w-3.5 shrink-0" />
             <span>{c.allCategories}</span>
           </button>
           {categories.map((cat) => (
@@ -76,7 +80,7 @@ export default function GazetteSidebar({
               className={navItem(activeCategory === cat.value)}
               onClick={() => onCategoryChange(cat.value)}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-current opacity-50" />
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-current opacity-50" />
               <span>{cat.label}</span>
             </button>
           ))}
@@ -85,13 +89,13 @@ export default function GazetteSidebar({
 
       {tags.length > 0 ? (
         <div className="rounded-xl bg-[#f1f4f6] p-5 dark:bg-white/5">
-          <div className="mb-4 flex items-center justify-end gap-2 border-e-4 border-[#002045] pe-3">
+          <div className="mb-4 flex items-center gap-2 border-s-4 border-[#002045] ps-3">
+            <Hash className="h-4 w-4 shrink-0 text-[#002045] dark:text-foreground" />
             <h4 className="text-sm font-bold uppercase tracking-wide text-[#002045] dark:text-foreground">
               {c.popularTags}
             </h4>
-            <Hash className="h-4 w-4 text-[#002045] dark:text-foreground" />
           </div>
-          <div className="flex flex-wrap justify-end gap-2">
+          <div className="flex flex-wrap gap-2">
             {tags.map((tag) => (
               <button
                 key={tag}
@@ -111,9 +115,9 @@ export default function GazetteSidebar({
       ) : null}
 
       <div className="relative overflow-hidden rounded-xl bg-[#002045] p-5 text-white">
-        <div className="pointer-events-none absolute -bottom-10 -start-10 h-32 w-32 rounded-xl bg-[#775a19]/20 blur-2xl" />
-        <h4 className="mb-2 text-end text-xl font-semibold">{c.consultCta}</h4>
-        <p className="mb-4 text-end text-sm leading-relaxed text-white/80">
+        <div className="pointer-events-none absolute -bottom-10 -end-10 h-32 w-32 rounded-xl bg-[#775a19]/20 blur-2xl" />
+        <h4 className="mb-2 text-xl font-semibold">{c.consultCta}</h4>
+        <p className="mb-4 text-sm leading-relaxed text-white/80">
           احصل على دعم قانوني متخصص من مستشاري LegalMind.
         </p>
         <button

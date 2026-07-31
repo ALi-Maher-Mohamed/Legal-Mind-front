@@ -13,7 +13,6 @@ import {
   Trash2,
   Volume2,
   VolumeX,
-  UserRound,
   Pencil,
 } from 'lucide-react';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
@@ -30,6 +29,7 @@ import {
   getCoverImage,
 } from '@/modules/dashboard/lib/blogHelpers';
 import { dashPageBg } from '@/modules/dashboard/lib/panelStyles';
+import { BlogAuthorAvatar, BlogCover } from '@/modules/dashboard/components/gazette/BlogMedia';
 
 export default function BlogDetailsPage() {
   const params = useParams();
@@ -188,7 +188,7 @@ export default function BlogDetailsPage() {
   const authorName = getAuthorName(blog);
 
   return (
-    <div className={`min-h-screen ${dashPageBg} px-4 py-6 sm:px-6 sm:py-8 lg:px-8`} dir="rtl">
+    <div className={`min-h-screen ${dashPageBg} px-4 py-6 text-start sm:px-6 sm:py-8 lg:px-8`} dir="rtl">
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-12">
         <article className="rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8 lg:col-span-8">
           <button
@@ -211,14 +211,13 @@ export default function BlogDetailsPage() {
 
           <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-3 border-b border-[#e5e8ee] pb-5 text-sm text-[#43474e] dark:border-white/10 dark:text-muted">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-[#ebeef0] dark:bg-white/10">
-                {avatar ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatar} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  <UserRound className="h-4 w-4" />
-                )}
-              </div>
+              <BlogAuthorAvatar
+                src={avatar}
+                name={authorName}
+                className="h-10 w-10"
+                textClassName="text-xs"
+                iconClassName="h-4 w-4"
+              />
               <div>
                 <p className="font-semibold text-[#181c1e] dark:text-foreground">{authorName}</p>
                 {author?.officeName ? (
@@ -237,12 +236,12 @@ export default function BlogDetailsPage() {
             <span>{c.views(blog.views || 0)}</span>
           </div>
 
-          {cover ? (
-            <div className="mb-8 overflow-hidden rounded-lg">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={cover} alt={blog.title} className="w-full object-cover" />
-            </div>
-          ) : null}
+          <BlogCover
+            src={cover}
+            alt={blog.title}
+            className="mb-8 h-52 w-full rounded-lg sm:h-64 md:h-72"
+            iconClassName="h-14 w-14"
+          />
 
           <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
             {blog.content}
@@ -319,31 +318,41 @@ export default function BlogDetailsPage() {
 
         <aside className="space-y-4 lg:col-span-4">
           <div className="rounded-xl bg-[#f1f4f6] p-5 dark:bg-white/5">
-            <h3 className="mb-4 border-e-4 border-[#002045] pe-3 text-end text-sm font-bold uppercase text-[#002045] dark:text-foreground">
+            <h3 className="mb-4 border-s-4 border-[#002045] ps-3 text-sm font-bold uppercase text-[#002045] dark:text-foreground">
               {c.related}
             </h3>
             <div className="space-y-3">
               {related.length === 0 ? (
-                <p className="text-end text-sm text-muted">—</p>
+                <p className="text-sm text-muted">—</p>
               ) : (
                 related.map((item) => {
                   const itemCover = getCoverImage(item);
+                  const itemAuthor = getAuthorName(item);
                   return (
                     <Link
                       key={getBlogId(item)}
                       href={`/dashboard/gazette/${getBlogId(item)}`}
                       className="flex items-center gap-3 rounded-lg bg-white p-2 transition hover:shadow-sm dark:bg-white/5"
                     >
-                      <div className="min-w-0 flex-1 text-end">
+                      <BlogCover
+                        src={itemCover}
+                        className="h-14 w-14 shrink-0 rounded-md"
+                        iconClassName="h-5 w-5"
+                      />
+                      <div className="min-w-0 flex-1">
                         <p className="line-clamp-2 text-sm font-semibold text-[#002045] dark:text-foreground">
                           {item.title}
                         </p>
-                      </div>
-                      <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-[#e8eef8]">
-                        {itemCover ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={itemCover} alt="" className="h-full w-full object-cover" />
-                        ) : null}
+                        <div className="mt-1 flex items-center gap-1.5">
+                          <BlogAuthorAvatar
+                            src={getAuthorAvatar(item)}
+                            name={itemAuthor}
+                            className="h-5 w-5"
+                            textClassName="text-[8px]"
+                            iconClassName="h-2.5 w-2.5"
+                          />
+                          <span className="truncate text-xs text-muted">{itemAuthor}</span>
+                        </div>
                       </div>
                     </Link>
                   );
@@ -354,10 +363,10 @@ export default function BlogDetailsPage() {
 
           {blog.tags?.length ? (
             <div className="rounded-xl bg-[#f1f4f6] p-5 dark:bg-white/5">
-              <h3 className="mb-4 border-e-4 border-[#002045] pe-3 text-end text-sm font-bold uppercase text-[#002045] dark:text-foreground">
+              <h3 className="mb-4 border-s-4 border-[#002045] ps-3 text-sm font-bold uppercase text-[#002045] dark:text-foreground">
                 {c.tags}
               </h3>
-              <div className="flex flex-wrap justify-end gap-2">
+              <div className="flex flex-wrap gap-2">
                 {blog.tags.map((tag) => (
                   <span
                     key={tag}

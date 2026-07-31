@@ -111,18 +111,18 @@ export default function GazetteView() {
     feedMode === 'latest' && pagination != null && pagination.page < pagination.pages;
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 pb-10" dir="rtl">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 pb-10 text-start" dir="rtl">
       <section className="relative overflow-hidden rounded-xl bg-[#1a365d] px-5 py-8 text-white sm:px-8 sm:py-10 md:px-12">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_45%)] opacity-40" />
-        <div className="relative ms-auto flex max-w-2xl flex-col items-end gap-3 text-end">
-          <span className="rounded-sm bg-[#fed488] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#785a1a]">
+        <div className="relative flex max-w-2xl flex-col gap-3">
+          <span className="w-fit rounded-sm bg-[#fed488] px-2 py-1 text-[11px] font-bold uppercase tracking-wide text-[#785a1a]">
             {c.eyebrow}
           </span>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">{c.title}</h1>
           <p className="text-sm leading-relaxed text-white/90 sm:text-base">{c.subtitle}</p>
           <Link
             href="/dashboard/gazette/create"
-            className="mt-2 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#002045] transition hover:bg-[#fed488]"
+            className="mt-2 inline-flex w-fit items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-[#002045] transition hover:bg-[#fed488]"
           >
             <Plus className="h-4 w-4" />
             {c.addArticle}
@@ -131,6 +131,7 @@ export default function GazetteView() {
       </section>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
+        {/* Mobile: content first. Desktop RTL: sidebar on the right via order */}
         <div className="order-2 lg:order-1 lg:col-span-4 xl:col-span-3">
           <GazetteSidebar
             categories={categories}
