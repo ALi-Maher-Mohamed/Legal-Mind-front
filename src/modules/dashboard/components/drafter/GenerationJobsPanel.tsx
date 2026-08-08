@@ -70,7 +70,7 @@ export default function GenerationJobsPanel({
           type="button"
           onClick={onRefresh}
           disabled={isLoading}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand/15 bg-[#f0f4ff] px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 sm:px-3 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-brand/15 bg-surface-raised px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 sm:px-3 dark:border-white/10 dark:bg-white/5 cursor-pointer"
         >
           {isLoading ? (
             <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -92,7 +92,7 @@ export default function GenerationJobsPanel({
             return (
               <li
                 key={job.jobId}
-                className="flex flex-col gap-3 rounded-xl border border-brand/15 bg-[#f8faff] p-3 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-white/5"
+                className="flex flex-col gap-3 rounded-xl border border-brand/15 bg-surface-raised p-3 sm:flex-row sm:items-center sm:justify-between dark:border-white/10 dark:bg-white/5"
               >
                 <div className="flex min-w-0 items-start gap-2.5">
                   <FileText className="mt-0.5 h-4 w-4 shrink-0 text-brand" />

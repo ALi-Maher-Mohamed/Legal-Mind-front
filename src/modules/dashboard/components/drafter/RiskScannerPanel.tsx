@@ -51,7 +51,7 @@ export default function RiskScannerPanel({
         </div>
 
         {validation ? (
-          <div className="rounded-xl border border-brand/15 bg-[#f8faff] px-3 py-2 dark:border-white/10 dark:bg-white/5">
+          <div className="rounded-xl border border-brand/15 bg-surface-raised px-3 py-2 dark:border-white/10 dark:bg-white/5">
             <p className="text-[10px] font-bold uppercase text-muted">{c.scoreLabel}</p>
             <p className="mt-0.5 text-lg font-bold text-foreground">
               {validation.score}
@@ -104,7 +104,7 @@ export default function RiskScannerPanel({
             type="button"
             onClick={onValidate}
             disabled={isValidating}
-            className="w-full rounded-lg border border-brand/15 bg-[#f0f4ff] py-2 text-[10px] font-bold uppercase tracking-wider text-brand transition hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+            className="w-full rounded-lg border border-brand/15 bg-surface-raised py-2 text-[10px] font-bold uppercase tracking-wider text-brand transition hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
           >
             {isValidating ? c.validating : c.validateCta}
           </button>

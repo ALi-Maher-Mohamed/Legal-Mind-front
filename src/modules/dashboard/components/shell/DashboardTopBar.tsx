@@ -19,7 +19,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
   const { theme, toggleTheme } = useThemeContext();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/15 bg-white/90 px-4 py-3 backdrop-blur-md dark:border-white/10 dark:bg-background/90 sm:px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/15 bg-card/90 px-4 py-3 backdrop-blur-md dark:border-white/10 dark:bg-background/90 sm:px-6">
       <div className="min-w-0">
         <Link href={ROUTES.home} className="block select-none">
           <span className="text-sm font-bold tracking-tight text-foreground sm:text-base">
@@ -36,7 +36,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
         <button
           type="button"
           onClick={onOpenProfile}
-          className="hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-[#f0f4ff] dark:hover:bg-white/5 cursor-pointer sm:flex"
+          className="hidden items-center gap-2 rounded-xl px-2 py-1 transition hover:bg-surface-raised dark:hover:bg-white/5 cursor-pointer sm:flex"
           aria-label={t.dashboard.navProfile}
         >
           <UserAvatar user={user} className="h-8 w-8 shrink-0" textClassName="text-xs" />
@@ -48,7 +48,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
         <button
           type="button"
           onClick={toggleTheme}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-[#f0f4ff] text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-surface-raised text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
           aria-label={theme === 'dark' ? 'فاتح' : 'داكن'}
         >
           {theme === 'dark' ? <Sun className="h-4 w-4 text-accent" /> : <Moon className="h-4 w-4" />}
@@ -56,7 +56,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
         <button
           type="button"
           onClick={onLogout}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-[#f0f4ff] text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="flex h-9 w-9 items-center justify-center rounded-lg border border-brand/15 bg-surface-raised text-muted transition hover:text-foreground dark:border-white/10 dark:bg-white/5 cursor-pointer"
           aria-label={t.dashboard.logout}
         >
           <LogOut className="h-4 w-4" />

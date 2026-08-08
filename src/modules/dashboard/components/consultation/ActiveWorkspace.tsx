@@ -133,7 +133,7 @@ export default function ActiveWorkspace(p: Props) {
           <div
             className={`${dashPanel} shrink-0 flex items-start gap-3 border-s-4 border-s-muted p-4 dark:border-s-white/20`}
           >
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand/15 bg-[#f0f4ff] text-muted dark:border-white/10 dark:bg-white/5">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand/15 bg-surface-raised text-muted dark:border-white/10 dark:bg-white/5">
               <Archive className="h-4 w-4" strokeWidth={1.75} />
             </div>
             <div className="min-w-0 flex-1 text-start">

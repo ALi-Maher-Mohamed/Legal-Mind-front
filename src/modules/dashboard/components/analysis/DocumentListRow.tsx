@@ -40,7 +40,7 @@ export default function DocumentListRow({
 
   return (
     <tr
-      className={`border-b border-brand/10 transition hover:bg-[#f0f4ff]/60 dark:border-white/10 dark:hover:bg-white/5 ${
+      className={`border-b border-brand/10 transition hover:bg-surface-raised/60 dark:border-white/10 dark:hover:bg-white/5 ${
         doc.status === 'processing' ? 'cursor-pointer' : ''
       }`}
       onClick={() => {

@@ -100,7 +100,7 @@ export default function ConfirmModal({
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="rounded-lg p-1.5 text-muted transition hover:bg-[#f0f4ff] hover:text-foreground disabled:opacity-50 dark:hover:bg-white/5 cursor-pointer"
+            className="rounded-lg p-1.5 text-muted transition hover:bg-surface-raised hover:text-foreground disabled:opacity-50 dark:hover:bg-white/5 cursor-pointer"
             aria-label={cancelLabel}
           >
             <X className="h-4 w-4" />

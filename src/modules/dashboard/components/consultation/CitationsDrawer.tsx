@@ -21,13 +21,13 @@ export default function CitationsDrawer({ citations, onOpen }: Props) {
           <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
             <BookOpen className="h-4 w-4 text-brand" /> {c.citationsTitle}
           </h4>
-          <span className="rounded bg-[#f0f4ff] px-2 py-0.5 text-[9px] font-bold dark:bg-white/5">
+          <span className="rounded bg-surface-raised px-2 py-0.5 text-[9px] font-bold dark:bg-white/5">
             {citations.length} {c.items}
           </span>
         </div>
 
         {citations.length === 0 ? (
-          <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-brand/15 bg-[#f8faff]/80 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-brand/15 bg-surface-raised/80 dark:border-white/10 dark:bg-white/[0.03]">
             <ConsultEmptyState
               icon={BookMarked}
               size="sm"
@@ -43,7 +43,7 @@ export default function CitationsDrawer({ citations, onOpen }: Props) {
                 key={cit.id}
                 type="button"
                 onClick={() => onOpen(cit)}
-                className="group relative w-full rounded-xl border border-brand/15 bg-[#f8faff] p-3 text-start transition hover:border-accent dark:border-white/10 dark:bg-white/5 cursor-pointer"
+                className="group relative w-full rounded-xl border border-brand/15 bg-surface-raised p-3 text-start transition hover:border-accent dark:border-white/10 dark:bg-white/5 cursor-pointer"
               >
                 <Eye className="absolute top-2 end-2 h-3.5 w-3.5 text-brand opacity-0 transition group-hover:opacity-100" />
                 <span className="text-[10px] font-bold text-muted">

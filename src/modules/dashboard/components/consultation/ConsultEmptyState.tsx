@@ -59,7 +59,7 @@ export default function ConsultEmptyState({
     >
       <div className="relative mb-4">
         <div
-          className={`flex items-center justify-center border border-brand/15 bg-gradient-to-br from-brand/10 via-[#f0f4ff] to-accent/10 text-brand dark:border-white/10 dark:from-brand/20 dark:via-white/5 dark:to-accent/10 ${s.iconBox}`}
+          className={`flex items-center justify-center border border-brand/15 bg-gradient-to-br from-brand/10 via-surface-raised to-accent/10 text-brand dark:border-white/10 dark:from-brand/20 dark:via-white/5 dark:to-accent/10 ${s.iconBox}`}
         >
           <Icon className={s.icon} strokeWidth={1.6} aria-hidden />
         </div>
@@ -79,7 +79,7 @@ export default function ConsultEmptyState({
           {Array.from({ length: ghostRows }).map((_, i) => (
             <div
               key={i}
-              className="rounded-xl border border-dashed border-brand/20 bg-[#f8faff]/70 px-3 py-2.5 dark:border-white/10 dark:bg-white/[0.03]"
+              className="rounded-xl border border-dashed border-brand/20 bg-surface-raised/70 px-3 py-2.5 dark:border-white/10 dark:bg-white/[0.03]"
             >
               <div className="mb-1.5 h-1.5 w-10 rounded bg-brand/15" />
               <div className="mb-1 h-2 w-full rounded bg-brand/10" />

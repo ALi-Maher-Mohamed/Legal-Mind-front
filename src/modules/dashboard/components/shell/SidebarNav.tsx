@@ -53,7 +53,7 @@ export default function SidebarNav({ view, onNavigate, variant = 'sidebar' }: Pr
             className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium transition cursor-pointer text-start ${
               active
                 ? 'bg-brand text-on-brand shadow-[0_2px_8px_rgba(0,62,199,0.2)]'
-                : 'text-muted hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5'
+                : 'text-muted hover:bg-surface-raised hover:text-foreground dark:hover:bg-white/5'
             }`}
           >
             <Icon className="h-4 w-4 shrink-0" />

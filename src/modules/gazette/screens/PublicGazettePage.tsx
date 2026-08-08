@@ -110,7 +110,7 @@ export default function PublicGazettePage() {
   return (
     <>
       <Navbar />
-      <main className="flex-1 bg-[#f0f4ff] pt-24 pb-16 dark:bg-background">
+      <main className="flex-1 bg-background pt-24 pb-16">
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 sm:px-6 lg:px-8" dir="rtl">
           <section className="relative overflow-hidden rounded-xl bg-[#1a365d] px-5 py-8 text-white sm:px-8 sm:py-10">
             <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.12),transparent_45%)] opacity-40" />

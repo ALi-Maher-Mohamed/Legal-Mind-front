@@ -185,7 +185,7 @@ export default function PublicBlogDetailsPage() {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-[#f0f4ff] px-4 py-6 pt-24 sm:px-6 sm:py-8 lg:px-8 dark:bg-background" dir="rtl">
+      <main className="min-h-screen bg-background px-4 py-6 pt-24 sm:px-6 sm:py-8 lg:px-8" dir="rtl">
         {isLoading ? (
           <div className="mx-auto h-96 max-w-5xl animate-pulse rounded-xl bg-white dark:bg-card" />
         ) : error || !blog ? (

@@ -27,7 +27,7 @@ export default function ContextCard({ type, onSelect }: Props) {
       onClick={() => onSelect(type)}
       className={`${dashPanel} group flex gap-4 p-5 text-start transition hover:border-brand cursor-pointer`}
     >
-      <div className="shrink-0 rounded-xl border border-brand/15 bg-[#f0f4ff] p-3 transition group-hover:bg-brand/10 dark:border-white/10 dark:bg-white/5">
+      <div className="shrink-0 rounded-xl border border-brand/15 bg-surface-raised p-3 transition group-hover:bg-brand/10 dark:border-white/10 dark:bg-white/5">
         <Icon className="h-6 w-6 text-brand" strokeWidth={2} />
       </div>
       <div className="min-w-0 flex-1">

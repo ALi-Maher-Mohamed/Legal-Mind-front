@@ -11,7 +11,7 @@ export default function PasswordRulesList({ password }: Props) {
   const rules = getPasswordRules(password);
 
   return (
-    <ul className="space-y-2 rounded-xl border border-brand/10 bg-[#f0f4ff]/70 p-3 dark:border-white/10 dark:bg-white/5">
+    <ul className="space-y-2 rounded-xl border border-brand/10 bg-surface-raised/70 p-3 dark:border-white/10 dark:bg-white/5">
       {rules.map((rule) => (
         <li key={rule.id} className="flex items-start gap-2 text-start text-xs">
           <span

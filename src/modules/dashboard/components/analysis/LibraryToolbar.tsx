@@ -32,7 +32,7 @@ export default function LibraryToolbar({
           value={searchQuery}
           onChange={(e) => onSearch(e.target.value)}
           placeholder={c.searchPlaceholder}
-          className="w-full rounded-lg border border-brand/15 bg-[#f0f4ff] py-2 ps-9 pe-3 text-xs text-foreground placeholder:text-muted focus:border-brand focus:outline-none dark:border-white/10 dark:bg-white/5"
+          className="w-full rounded-lg border border-brand/15 bg-surface-raised py-2 ps-9 pe-3 text-xs text-foreground placeholder:text-muted focus:border-brand focus:outline-none dark:border-white/10 dark:bg-white/5"
         />
       </div>
 

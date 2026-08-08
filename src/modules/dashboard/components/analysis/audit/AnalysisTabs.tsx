@@ -18,7 +18,7 @@ type Props = {
 
 export default function AnalysisTabs({ active, onChange }: Props) {
   return (
-    <div className="flex shrink-0 overflow-x-auto border-b border-brand/15 bg-[#f0f4ff] dark:border-white/10 dark:bg-white/5">
+    <div className="flex shrink-0 overflow-x-auto border-b border-brand/15 bg-surface-raised dark:border-white/10 dark:bg-white/5">
       {TABS.map((tab) => (
         <button
           key={tab.id}

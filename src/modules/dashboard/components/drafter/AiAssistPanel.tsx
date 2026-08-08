@@ -27,7 +27,7 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
           {APPROVED_CLAUSES.map((clause) => (
             <div
               key={clause.title}
-              className="group relative rounded-xl border border-brand/15 bg-[#f8faff] p-3 dark:border-white/10 dark:bg-white/5"
+              className="group relative rounded-xl border border-brand/15 bg-surface-raised p-3 dark:border-white/10 dark:bg-white/5"
             >
               <span className="block text-[9px] font-bold uppercase text-muted">
                 {c.clauseType} {clause.type}
@@ -56,7 +56,7 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
           placeholder={c.rewritePlaceholder}
           rows={3}
           disabled={isRewriting}
-          className="w-full rounded-lg border border-brand/15 bg-[#f8faff] p-2 text-[10px] leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5"
+          className="w-full rounded-lg border border-brand/15 bg-surface-raised p-2 text-[10px] leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5"
         />
         <button
           type="button"
@@ -67,7 +67,7 @@ export default function AiAssistPanel({ onInsert, onRewrite, isRewriting = false
             setInstructions('');
           }}
           disabled={isRewriting || !instructions.trim()}
-          className="w-full rounded-lg border border-brand/10 bg-[#f0f4ff] py-2 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+          className="w-full rounded-lg border border-brand/10 bg-surface-raised py-2 text-[10px] font-bold uppercase tracking-wider text-brand hover:bg-brand/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
         >
           {isRewriting ? c.rewriting : c.rewriteCta}
         </button>

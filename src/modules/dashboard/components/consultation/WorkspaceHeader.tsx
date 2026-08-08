@@ -27,7 +27,7 @@ type Props = {
 };
 
 const iconBtn =
-  'rounded-lg border border-brand/15 bg-[#f0f4ff] p-2 text-muted transition hover:text-foreground disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer';
+  'rounded-lg border border-brand/15 bg-surface-raised p-2 text-muted transition hover:text-foreground disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer';
 
 export default function WorkspaceHeader({
   conversation,

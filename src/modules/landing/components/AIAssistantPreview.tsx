@@ -73,7 +73,7 @@ export default function AIAssistantPreview() {
   const showSuggestions = !usedSuggestions.lease || !usedSuggestions.developer;
 
   return (
-    <section className="bg-[#f0f4ff] py-16 md:py-20 dark:bg-surface-muted">
+    <section className="bg-surface-raised py-16 md:py-20 dark:bg-surface-muted">
       <div className="lm-container max-w-[1152px]">
         <SectionTitle badge="AI SIMULATOR" title={t.aiPreview.title} align="center" />
 

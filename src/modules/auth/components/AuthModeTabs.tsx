@@ -22,7 +22,7 @@ export default function AuthModeTabs({ mode, onLogin, onRegister }: Props) {
 
   return (
     <div
-      className="flex p-1 mb-6 rounded-xl border border-brand/15 bg-[#f0f4ff] dark:border-white/10 dark:bg-white/5"
+      className="flex p-1 mb-6 rounded-xl border border-brand/15 bg-surface-raised dark:border-white/10 dark:bg-white/5"
       role="tablist"
       aria-label="Auth mode"
     >

@@ -23,7 +23,7 @@ export default function SourceViewerModal({ source, onClose }: Props) {
           </button>
         </div>
 
-        <div className="overflow-y-auto bg-[#f0f4ff] p-4 dark:bg-background sm:p-6">
+        <div className="overflow-y-auto bg-surface-raised p-4 dark:bg-background sm:p-6">
           <div className="relative min-h-[280px] rounded-xl border border-brand/15 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-card sm:p-8">
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-5xl font-bold uppercase tracking-widest text-brand/5 select-none sm:text-6xl">
               {c.watermark}
@@ -34,14 +34,14 @@ export default function SourceViewerModal({ source, onClose }: Props) {
             <p className="mb-4 text-end text-xs italic text-muted">
               {c.archiveId}: {source.id.toUpperCase()} • {c.page} {source.page || 1}
             </p>
-            <p className="border-s-4 border-brand bg-[#f8faff] py-2 ps-4 text-sm italic leading-relaxed dark:bg-white/5">
+            <p className="border-s-4 border-brand bg-surface-raised py-2 ps-4 text-sm italic leading-relaxed dark:bg-white/5">
               &ldquo;{source.excerpt}&rdquo;
             </p>
             <p className="mt-4 text-xs leading-relaxed text-muted">{c.viewerNote}</p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-t border-brand/10 bg-[#f0f4ff] px-5 py-3.5 text-xs dark:border-white/10 dark:bg-white/5 sm:px-6">
+        <div className="flex items-center justify-between border-t border-brand/10 bg-surface-raised px-5 py-3.5 text-xs dark:border-white/10 dark:bg-white/5 sm:px-6">
           <span className="font-mono text-muted">{c.verified}</span>
           <button
             type="button"

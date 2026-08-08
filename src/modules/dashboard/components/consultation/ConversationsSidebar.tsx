@@ -52,12 +52,12 @@ export default function ConversationsSidebar({
           <History className="h-4 w-4 text-brand" />
           {c.historyTitle}
         </h4>
-        <span className="rounded bg-[#f0f4ff] px-2 py-0.5 text-[9px] font-bold dark:bg-white/5">
+        <span className="rounded bg-surface-raised px-2 py-0.5 text-[9px] font-bold dark:bg-white/5">
           {conversations.length}
         </span>
       </div>
 
-      <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-brand/10 bg-[#f8faff] p-1 dark:border-white/10 dark:bg-white/5">
+      <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-brand/10 bg-surface-raised p-1 dark:border-white/10 dark:bg-white/5">
         <button
           type="button"
           onClick={() => onFilterChange('active')}
@@ -96,7 +96,7 @@ export default function ConversationsSidebar({
         {isListLoading ? (
           <ConversationListSkeleton rows={7} />
         ) : conversations.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-brand/20 bg-[#f8faff]/90 dark:border-white/10 dark:bg-white/[0.03]">
+          <div className="rounded-xl border border-dashed border-brand/20 bg-surface-raised/90 dark:border-white/10 dark:bg-white/[0.03]">
             <ConsultEmptyState
               icon={filter === 'archived' ? Archive : MessageSquarePlus}
               size="sm"
@@ -123,7 +123,7 @@ export default function ConversationsSidebar({
                 className={`w-full rounded-xl border p-3 text-start transition cursor-pointer ${
                   isActive
                     ? 'border-brand bg-brand/5 shadow-[0_2px_8px_rgba(0,62,199,0.08)]'
-                    : 'border-brand/15 bg-[#f8faff] hover:border-brand dark:border-white/10 dark:bg-white/5'
+                    : 'border-brand/15 bg-surface-raised hover:border-brand dark:border-white/10 dark:bg-white/5'
                 }`}
               >
                 <div className="flex items-start gap-2">

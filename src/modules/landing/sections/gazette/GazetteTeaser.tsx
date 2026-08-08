@@ -41,7 +41,7 @@ export default function GazetteTeaser() {
   }, []);
 
   return (
-    <section id="gazette" className="relative scroll-mt-20 overflow-hidden bg-[#f0f4ff] py-20 dark:bg-[#0b1326]">
+    <section id="gazette" className="relative scroll-mt-20 overflow-hidden bg-surface-raised py-20 dark:bg-[#0b1326]">
       <div className="pointer-events-none absolute -start-20 top-10 h-64 w-64 rounded-full bg-brand/10 blur-3xl" />
       <div className="pointer-events-none absolute -end-16 bottom-0 h-56 w-56 rounded-full bg-accent/15 blur-3xl" />
 

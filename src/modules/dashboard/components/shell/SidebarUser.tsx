@@ -25,7 +25,7 @@ export default function SidebarUser({ user, onLogout }: Props) {
       <button
         type="button"
         onClick={onLogout}
-        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5 cursor-pointer"
+        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-muted transition hover:bg-surface-raised hover:text-foreground dark:hover:bg-white/5 cursor-pointer"
       >
         <LogOut className="h-4 w-4" />
         {t.dashboard.logout}

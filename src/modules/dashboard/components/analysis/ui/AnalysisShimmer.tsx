@@ -115,7 +115,7 @@ export function AuditViewSkeleton({ onBack }: { onBack?: () => void }) {
         </div>
 
         <div className="overflow-hidden rounded-2xl border border-brand/10 bg-white dark:border-white/10 dark:bg-white/5 lg:col-span-6">
-          <div className="flex gap-2 border-b border-brand/10 bg-[#f0f4ff] p-3 dark:border-white/10 dark:bg-white/5">
+          <div className="flex gap-2 border-b border-brand/10 bg-surface-raised p-3 dark:border-white/10 dark:bg-white/5">
             <ShimmerBone className="h-8 w-20 rounded-lg" />
             <ShimmerBone className="h-8 w-20 rounded-lg" />
             <ShimmerBone className="h-8 w-20 rounded-lg" />

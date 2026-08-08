@@ -35,7 +35,7 @@ export default function ClausesTab({ doc }: Props) {
           {clauses.map((cl) => (
             <div
               key={cl.clause_id}
-              className="rounded-xl border border-brand/15 bg-[#f8faff] p-4 dark:border-white/10 dark:bg-white/5"
+              className="rounded-xl border border-brand/15 bg-surface-raised p-4 dark:border-white/10 dark:bg-white/5"
             >
               <div className="flex flex-wrap items-center gap-2">
                 <span className="font-mono text-[10px] text-muted">{cl.clause_id}</span>

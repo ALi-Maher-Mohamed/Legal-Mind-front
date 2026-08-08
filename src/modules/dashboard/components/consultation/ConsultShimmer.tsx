@@ -47,7 +47,7 @@ export function ConversationListSkeleton({ rows = 6 }: { rows?: number }) {
       {Array.from({ length: rows }).map((_, index) => (
         <div
           key={index}
-          className="rounded-xl border border-brand/15 bg-[#f8faff] p-3 dark:border-white/10 dark:bg-white/5"
+          className="rounded-xl border border-brand/15 bg-surface-raised p-3 dark:border-white/10 dark:bg-white/5"
         >
           <div className="flex items-start gap-2">
             <Bone className="mt-0.5 h-3.5 w-3.5 shrink-0 rounded" />

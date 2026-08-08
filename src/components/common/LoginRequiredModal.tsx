@@ -68,7 +68,7 @@ export default function LoginRequiredModal({ open, onConfirm, onCancel }: Props)
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg p-1.5 text-muted transition hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5 cursor-pointer"
+            className="rounded-lg p-1.5 text-muted transition hover:bg-surface-raised hover:text-foreground dark:hover:bg-white/5 cursor-pointer"
             aria-label={t.common.loginRequiredCancel}
           >
             <X className="h-4 w-4" />

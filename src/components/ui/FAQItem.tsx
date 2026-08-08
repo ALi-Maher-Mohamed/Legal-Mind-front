@@ -17,7 +17,7 @@ export function FAQItem({ question, answer }: FAQItemProps) {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full items-center justify-between gap-4 p-5 text-start md:p-6 cursor-pointer focus:outline-none select-none hover:bg-[#f0f4ff]/60 dark:hover:bg-white/5 transition-colors"
+        className="flex w-full items-center justify-between gap-4 p-5 text-start md:p-6 cursor-pointer focus:outline-none select-none hover:bg-surface-raised/60 dark:hover:bg-white/5 transition-colors"
       >
         <span className="text-sm font-semibold text-[#191c1e] md:text-base dark:text-[#dae2fd]">
           {question}

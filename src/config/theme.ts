@@ -9,18 +9,19 @@ export type ThemeMode = 'light' | 'dark';
 /** Raw Material-style palette from design system docs */
 export const palette = {
   light: {
-    background: '#f7f9fb',
-    surface: '#f7f9fb',
-    surfaceDim: '#d8dadc',
-    surfaceBright: '#f7f9fb',
-    surfaceLowest: '#ffffff',
-    surfaceLow: '#f2f4f6',
-    surfaceContainer: '#eceef0',
-    surfaceHigh: '#e6e8ea',
-    surfaceHighest: '#e0e3e5',
+    /** Soft cool gray-blue floor — less eye strain than pure white */
+    background: '#e8edf5',
+    surface: '#eef2f8',
+    surfaceDim: '#c9d1de',
+    surfaceBright: '#f2f5fa',
+    surfaceLowest: '#f5f7fb',
+    surfaceLow: '#eef2f8',
+    surfaceContainer: '#e4eaf3',
+    surfaceHigh: '#dde4ef',
+    surfaceHighest: '#d5ddeb',
     onSurface: '#191c1e',
     onSurfaceVariant: '#434656',
-    outline: '#c3c5d9',
+    outline: '#c0c8d8',
     outlineStrong: '#737688',
     primary: '#003ec7',
     onPrimary: '#ffffff',
@@ -57,13 +58,14 @@ export const palette = {
 /** Semantic tokens used by CSS vars + components */
 export const themes = {
   light: {
-    background: '#ffffff',
+    background: palette.light.background,
     foreground: palette.light.onSurface,
-    card: '#ffffff',
-    surface: '#ffffff',
-    surfaceRaised: '#f0f4ff',
-    surfaceMuted: '#e8eeff',
-    border: '#d6e0f5',
+    /** Soft paper — not pure #fff */
+    card: palette.light.surfaceLowest,
+    surface: palette.light.surfaceLowest,
+    surfaceRaised: palette.light.surfaceLow,
+    surfaceMuted: palette.light.surfaceContainer,
+    border: '#c8d0e0',
     borderStrong: palette.light.outlineStrong,
     muted: palette.light.onSurfaceVariant,
     mutedForeground: palette.light.onSurfaceVariant,
@@ -77,9 +79,9 @@ export const themes = {
     warning: '#d69e2e',
     danger: palette.light.error,
     ring: palette.light.primary,
-    selection: 'rgba(0, 62, 199, 0.18)',
-    scrollbarTrack: '#f0f4ff',
-    scrollbarThumb: '#b8c7e8',
+    selection: 'rgba(0, 62, 199, 0.16)',
+    scrollbarTrack: palette.light.surfaceLow,
+    scrollbarThumb: '#a6b4cc',
   },
   dark: {
     background: palette.dark.background,
@@ -177,6 +179,9 @@ export function getThemeCssVars(mode: ThemeMode): Record<string, string> {
   vars['--color-card-dark'] = tokens.card;
   vars['--color-primary-blue'] = tokens.brand;
   vars['--color-accent-gold'] = tokens.accent;
+
+  // Soften Tailwind `bg-white` / `text-white` in light only (dark keeps pure white mixes)
+  vars['--color-white'] = mode === 'light' ? palette.light.surfaceLowest : '#ffffff';
 
   return vars;
 }

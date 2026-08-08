@@ -51,7 +51,7 @@ export default function AiDraftPanel({
           required
           rows={4}
           disabled={isDrafting}
-          className="w-full rounded-xl border border-brand/20 bg-[#f8faff] p-3 text-xs leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5 sm:p-4 sm:text-sm"
+          className="w-full rounded-xl border border-brand/20 bg-surface-raised p-3 text-xs leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:border-accent focus:outline-none disabled:opacity-60 dark:border-white/10 dark:bg-white/5 sm:p-4 sm:text-sm"
         />
 
         <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
@@ -65,7 +65,7 @@ export default function AiDraftPanel({
                 type="button"
                 onClick={() => onPromptChange(ex.text)}
                 disabled={isDrafting}
-                className="rounded-lg border border-brand/15 bg-[#f0f4ff] px-2.5 py-1.5 text-[10px] italic text-brand hover:border-accent disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
+                className="rounded-lg border border-brand/15 bg-surface-raised px-2.5 py-1.5 text-[10px] italic text-brand hover:border-accent disabled:opacity-50 dark:border-white/10 dark:bg-white/5 cursor-pointer"
               >
                 {ex.label}
               </button>

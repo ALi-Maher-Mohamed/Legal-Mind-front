@@ -85,7 +85,7 @@ export default function MessageThread(props: Props) {
               description={c.emptyChatHint}
               className="!py-8 sm:!py-10"
             />
-            <div className="border-t border-brand/10 bg-[#f8faff]/90 px-5 py-3 dark:border-white/10 dark:bg-white/[0.03]">
+            <div className="border-t border-brand/10 bg-surface-raised/90 px-5 py-3 dark:border-white/10 dark:bg-white/[0.03]">
               {props.title ? (
                 <p className="mb-1.5 flex items-center justify-center gap-1.5 text-[11px] font-bold text-brand">
                   <MessagesSquare className="h-3.5 w-3.5" />

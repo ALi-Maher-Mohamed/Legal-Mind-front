@@ -12,8 +12,8 @@ type Props = {
 };
 
 const SLIDE_ACCENT: Record<OnboardingSlideKey, string> = {
-  aiCounsel: 'from-brand/20 via-[#f0f4ff] to-accent/10',
-  docAudit: 'from-accent/15 via-[#f0f4ff] to-brand/15',
+  aiCounsel: 'from-brand/20 via-surface-raised to-accent/10',
+  docAudit: 'from-accent/15 via-surface-raised to-brand/15',
   firmBrand: 'from-brand/15 via-white to-brand/10',
 };
 

@@ -66,7 +66,7 @@ export default function FAQ() {
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-col items-center gap-4 rounded-2xl border border-brand/15 bg-[#f0f4ff] p-6 sm:p-8 text-center dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)]">
+        <div className="flex flex-col items-center gap-4 rounded-2xl border border-brand/15 bg-surface-raised p-6 sm:p-8 text-center dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)]">
           <h3 className="text-lg font-bold text-[#191c1e] md:text-xl dark:text-[#dae2fd]">
             {t.faq.ctaTitle}
           </h3>

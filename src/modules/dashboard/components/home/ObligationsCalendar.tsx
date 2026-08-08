@@ -45,7 +45,7 @@ export default function ObligationsCalendar() {
               key={day}
               className={`relative flex items-center justify-center rounded-md py-1 ${
                 isToday ? 'bg-brand text-on-brand font-bold' : ''
-              } ${marked && !isToday ? 'border border-brand/40 text-brand font-bold bg-[#f0f4ff] dark:bg-brand/15' : ''}`}
+              } ${marked && !isToday ? 'border border-brand/40 text-brand font-bold bg-surface-raised dark:bg-brand/15' : ''}`}
             >
               {day}
               {marked && <span className="absolute bottom-0.5 h-1 w-1 rounded-full bg-accent" />}

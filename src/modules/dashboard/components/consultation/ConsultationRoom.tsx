@@ -24,7 +24,7 @@ export default function ConsultationRoom() {
       <div className="relative flex h-[calc(100vh-10rem)] flex-col gap-4 sm:h-[calc(100vh-11rem)] lg:flex-row">
         <div className="h-full w-full shrink-0 lg:w-72">
           <div className={`${dashPanel} flex h-full flex-col p-3 sm:p-4`}>
-            <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-brand/10 bg-[#f8faff] p-1 dark:border-white/10 dark:bg-white/5">
+            <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-brand/10 bg-surface-raised p-1 dark:border-white/10 dark:bg-white/5">
               <button
                 type="button"
                 onClick={() => room.switchFilter('active')}
@@ -39,7 +39,7 @@ export default function ConsultationRoom() {
                 {c.archivedTab}
               </button>
             </div>
-            <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-brand/15 bg-[#f8faff]/80 dark:border-white/10 dark:bg-white/[0.03]">
+            <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-brand/15 bg-surface-raised/80 dark:border-white/10 dark:bg-white/[0.03]">
               <ConsultEmptyState
                 icon={Archive}
                 size="sm"

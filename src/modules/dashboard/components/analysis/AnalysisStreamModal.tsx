@@ -178,7 +178,7 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
             <p className="mb-3 text-[10px] font-bold uppercase tracking-wider text-muted">
               {c.streamFeed}
             </p>
-            <div className="flex-1 space-y-2 overflow-y-auto rounded-xl border border-brand/10 bg-[#f0f4ff] p-3 font-mono text-[11px] leading-relaxed dark:border-white/10 dark:bg-black/25">
+            <div className="flex-1 space-y-2 overflow-y-auto rounded-xl border border-brand/10 bg-surface-raised p-3 font-mono text-[11px] leading-relaxed dark:border-white/10 dark:bg-black/25">
               {stream.logs.length === 0 ? (
                 <p className="text-muted">{c.streamWaiting}</p>
               ) : (

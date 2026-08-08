@@ -20,7 +20,7 @@ export default function VerifyEmailStatus({ status, onRetry }: Props) {
   if (status === 'loading' || status === 'idle') {
     return (
       <div className="space-y-6 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-surface-raised text-brand dark:border-white/10 dark:bg-brand/15">
           <Loader2 className="h-8 w-8 animate-spin" />
         </div>
         <h1 className="text-2xl font-bold text-foreground md:text-3xl">{t.auth.verifyEmailTitle}</h1>
@@ -32,7 +32,7 @@ export default function VerifyEmailStatus({ status, onRetry }: Props) {
   if (status === 'success') {
     return (
       <div className="space-y-6 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-surface-raised text-brand dark:border-white/10 dark:bg-brand/15">
           <CheckCircle2 className="h-8 w-8" />
         </div>
         <div>
@@ -51,7 +51,7 @@ export default function VerifyEmailStatus({ status, onRetry }: Props) {
   const isMissing = status === 'missing';
   return (
     <div className="space-y-6 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-surface-raised text-brand dark:border-white/10 dark:bg-brand/15">
         {isMissing ? <MailWarning className="h-8 w-8" /> : <ShieldX className="h-8 w-8" />}
       </div>
       <div>

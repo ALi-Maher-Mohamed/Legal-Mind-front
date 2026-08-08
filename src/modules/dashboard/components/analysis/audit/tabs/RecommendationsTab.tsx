@@ -22,7 +22,7 @@ export default function RecommendationsTab({ doc }: Props) {
           {recommendations.map((item, index) => (
             <li
               key={`${index}-${item}`}
-              className="flex items-start gap-2.5 rounded-xl border border-brand/15 bg-[#f8faff] p-4 text-xs leading-relaxed text-muted dark:border-white/10 dark:bg-white/5"
+              className="flex items-start gap-2.5 rounded-xl border border-brand/15 bg-surface-raised p-4 text-xs leading-relaxed text-muted dark:border-white/10 dark:bg-white/5"
             >
               <Check className="mt-0.5 h-4 w-4 shrink-0 text-success" strokeWidth={2.5} />
               <span>{item}</span>

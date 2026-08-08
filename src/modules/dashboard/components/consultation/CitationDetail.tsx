@@ -12,7 +12,7 @@ type Props = {
 
 export default function CitationDetail({ citation, onClose, onOpenViewer }: Props) {
   return (
-    <div className="relative mt-3 rounded-xl border border-accent/40 bg-[#f8faff] p-3.5 text-xs text-muted dark:bg-white/5">
+    <div className="relative mt-3 rounded-xl border border-accent/40 bg-surface-raised p-3.5 text-xs text-muted dark:bg-white/5">
       <button
         type="button"
         onClick={onClose}

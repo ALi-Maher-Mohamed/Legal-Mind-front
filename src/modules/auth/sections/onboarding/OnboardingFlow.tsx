@@ -31,7 +31,7 @@ export default function OnboardingFlow({ onComplete }: Props) {
           <button
             type="button"
             onClick={skip}
-            className="shrink-0 rounded-lg border border-brand/15 bg-[#f0f4ff] px-3 py-1.5 text-xs font-semibold text-brand transition hover:bg-brand hover:text-on-brand dark:border-white/10 dark:bg-white/5 cursor-pointer"
+            className="shrink-0 rounded-lg border border-brand/15 bg-surface-raised px-3 py-1.5 text-xs font-semibold text-brand transition hover:bg-brand hover:text-on-brand dark:border-white/10 dark:bg-white/5 cursor-pointer"
           >
             {t.auth.skipOnboarding}
           </button>

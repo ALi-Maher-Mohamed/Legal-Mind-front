@@ -40,15 +40,15 @@ export default function SummaryTab({ doc }: Props) {
           </p>
         </div>
         <div className="grid flex-1 grid-cols-3 gap-2 text-center text-[10px]">
-          <div className="rounded-lg bg-[#f0f4ff] p-2 dark:bg-white/5">
+          <div className="rounded-lg bg-surface-raised p-2 dark:bg-white/5">
             <p className="font-bold text-success">{overall.mandatory_clauses.present}</p>
             <p className="text-muted">{c.mandatoryPresent}</p>
           </div>
-          <div className="rounded-lg bg-[#f0f4ff] p-2 dark:bg-white/5">
+          <div className="rounded-lg bg-surface-raised p-2 dark:bg-white/5">
             <p className="font-bold text-accent">{overall.mandatory_clauses.missing}</p>
             <p className="text-muted">{c.mandatoryMissing}</p>
           </div>
-          <div className="rounded-lg bg-[#f0f4ff] p-2 dark:bg-white/5">
+          <div className="rounded-lg bg-surface-raised p-2 dark:bg-white/5">
             <p className="font-bold text-danger">{overall.mandatory_clauses.non_compliant}</p>
             <p className="text-muted">{c.mandatoryNonCompliant}</p>
           </div>
@@ -59,7 +59,7 @@ export default function SummaryTab({ doc }: Props) {
         <h4 className="border-b border-brand/10 pb-2 text-lg font-bold text-foreground dark:border-white/10">
           {c.summaryTitle}
         </h4>
-        <p className="mt-3 rounded-lg border-s-2 border-accent bg-[#f0f4ff]/80 py-3 ps-4 text-sm leading-relaxed text-muted dark:bg-white/5">
+        <p className="mt-3 rounded-lg border-s-2 border-accent bg-surface-raised/80 py-3 ps-4 text-sm leading-relaxed text-muted dark:bg-white/5">
           {overall.summary}
         </p>
       </div>

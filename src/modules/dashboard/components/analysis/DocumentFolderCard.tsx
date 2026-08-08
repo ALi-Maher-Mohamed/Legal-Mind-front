@@ -69,7 +69,7 @@ export default function DocumentFolderCard({
         }
       }}
       className={`${dashPanel} flex flex-col justify-between border-t-4 p-5 transition ${ACCENTS[index % ACCENTS.length]} ${
-        doc.status === 'queued' || doc.status === 'failed' ? 'bg-[#f8faff] dark:bg-white/[0.03]' : ''
+        doc.status === 'queued' || doc.status === 'failed' ? 'bg-surface-raised dark:bg-white/[0.03]' : ''
       } ${doc.status === 'processing' ? 'cursor-pointer hover:border-brand/40 hover:shadow-[0_8px_24px_rgba(0,62,199,0.12)]' : ''}`}
     >
       <div>

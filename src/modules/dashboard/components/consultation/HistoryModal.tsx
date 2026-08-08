@@ -57,7 +57,7 @@ export default function HistoryModal({
           ))}
         </div>
 
-        <div className="flex items-center justify-between border-t border-brand/10 bg-[#f0f4ff] px-5 py-3.5 text-xs dark:border-white/10 dark:bg-white/5">
+        <div className="flex items-center justify-between border-t border-brand/10 bg-surface-raised px-5 py-3.5 text-xs dark:border-white/10 dark:bg-white/5">
           <button
             type="button"
             onClick={() => onCreate('general')}

@@ -19,7 +19,7 @@ export default function ForgotPasswordForm({ onBackLogin }: Props) {
   if (sentEmail) {
     return (
       <div className="space-y-6 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-[#f0f4ff] text-brand dark:border-white/10 dark:bg-brand/15">
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl border border-brand/15 bg-surface-raised text-brand dark:border-white/10 dark:bg-brand/15">
           <CheckCircle2 className="h-8 w-8" />
         </div>
         <div>

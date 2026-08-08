@@ -56,7 +56,7 @@ export default function ComposerForm({
               className={`rounded-lg p-1.5 transition cursor-pointer ${
                 isDictating
                   ? 'animate-pulse bg-brand text-on-brand'
-                  : 'text-muted hover:bg-[#f0f4ff] hover:text-foreground dark:hover:bg-white/5'
+                  : 'text-muted hover:bg-surface-raised hover:text-foreground dark:hover:bg-white/5'
               }`}
             >
               <Mic className="h-4 w-4" />

@@ -69,7 +69,7 @@ export default function RenameConversationModal({
             type="button"
             onClick={onClose}
             disabled={isLoading}
-            className="rounded-lg p-1.5 text-muted hover:bg-[#f0f4ff] dark:hover:bg-white/5 cursor-pointer"
+            className="rounded-lg p-1.5 text-muted hover:bg-surface-raised dark:hover:bg-white/5 cursor-pointer"
             aria-label={c.cancel}
           >
             <X className="h-4 w-4" />
@@ -89,7 +89,7 @@ export default function RenameConversationModal({
             maxLength={160}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={c.renamePlaceholder}
-            className="w-full rounded-xl border border-brand/15 bg-[#f8faff] px-4 py-3 text-sm text-foreground outline-none focus:border-brand focus:ring-1 focus:ring-brand dark:border-white/10 dark:bg-white/5"
+            className="w-full rounded-xl border border-brand/15 bg-surface-raised px-4 py-3 text-sm text-foreground outline-none focus:border-brand focus:ring-1 focus:ring-brand dark:border-white/10 dark:bg-white/5"
             autoFocus
           />
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
