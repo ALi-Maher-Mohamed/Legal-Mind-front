@@ -75,7 +75,7 @@ export default function ConfirmModal({
         }}
       />
 
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-brand/15 bg-white shadow-[0_24px_60px_rgba(11,19,38,0.35)] dark:border-white/10 dark:bg-card">
+      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-brand/12 bg-card shadow-[var(--lm-card-shadow-md)] dark:border-white/10 dark:bg-card dark:shadow-[0_24px_60px_rgba(11,19,38,0.35)]">
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-l from-brand via-[#0038b6] to-accent" />
 
         <div className="flex items-start justify-between gap-3 px-5 pt-5 sm:px-6 sm:pt-6">
@@ -107,7 +107,7 @@ export default function ConfirmModal({
           </button>
         </div>
 
-        <div className="mt-6 flex flex-col-reverse gap-2 border-t border-brand/10 bg-[#f7f9ff] px-5 py-4 sm:flex-row sm:justify-end dark:border-white/10 dark:bg-white/5 sm:px-6">
+        <div className="mt-6 flex flex-col-reverse gap-2 border-t border-brand/10 bg-surface-raised px-5 py-4 sm:flex-row sm:justify-end dark:border-white/10 dark:bg-white/5 sm:px-6">
           <Button
             type="button"
             variant="secondary"

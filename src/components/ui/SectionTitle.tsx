@@ -13,7 +13,7 @@ interface SectionTitleProps {
 export function SectionTitle({
   title,
   subtitle,
-  badge,
+
   align = "center",
   className = "",
 }: SectionTitleProps) {
@@ -30,12 +30,6 @@ export function SectionTitle({
     <div
       className={`flex flex-col mb-10 md:mb-12 ${alignmentClass[normalizedAlign]} ${className}`}
     >
-      {badge && (
-        <p className="mb-3 text-xs font-semibold tracking-[0.14em] text-brand uppercase">
-          {badge}
-        </p>
-      )}
-
       <h2 className="max-w-2xl text-2xl font-semibold tracking-tight text-foreground md:text-[32px] md:leading-10">
         {title}
       </h2>

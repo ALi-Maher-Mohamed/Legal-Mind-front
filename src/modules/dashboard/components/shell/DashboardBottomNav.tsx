@@ -17,7 +17,7 @@ export default function DashboardBottomNav({ view, onNavigate }: Props) {
       className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-3 sm:bottom-6 sm:px-4"
       aria-label={t.dashboard.workspace}
     >
-      <div className="pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto rounded-2xl border border-brand/15 bg-card/90 p-1.5 shadow-[0_8px_28px_rgba(20,40,80,0.12)] backdrop-blur-xl dark:border-white/10 dark:bg-card/90 dark:shadow-[0_8px_32px_rgba(0,0,0,0.45)] sm:gap-1 sm:p-2">
+      <div className="pointer-events-auto flex max-w-full items-center gap-0.5 overflow-x-auto rounded-2xl border border-brand/12 bg-card/95 p-1.5 shadow-[var(--lm-card-shadow-md)] backdrop-blur-xl dark:border-white/10 dark:bg-card/90 dark:shadow-[0_8px_32px_rgba(0,0,0,0.45)] sm:gap-1 sm:p-2">
         {DASH_NAV_ITEMS.map((item) => {
           const Icon = item.icon;
           const active = view === item.id;

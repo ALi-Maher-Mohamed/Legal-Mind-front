@@ -19,7 +19,7 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
   const { theme, toggleTheme } = useThemeContext();
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/15 bg-card/90 px-4 py-3 backdrop-blur-md dark:border-white/10 dark:bg-background/90 sm:px-6">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/12 bg-card/92 px-4 py-3 shadow-[var(--lm-card-shadow)] backdrop-blur-md dark:border-white/10 dark:bg-background/90 dark:shadow-none sm:px-6">
       <div className="min-w-0">
         <Link href={ROUTES.home} className="block select-none">
           <span className="text-sm font-bold tracking-tight text-foreground sm:text-base">

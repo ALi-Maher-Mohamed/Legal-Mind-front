@@ -19,9 +19,9 @@ export function Card({
   return (
     <div
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl border border-brand/15 bg-white shadow-[0_2px_8px_rgba(0,62,199,0.06)] transition-all duration-300 dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)] dark:shadow-none dark:backdrop-blur-[6px] ${
+      className={`relative overflow-hidden rounded-2xl border border-brand/12 bg-card shadow-[var(--lm-card-shadow)] transition-all duration-300 dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)] dark:shadow-none dark:backdrop-blur-[6px] ${
         onClick || hoverGlow
-          ? 'hover:border-brand/40 hover:shadow-[0_4px_12px_rgba(0,62,199,0.1)] cursor-pointer dark:hover:border-brand/30'
+          ? 'hover:border-brand/40 hover:shadow-[var(--lm-card-shadow-md)] cursor-pointer dark:hover:border-brand/30 dark:hover:shadow-none'
           : ''
       } ${className}`}
     >

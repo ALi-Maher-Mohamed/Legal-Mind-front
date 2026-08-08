@@ -9,22 +9,23 @@ export type ThemeMode = 'light' | 'dark';
 /** Raw Material-style palette from design system docs */
 export const palette = {
   light: {
-    /** Soft cool gray-blue floor — less eye strain than pure white */
-    background: '#e8edf5',
-    surface: '#eef2f8',
-    surfaceDim: '#c9d1de',
-    surfaceBright: '#f2f5fa',
-    surfaceLowest: '#f5f7fb',
-    surfaceLow: '#eef2f8',
-    surfaceContainer: '#e4eaf3',
-    surfaceHigh: '#dde4ef',
-    surfaceHighest: '#d5ddeb',
-    onSurface: '#191c1e',
-    onSurfaceVariant: '#434656',
-    outline: '#c0c8d8',
-    outlineStrong: '#737688',
+    /** Cool blue-gray floor (page canvas) — easy on the eyes */
+    background: '#e4e9f2',
+    surface: '#eaeff6',
+    surfaceDim: '#c5cedc',
+    surfaceBright: '#f0f3f8',
+    /** Soft paper — never pure #ffffff */
+    surfaceLowest: '#f3f5f9',
+    surfaceLow: '#e8edf5',
+    surfaceContainer: '#dfe6f0',
+    surfaceHigh: '#d7dfeb',
+    surfaceHighest: '#cfd8e6',
+    onSurface: '#1a1d24',
+    onSurfaceVariant: '#4a5060',
+    outline: '#b8c1d1',
+    outlineStrong: '#6b7285',
     primary: '#003ec7',
-    onPrimary: '#ffffff',
+    onPrimary: '#f7f9fc',
     primaryContainer: '#0052ff',
     secondary: '#565e74',
     tertiary: '#3f4f65',
@@ -60,12 +61,12 @@ export const themes = {
   light: {
     background: palette.light.background,
     foreground: palette.light.onSurface,
-    /** Soft paper — not pure #fff */
+    /** Soft elevated paper (cards) vs cooler page canvas */
     card: palette.light.surfaceLowest,
     surface: palette.light.surfaceLowest,
     surfaceRaised: palette.light.surfaceLow,
     surfaceMuted: palette.light.surfaceContainer,
-    border: '#c8d0e0',
+    border: '#b9c3d4',
     borderStrong: palette.light.outlineStrong,
     muted: palette.light.onSurfaceVariant,
     mutedForeground: palette.light.onSurfaceVariant,
@@ -79,9 +80,9 @@ export const themes = {
     warning: '#d69e2e',
     danger: palette.light.error,
     ring: palette.light.primary,
-    selection: 'rgba(0, 62, 199, 0.16)',
+    selection: 'rgba(0, 62, 199, 0.14)',
     scrollbarTrack: palette.light.surfaceLow,
-    scrollbarThumb: '#a6b4cc',
+    scrollbarThumb: '#9aabc4',
   },
   dark: {
     background: palette.dark.background,
@@ -180,8 +181,23 @@ export function getThemeCssVars(mode: ThemeMode): Record<string, string> {
   vars['--color-primary-blue'] = tokens.brand;
   vars['--color-accent-gold'] = tokens.accent;
 
-  // Soften Tailwind `bg-white` / `text-white` in light only (dark keeps pure white mixes)
-  vars['--color-white'] = mode === 'light' ? palette.light.surfaceLowest : '#ffffff';
+  /**
+   * Soften Tailwind `bg-white` / default white mixes in light only.
+   * `text-on-brand` stays readable; pure #fff reserved for dark overlays.
+   */
+  if (mode === 'light') {
+    vars['--lm-white'] = palette.light.surfaceLowest;
+    vars['--color-white'] = palette.light.surfaceLowest;
+    vars['--lm-card-shadow'] =
+      '0 1px 2px rgba(28, 45, 80, 0.04), 0 4px 16px rgba(28, 45, 80, 0.07)';
+    vars['--lm-card-shadow-md'] =
+      '0 2px 4px rgba(28, 45, 80, 0.05), 0 8px 24px rgba(28, 45, 80, 0.08)';
+  } else {
+    vars['--lm-white'] = '#ffffff';
+    vars['--color-white'] = '#ffffff';
+    vars['--lm-card-shadow'] = 'none';
+    vars['--lm-card-shadow-md'] = 'none';
+  }
 
   return vars;
 }

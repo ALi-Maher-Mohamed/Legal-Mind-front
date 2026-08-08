@@ -16,7 +16,7 @@ export default function DocumentCard({ doc, accentClass, onOpen }: Props) {
     <button
       type="button"
       onClick={onOpen}
-      className={`group relative w-52 shrink-0 rounded-xl border border-brand/15 border-s-4 bg-card p-4 text-start transition hover:border-brand/40 hover:shadow-[0_4px_16px_rgba(20,40,80,0.1)] dark:border-white/10 dark:bg-white/5 dark:hover:shadow-none cursor-pointer ${accentClass}`}
+      className={`group relative w-52 shrink-0 rounded-xl border border-brand/12 border-s-4 bg-card p-4 text-start shadow-[var(--lm-card-shadow)] transition hover:border-brand/40 hover:shadow-[var(--lm-card-shadow-md)] dark:border-white/10 dark:bg-white/5 dark:shadow-none dark:hover:shadow-none cursor-pointer ${accentClass}`}
     >
       <ArrowUpRight className="absolute top-2 end-2 h-4 w-4 text-brand opacity-0 transition group-hover:opacity-100" />
       <FileText className="mb-2 h-7 w-7 text-brand" strokeWidth={1.5} />

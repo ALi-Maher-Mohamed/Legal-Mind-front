@@ -40,7 +40,7 @@ export default function GazetteArticleCard({
     return (
       <Link
         href={href}
-        className="group flex flex-col overflow-hidden rounded-xl border border-[#c4c6cf] bg-white shadow-[0_4px_20px_rgba(26,54,93,0.05)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card md:flex-row"
+        className="group flex flex-col overflow-hidden rounded-xl border border-brand/12 bg-card shadow-[var(--lm-card-shadow)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card dark:shadow-none md:flex-row"
       >
         {/* In RTL: content on the right, cover on the left */}
         <div className="flex flex-1 flex-col justify-center p-5 text-start sm:p-6 md:p-7">
@@ -74,7 +74,7 @@ export default function GazetteArticleCard({
   return (
     <Link
       href={href}
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-[#c4c6cf] bg-white shadow-[0_4px_20px_rgba(26,54,93,0.05)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card"
+      className="group flex h-full flex-col overflow-hidden rounded-xl border border-brand/12 bg-card shadow-[var(--lm-card-shadow)] transition hover:border-brand/40 dark:border-white/10 dark:bg-card dark:shadow-none"
     >
       <BlogCover
         src={cover}

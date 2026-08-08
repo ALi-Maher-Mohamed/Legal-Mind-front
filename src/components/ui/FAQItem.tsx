@@ -13,7 +13,7 @@ export function FAQItem({ question, answer }: FAQItemProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="mb-3 overflow-hidden rounded-2xl border border-brand/15 bg-white shadow-[0_2px_8px_rgba(0,62,199,0.06)] dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)] dark:shadow-none">
+    <div className="mb-3 overflow-hidden rounded-2xl border border-brand/12 bg-card shadow-[var(--lm-card-shadow)] dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)] dark:shadow-none">
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
