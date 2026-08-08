@@ -35,10 +35,10 @@ export function useResetPassword(token: string, onSuccess: () => void) {
     setError("");
     try {
       const result = await authService.resetPassword({ token, password });
-      toastApiSuccess(result.message || 'تم تحديث كلمة المرور بنجاح');
+      toastApiSuccess(result.message);
       onSuccess();
     } catch (error) {
-      toastApiError(error, "تعذّر تحديث كلمة المرور");
+      toastApiError(error);
     } finally {
       setIsLoading(false);
     }

@@ -63,7 +63,7 @@ export default function PublicGazettePage() {
           setBlogs([]);
           setError(err instanceof Error ? err.message : 'تعذر جلب المقالات');
         }
-        toastApiError(err, 'تعذر جلب المقالات');
+        toastApiError(err);
       } finally {
         if (requestId === requestIdRef.current) {
           setIsLoading(false);

@@ -100,18 +100,20 @@ export function useCreateBlogForm() {
 
     try {
       if (editId) {
-        const blog = await blogsService.update(editId, payload);
-        toastApiSuccess(c.updateOk);
+        const result = await blogsService.update(editId, payload);
+        toastApiSuccess(result.message);
+        const blog = result.blog;
         router.push(`/dashboard/gazette/${blog._id || blog.id || editId}`);
         return;
       }
 
-      const blog = await blogsService.create(payload);
-      toastApiSuccess(c.createOk);
+      const result = await blogsService.create(payload);
+      toastApiSuccess(result.message);
+      const blog = result.blog;
       router.push(`/dashboard/gazette/${blog._id || blog.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : c.createFail);
-      toastApiError(err, c.createFail);
+      setError(err instanceof Error ? err.message : '');
+      toastApiError(err);
       setIsSubmitting(false);
     }
   };

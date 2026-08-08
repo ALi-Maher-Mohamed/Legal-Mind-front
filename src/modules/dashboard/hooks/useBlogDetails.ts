@@ -88,9 +88,8 @@ export function useBlogDetails() {
             }
           : prev,
       );
-      toastApiSuccess(result.bookmarked ? c.bookmarkOkAdd : c.bookmarkOkRemove);
     } catch (err) {
-      toastApiError(err, c.bookmarkFail);
+      toastApiError(err);
     } finally {
       setIsBookmarking(false);
     }
@@ -137,11 +136,10 @@ export function useBlogDetails() {
     if (!window.confirm(c.deleteConfirm)) return;
     setIsDeleting(true);
     try {
-      const message = await blogsService.remove(blogId);
-      toastApiSuccess(message || c.deleteOk);
+      await blogsService.remove(blogId);
       router.push('/dashboard?view=gazette');
     } catch (err) {
-      toastApiError(err, 'تعذّر حذف المقال');
+      toastApiError(err);
       setIsDeleting(false);
     }
   };

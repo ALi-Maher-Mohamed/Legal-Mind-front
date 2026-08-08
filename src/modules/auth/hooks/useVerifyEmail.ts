@@ -6,7 +6,7 @@ import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 
 export type VerifyEmailStatus = 'idle' | 'loading' | 'success' | 'missing' | 'error';
 
-type VerifyResult = { message: string };
+type VerifyResult = { message?: string };
 
 /** Survives React Strict Mode remounts so the same token is verified once. */
 const verifyCache = new Map<string, Promise<VerifyResult>>();
@@ -21,9 +21,7 @@ function verifyOnce(token: string): Promise<VerifyResult> {
     .verifyEmail(token)
     .then((result) => {
       succeededTokens.add(token);
-      return {
-        message: result.message || 'تم تأكيد بريدك بنجاح',
-      };
+      return { message: result.message };
     })
     .catch((error) => {
       if (!succeededTokens.has(token)) {
@@ -59,7 +57,7 @@ export function useVerifyEmail(token: string | null) {
       const result = await verifyOnce(token);
       if (!toastedTokens.has(token)) {
         toastedTokens.add(token);
-        toastApiSuccess(result.message || 'تم تأكيد بريدك بنجاح');
+        toastApiSuccess(result.message);
       }
       setStatus('success');
     } catch (error) {
@@ -67,7 +65,7 @@ export function useVerifyEmail(token: string | null) {
         setStatus('success');
         return;
       }
-      toastApiError(error, 'تعذّر تأكيد البريد الإلكتروني');
+      toastApiError(error);
       setStatus('error');
     }
   }, [token]);
@@ -88,7 +86,7 @@ export function useVerifyEmail(token: string | null) {
         if (!active) return;
         if (!toastedTokens.has(token)) {
           toastedTokens.add(token);
-          toastApiSuccess(result.message || 'تم تأكيد بريدك بنجاح');
+          toastApiSuccess(result.message);
         }
         setStatus('success');
       } catch (error) {
@@ -97,7 +95,7 @@ export function useVerifyEmail(token: string | null) {
           setStatus('success');
           return;
         }
-        toastApiError(error, 'تعذّر تأكيد البريد الإلكتروني');
+        toastApiError(error);
         setStatus('error');
       }
     };

@@ -20,10 +20,10 @@ export function useForgotPassword(onSent: (email: string) => void) {
     setIsLoading(true);
     try {
       const result = await authService.requestPasswordReset(email.trim());
-      toastApiSuccess(result.message || 'تم إرسال رابط إعادة التعيين إلى بريدك');
+      toastApiSuccess(result.message);
       onSent(email.trim());
     } catch (error) {
-      toastApiError(error, 'تعذّر إرسال رابط الاستعادة');
+      toastApiError(error);
     } finally {
       setIsLoading(false);
     }

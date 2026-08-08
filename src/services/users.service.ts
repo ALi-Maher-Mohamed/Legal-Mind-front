@@ -161,10 +161,9 @@ export const usersService = {
     };
   },
 
-  async removeBookmark(bookmark: Pick<BlogBookmark, 'bookmarkId'>): Promise<string> {
+  async removeBookmark(bookmark: Pick<BlogBookmark, 'bookmarkId'>): Promise<void> {
     await api.delete(`/api/v1/users/me/bookmarks/${bookmark.bookmarkId}`, {
       auth: true,
     });
-    return 'تمت إزالة المقالة من المفضلة';
   },
 };

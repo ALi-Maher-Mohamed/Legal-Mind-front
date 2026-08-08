@@ -55,9 +55,9 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
       } catch (err) {
         if (!append) {
           setComments([]);
-          setError(err instanceof Error ? err.message : c.commentsError);
+          setError(err instanceof Error ? err.message : '');
         }
-        toastApiError(err, c.commentsError);
+        toastApiError(err);
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
@@ -86,12 +86,12 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
 
     setIsSubmitting(true);
     try {
-      await commentsService.create(blogId, content);
+      const result = await commentsService.create(blogId, content);
       setDraft('');
-      toastApiSuccess(c.commentOkCreate);
+      toastApiSuccess(result.message);
       await load(1, false);
     } catch (err) {
-      toastApiError(err, c.commentFail);
+      toastApiError(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -102,7 +102,8 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
     if (!content || busyId) return;
     setBusyId(commentId);
     try {
-      const updated = await commentsService.update(commentId, content);
+      const result = await commentsService.update(commentId, content);
+      const updated = result.comment;
       setComments((prev) =>
         prev.map((item) => {
           if (getCommentId(item) !== commentId) return item;
@@ -119,9 +120,9 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
       );
       setEditingId(null);
       setEditDraft('');
-      toastApiSuccess(c.commentOkUpdate);
+      toastApiSuccess(result.message);
     } catch (err) {
-      toastApiError(err, c.commentFail);
+      toastApiError(err);
     } finally {
       setBusyId(null);
     }
@@ -131,12 +132,11 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
     if (!window.confirm(c.commentDeleteConfirm) || busyId) return;
     setBusyId(commentId);
     try {
-      const message = await commentsService.remove(commentId);
+      await commentsService.remove(commentId);
       setComments((prev) => prev.filter((item) => getCommentId(item) !== commentId));
       setTotal((prev) => Math.max(0, prev - 1));
-      toastApiSuccess(message || c.commentOkDelete);
     } catch (err) {
-      toastApiError(err, c.commentFail);
+      toastApiError(err);
     } finally {
       setBusyId(null);
     }

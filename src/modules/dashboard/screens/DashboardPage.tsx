@@ -80,7 +80,7 @@ export default function DashboardPage() {
         setShowOnboarding(!hasCompletedOnboarding(freshUser.id));
       } catch (error) {
         authService.clearSession();
-        toastApiError(error, "انتهت الجلسة. سجّل الدخول مجدداً");
+        toastApiError(error);
         router.replace(ROUTES.login);
       }
     };

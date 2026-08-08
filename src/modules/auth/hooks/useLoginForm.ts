@@ -31,10 +31,9 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
         password,
       });
 
-      toastApiSuccess(result.message || 'تم تسجيل الدخول بنجاح');
+      toastApiSuccess(result.message);
       onSuccess(result.user);
     } catch (error) {
-      // Unverified email → guide user to resend-verification flow
       if (
         error instanceof ApiError &&
         error.errorCode === AuthErrorCode.EMAIL_NOT_VERIFIED
@@ -46,7 +45,7 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
         return;
       }
 
-      toastApiError(error, 'تعذّر تسجيل الدخول');
+      toastApiError(error);
     } finally {
       setIsLoading(false);
     }

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLanguage } from '@/hooks/useLanguage';
 import { ROUTES } from '@/config/routes';
 import { authService } from '@/services/auth.service';
 import { usersService } from '@/services/users.service';
@@ -13,7 +12,6 @@ import { validateAvatarFile } from '../lib/avatarUpload';
 export function useProfileActions(
   onUserUpdate: (user: AuthUser) => void,
 ) {
-  const { t } = useLanguage();
   const router = useRouter();
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
@@ -25,10 +23,10 @@ export function useProfileActions(
     try {
       const result = await usersService.updateProfile(payload);
       onUserUpdate(result.user);
-      toastApiSuccess(result.message || t.dashboard.profileSaveSuccess);
+      toastApiSuccess(result.message);
       return true;
     } catch (error) {
-      toastApiError(error, t.dashboard.profileSaveError);
+      toastApiError(error);
       return false;
     } finally {
       setIsSaving(false);
@@ -36,24 +34,17 @@ export function useProfileActions(
   };
 
   const uploadAvatar = async (file: File) => {
-    const validationKey = validateAvatarFile(file);
-    if (validationKey === 'avatarTypeError') {
-      toastApiError(null, t.dashboard.profileAvatarTypeError);
-      return false;
-    }
-    if (validationKey === 'avatarSizeError') {
-      toastApiError(null, t.dashboard.profileAvatarSizeError);
-      return false;
-    }
+    // Local file rules only — no inventing API messages.
+    if (validateAvatarFile(file)) return false;
 
     setIsUploadingAvatar(true);
     try {
       const result = await usersService.uploadAvatar(file);
       onUserUpdate(result.user);
-      toastApiSuccess(result.message || t.dashboard.profileAvatarSuccess);
+      toastApiSuccess(result.message);
       return true;
     } catch (error) {
-      toastApiError(error, t.dashboard.profileAvatarError);
+      toastApiError(error);
       return false;
     } finally {
       setIsUploadingAvatar(false);
@@ -64,10 +55,10 @@ export function useProfileActions(
     setIsLoggingOutAll(true);
     try {
       const result = await authService.logoutAll();
-      toastApiSuccess(result.message || t.dashboard.profileLogoutAllTitle);
+      toastApiSuccess(result.message);
       router.replace(ROUTES.login);
     } catch (error) {
-      toastApiError(error, t.dashboard.profileLogoutAllError);
+      toastApiError(error);
       setIsLoggingOutAll(false);
       setLogoutAllOpen(false);
     }

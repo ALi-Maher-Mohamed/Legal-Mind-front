@@ -22,13 +22,14 @@ export function useResendVerification(email: string) {
       toastApiError(new Error(validationError));
       return;
     }
+
     setIsLoading(true);
     try {
       const result = await authService.resendVerification(email);
-      toastApiSuccess(result.message || 'تم إعادة إرسال رابط التفعيل');
+      toastApiSuccess(result.message);
       setCooldown(30);
     } catch (error) {
-      toastApiError(error, 'تعذّر إعادة إرسال رابط التفعيل');
+      toastApiError(error);
     } finally {
       setIsLoading(false);
     }

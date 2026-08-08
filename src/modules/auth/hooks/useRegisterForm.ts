@@ -54,10 +54,10 @@ export function useRegisterForm(onComplete: (email: string) => void) {
     setIsLoading(true);
     try {
       const result = await authService.register(draft);
-      toastApiSuccess(result.message || 'تم إنشاء الحساب. يرجى تفعيل بريدك الإلكتروني');
+      toastApiSuccess(result.message);
       onComplete(draft.email.trim());
     } catch (error) {
-      toastApiError(error, 'تعذّر إنشاء الحساب');
+      toastApiError(error);
     } finally {
       setIsLoading(false);
     }

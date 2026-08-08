@@ -63,25 +63,14 @@ function toApiFailure(payload: unknown, responseOk: boolean): ApiFailure | null 
     return {
       success: false,
       error: error || 'ERROR',
-      message: message || 'Request failed',
-      details: (record.details as ApiFailure['details']) ?? undefined,
-      request_id: requestId,
-    };
-  }
-
-  // Rate-limit / alternate auth failures: { error, message } without success:false
-  if (!responseOk && error && message) {
-    return {
-      success: false,
-      error,
       message,
       details: (record.details as ApiFailure['details']) ?? undefined,
       request_id: requestId,
     };
   }
 
-  // Contract modules: { success: false already covered } — also catch explicit error field on non-OK
-  if (!responseOk && message) {
+  // Rate-limit / alternate failures: { error, message } without success:false
+  if (!responseOk && (error || message || record.details)) {
     return {
       success: false,
       error: error || 'ERROR',
@@ -115,9 +104,10 @@ async function parseBody(response: Response): Promise<ParsedBody> {
   }
 }
 
-function throwApiFailure(status: number, failure: ApiFailure | null, fallback: string): never {
+function throwApiFailure(status: number, failure: ApiFailure | null): never {
   const details = failure?.details ?? null;
-  const message = resolveApiErrorMessage(failure?.message, details, fallback);
+  // Display text is always from backend `message` (or backend field details).
+  const message = resolveApiErrorMessage(failure?.message, details);
 
   if (failure?.request_id) {
     console.error('[api]', failure.error || 'request_failed', {
@@ -246,11 +236,7 @@ async function executeRequest<T>(
   }
 
   if (!response.ok || failure) {
-    throwApiFailure(
-      response.status,
-      failure,
-      `فشل الطلب (${response.status})`,
-    );
+    throwApiFailure(response.status, failure);
   }
 
   // 204 No Content and other empty successful bodies.
@@ -300,11 +286,7 @@ export async function apiDownload(
 
   if (!response.ok) {
     const { failure } = await parseBody(response);
-    throwApiFailure(
-      response.status,
-      failure,
-      `فشل التحميل (${response.status})`,
-    );
+    throwApiFailure(response.status, failure);
   }
 
   const disposition = response.headers.get('Content-Disposition');

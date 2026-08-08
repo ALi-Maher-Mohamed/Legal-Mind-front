@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Bookmark, BookmarkX, ChevronDown, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { toastApiError } from '@/lib/api/toast';
 import { usersService } from '@/services/users.service';
 import type { BlogBookmark } from '@/types/blog.types';
 import {
@@ -38,14 +38,14 @@ export default function ProfileBookmarksCard() {
     } catch (err) {
       if (!append) {
         setItems([]);
-        setError(err instanceof Error ? err.message : t.dashboard.profileBookmarksError);
+        setError(err instanceof Error ? err.message : '');
       }
-      toastApiError(err, t.dashboard.profileBookmarksError);
+      toastApiError(err);
     } finally {
       setIsLoading(false);
       setIsLoadingMore(false);
     }
-  }, [t.dashboard.profileBookmarksError]);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,11 +61,10 @@ export default function ProfileBookmarksCard() {
     if (removingId) return;
     setRemovingId(item.bookmarkId);
     try {
-      const message = await usersService.removeBookmark(item);
+      await usersService.removeBookmark(item);
       setItems((prev) => prev.filter((row) => row.bookmarkId !== item.bookmarkId));
-      toastApiSuccess(message || t.dashboard.profileBookmarkRemoved);
     } catch (err) {
-      toastApiError(err, t.dashboard.profileBookmarkRemoveError);
+      toastApiError(err);
     } finally {
       setRemovingId(null);
     }

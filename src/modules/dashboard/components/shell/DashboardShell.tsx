@@ -6,7 +6,7 @@ import { LogOut } from 'lucide-react';
 import { authService } from '@/services/auth.service';
 import { ROUTES } from '@/config/routes';
 import { useLanguage } from '@/hooks/useLanguage';
-import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
+import { toastApiError } from '@/lib/api/toast';
 import type { AuthUser } from '@/types/auth.types';
 import type { DashboardView } from '@/types/dashboard.types';
 import { dashPageBg } from '../../lib/panelStyles';
@@ -31,10 +31,9 @@ export default function DashboardShell({ user, view, onNavigate, children }: Pro
     setIsLoggingOut(true);
     try {
       await authService.logout();
-      toastApiSuccess(t.dashboard.logoutSuccess);
       router.push(ROUTES.login);
     } catch (error) {
-      toastApiError(error, t.dashboard.logoutError);
+      toastApiError(error);
       setIsLoggingOut(false);
       setLogoutOpen(false);
     }

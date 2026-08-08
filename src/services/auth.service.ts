@@ -36,25 +36,23 @@ function buildRegisterPayload(draft: RegisterDraft) {
 
 function assertSessionResponse(
   response: AuthSessionResponse | null | undefined,
-  context: string,
 ): asserts response is AuthSessionResponse {
   if (!response?.access_token || !response.user?.id || !response.user?.email) {
-    throw new ApiError(`استجابة غير صالحة من الخادم (${context})`, 500);
+    throw new ApiError("", 500);
   }
 }
 
 function persistSessionFromAuth(
   response: AuthSessionResponse,
   practiceAreas: string[] = [],
-  message?: string,
 ): AuthSessionPayload {
-  assertSessionResponse(response, "auth");
+  assertSessionResponse(response);
   const user = mapApiUserToAuthUser(response.user, practiceAreas);
   sessionStore.persist(user, response.access_token);
   return {
     user,
     accessToken: response.access_token,
-    message,
+    message: response.message,
   };
 }
 
@@ -90,12 +88,12 @@ export const authService = {
     );
 
     if (!response?.user) {
-      throw new ApiError("استجابة غير صالحة من الخادم (register)", 500);
+      throw new ApiError("", 500);
     }
 
     return {
       user: mapApiUserToAuthUser(response.user, draft.selectedPractices),
-      message: response.message || "تم إنشاء الحساب. يرجى تفعيل بريدك الإلكتروني",
+      message: response.message,
     };
   },
 
@@ -104,7 +102,7 @@ export const authService = {
       auth: true,
     });
     if (!response?.user) {
-      throw new ApiError("استجابة غير صالحة من الخادم (me)", 500);
+      throw new ApiError("", 500);
     }
     const practiceAreas = sessionStore.getUser()?.practiceAreas ?? [];
     const user = mapApiUserToAuthUser(response.user, practiceAreas);
@@ -145,7 +143,7 @@ export const authService = {
       { json: { token: token.trim() } },
       { skipAuthRefresh: true },
     );
-    return { message: response?.message || "تم تأكيد بريدك بنجاح" };
+    return { message: response?.message };
   },
 
   async resendVerification(email: string): Promise<{ message?: string }> {
@@ -154,9 +152,7 @@ export const authService = {
       { json: { email: email.trim() } },
       { skipAuthRefresh: true },
     );
-    return {
-      message: response?.message || "إن وُجد الحساب، سيصلك رابط التفعيل",
-    };
+    return { message: response?.message };
   },
 
   async requestPasswordReset(email: string): Promise<{ message?: string }> {
@@ -165,9 +161,7 @@ export const authService = {
       { json: { email: email.trim() } },
       { skipAuthRefresh: true },
     );
-    return {
-      message: response?.message || "إن وُجد الحساب، سيصلك رابط إعادة التعيين",
-    };
+    return { message: response?.message };
   },
 
   /** Reset returns { message, access_token, user } + Set-Cookie refresh. */
@@ -185,11 +179,7 @@ export const authService = {
       { skipAuthRefresh: true },
     );
 
-    return persistSessionFromAuth(
-      response,
-      [],
-      response?.message || "تم تحديث كلمة المرور بنجاح",
-    );
+    return persistSessionFromAuth(response);
   },
 
   /** Logout uses refresh cookie (path-scoped to /api/v1/auth). Returns 204. */
@@ -207,7 +197,7 @@ export const authService = {
     }
   },
 
-  /** Revokes all sessions. Returns 204. */
+  /** Revokes all sessions. Returns 204 (no body / no message). */
   async logoutAll(): Promise<{ message?: string }> {
     try {
       await api.post<void>("/api/v1/auth/logout-all", undefined, {
@@ -216,7 +206,7 @@ export const authService = {
     } finally {
       sessionStore.clear();
     }
-    return { message: "تم تسجيل الخروج من جميع الأجهزة" };
+    return {};
   },
 
   persistSession(

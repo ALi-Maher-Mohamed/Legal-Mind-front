@@ -8,6 +8,7 @@ type CommentsResponse = {
 
 type CommentResponse = {
   comment: BlogComment;
+  message?: string;
 };
 
 export const commentsService = {
@@ -26,28 +27,33 @@ export const commentsService = {
     };
   },
 
-  async create(blogId: string, content: string): Promise<BlogComment> {
+  async create(
+    blogId: string,
+    content: string,
+  ): Promise<{ comment: BlogComment; message?: string }> {
     const response = await api.post<CommentResponse>(
       `/api/v1/blogs/${blogId}/comments`,
       { json: { content } },
       { auth: true },
     );
-    return response.comment;
+    return { comment: response.comment, message: response.message };
   },
 
-  async update(commentId: string, content: string): Promise<BlogComment> {
+  async update(
+    commentId: string,
+    content: string,
+  ): Promise<{ comment: BlogComment; message?: string }> {
     const response = await api.put<CommentResponse>(
       `/api/v1/comments/${commentId}`,
       { json: { content } },
       { auth: true },
     );
-    return response.comment;
+    return { comment: response.comment, message: response.message };
   },
 
-  async remove(commentId: string): Promise<string> {
+  async remove(commentId: string): Promise<void> {
     await api.delete(`/api/v1/comments/${commentId}`, {
       auth: true,
     });
-    return 'تم حذف التعليق بنجاح';
   },
 };

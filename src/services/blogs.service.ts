@@ -31,6 +31,7 @@ type ListResponse = {
 
 type BlogResponse = {
   blog: Blog;
+  message?: string;
 };
 
 type CategoriesResponse = {
@@ -92,30 +93,32 @@ export const blogsService = {
     return response.blog;
   },
 
-  async create(payload: CreateBlogPayload): Promise<Blog> {
+  async create(payload: CreateBlogPayload): Promise<{ blog: Blog; message?: string }> {
     const response = await api.post<BlogResponse>(
       '/api/v1/blogs',
       { json: payload },
       { auth: true },
     );
-    return response.blog;
+    return { blog: response.blog, message: response.message };
   },
 
-  async update(blogId: string, payload: UpdateBlogPayload): Promise<Blog> {
+  async update(
+    blogId: string,
+    payload: UpdateBlogPayload,
+  ): Promise<{ blog: Blog; message?: string }> {
     const response = await api.put<BlogResponse>(
       `/api/v1/blogs/${blogId}`,
       { json: payload },
       { auth: true },
     );
     if (!response?.blog) {
-      throw new Error('تعذّر تحديث المقال');
+      throw new Error('');
     }
-    return response.blog;
+    return { blog: response.blog, message: response.message };
   },
 
-  async remove(blogId: string): Promise<string> {
+  async remove(blogId: string): Promise<void> {
     await api.delete(`/api/v1/blogs/${blogId}`, { auth: true });
-    return 'تم حذف المقالة بنجاح';
   },
 
   async toggleBookmark(blogId: string): Promise<BookmarkResult> {
