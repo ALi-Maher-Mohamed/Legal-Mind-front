@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { ChevronUp, Scale } from 'lucide-react';
+import { ChevronUp, MessagesSquare, Scale } from 'lucide-react';
 import type { Citation, ConsultMessage } from '@/types/consultation.types';
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
@@ -9,6 +9,7 @@ import {
   MessageThreadSkeleton,
   TypingDotsSkeleton,
 } from './ConsultShimmer';
+import ConsultEmptyState from './ConsultEmptyState';
 import MessageSheet from './MessageSheet';
 
 type Props = {
@@ -35,11 +36,9 @@ export default function MessageThread(props: Props) {
   const prevCount = useRef(0);
 
   useEffect(() => {
-    // Only auto-scroll when messages grow at the end (new send), not when prepending older.
     if (props.messages.length > prevCount.current) {
       const grewAtEnd =
-        props.isSending ||
-        props.messages.length - prevCount.current <= 2;
+        props.isSending || props.messages.length - prevCount.current <= 2;
       if (grewAtEnd) {
         endRef.current?.scrollIntoView({ behavior: 'smooth' });
       }
@@ -77,18 +76,26 @@ export default function MessageThread(props: Props) {
 
         {props.messages.length === 0 && !props.isSending ? (
           <div
-            className={`${dashPanel} mx-auto max-w-lg border-s-4 border-s-brand p-6 text-center sm:p-8`}
+            className={`${dashPanel} mx-auto w-full max-w-lg border-s-4 border-s-brand overflow-hidden`}
           >
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand/10 text-brand">
-              <Scale className="h-6 w-6" />
+            <ConsultEmptyState
+              icon={Scale}
+              size="md"
+              title={c.emptyChatTitle}
+              description={c.emptyChatHint}
+              className="!py-8 sm:!py-10"
+            />
+            <div className="border-t border-brand/10 bg-[#f8faff]/90 px-5 py-3 dark:border-white/10 dark:bg-white/[0.03]">
+              {props.title ? (
+                <p className="mb-1.5 flex items-center justify-center gap-1.5 text-[11px] font-bold text-brand">
+                  <MessagesSquare className="h-3.5 w-3.5" />
+                  {props.title}
+                </p>
+              ) : null}
+              <p className="text-center text-[10px] leading-relaxed text-muted">
+                {c.emptyChatPrompt}
+              </p>
             </div>
-            <h4 className="text-base font-bold text-foreground">{c.emptyChatTitle}</h4>
-            <p className="mt-2 text-xs leading-relaxed text-muted sm:text-sm">
-              {c.emptyChatHint}
-            </p>
-            {props.title ? (
-              <p className="mt-3 text-[11px] font-medium text-brand">{props.title}</p>
-            ) : null}
           </div>
         ) : (
           props.messages.map((msg) => (

@@ -1,9 +1,10 @@
 'use client';
 
-import { BookOpen, Eye } from 'lucide-react';
+import { BookMarked, BookOpen, Eye } from 'lucide-react';
 import type { Citation } from '@/types/consultation.types';
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
+import ConsultEmptyState from './ConsultEmptyState';
 
 type Props = {
   citations: Citation[];
@@ -15,7 +16,7 @@ export default function CitationsDrawer({ citations, onOpen }: Props) {
     <aside
       className={`${dashPanel} relative hidden h-full w-72 shrink-0 flex-col justify-between p-4 lg:flex`}
     >
-      <div>
+      <div className="flex min-h-0 flex-1 flex-col">
         <div className="mb-4 flex items-center justify-between border-b border-brand/10 pb-3 dark:border-white/10">
           <h4 className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-foreground">
             <BookOpen className="h-4 w-4 text-brand" /> {c.citationsTitle}
@@ -26,9 +27,17 @@ export default function CitationsDrawer({ citations, onOpen }: Props) {
         </div>
 
         {citations.length === 0 ? (
-          <p className="py-12 text-center text-xs italic text-muted">{c.noCitations}</p>
+          <div className="flex min-h-0 flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-brand/15 bg-[#f8faff]/80 dark:border-white/10 dark:bg-white/[0.03]">
+            <ConsultEmptyState
+              icon={BookMarked}
+              size="sm"
+              title={c.noCitationsTitle}
+              description={c.noCitationsHint}
+              ghostRows={2}
+            />
+          </div>
         ) : (
-          <div className="max-h-[450px] space-y-3 overflow-y-auto pe-1">
+          <div className="max-h-[450px] min-h-0 space-y-3 overflow-y-auto pe-1">
             {citations.map((cit, idx) => (
               <button
                 key={cit.id}

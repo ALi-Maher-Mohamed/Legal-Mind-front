@@ -2,7 +2,6 @@
 
 import {
   Archive,
-  ArchiveRestore,
   ChevronDown,
   History,
   MessageSquarePlus,
@@ -13,6 +12,7 @@ import type { Conversation, ConversationFilter } from '@/types/consultation.type
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
 import { ConversationListSkeleton } from './ConsultShimmer';
+import ConsultEmptyState from './ConsultEmptyState';
 
 type Props = {
   conversations: Conversation[];
@@ -96,13 +96,20 @@ export default function ConversationsSidebar({
         {isListLoading ? (
           <ConversationListSkeleton rows={7} />
         ) : conversations.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-brand/20 bg-[#f8faff] p-4 text-center dark:border-white/10 dark:bg-white/5">
-            {filter === 'archived' ? (
-              <Archive className="mx-auto mb-2 h-5 w-5 text-muted" />
-            ) : (
-              <ArchiveRestore className="mx-auto mb-2 h-5 w-5 text-muted" />
-            )}
-            <p className="text-[11px] text-muted">{c.emptyList}</p>
+          <div className="rounded-xl border border-dashed border-brand/20 bg-[#f8faff]/90 dark:border-white/10 dark:bg-white/[0.03]">
+            <ConsultEmptyState
+              icon={filter === 'archived' ? Archive : MessageSquarePlus}
+              size="sm"
+              title={filter === 'archived' ? c.emptyArchivedTitle : c.emptyActiveTitle}
+              description={
+                filter === 'archived' ? c.emptyArchivedHint : c.emptyActiveHint
+              }
+              action={
+                filter === 'active'
+                  ? { label: c.newSession, onClick: onNew }
+                  : undefined
+              }
+            />
           </div>
         ) : (
           conversations.map((conv) => {

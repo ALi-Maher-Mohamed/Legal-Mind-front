@@ -1,11 +1,12 @@
 'use client';
 
-import { Trash2 } from 'lucide-react';
+import { Archive, CloudOff, Trash2 } from 'lucide-react';
 import { useConsultationRoom } from '../../hooks/useConsultationRoom';
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
 import ConfirmModal from '../ui/ConfirmModal';
 import ActiveWorkspace from './ActiveWorkspace';
+import ConsultEmptyState from './ConsultEmptyState';
 import ConsultationRoomSkeleton from './ConsultShimmer';
 import RenameConversationModal from './RenameConversationModal';
 import NewConversationModal from './NewConversationModal';
@@ -22,7 +23,7 @@ export default function ConsultationRoom() {
     return (
       <div className="relative flex h-[calc(100vh-10rem)] flex-col gap-4 sm:h-[calc(100vh-11rem)] lg:flex-row">
         <div className="h-full w-full shrink-0 lg:w-72">
-          <div className={`${dashPanel} h-full p-3 sm:p-4`}>
+          <div className={`${dashPanel} flex h-full flex-col p-3 sm:p-4`}>
             <div className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-brand/10 bg-[#f8faff] p-1 dark:border-white/10 dark:bg-white/5">
               <button
                 type="button"
@@ -38,11 +39,29 @@ export default function ConsultationRoom() {
                 {c.archivedTab}
               </button>
             </div>
-            <p className="p-4 text-center text-xs text-muted">{c.emptyList}</p>
+            <div className="flex min-h-0 flex-1 items-center justify-center rounded-xl border border-dashed border-brand/15 bg-[#f8faff]/80 dark:border-white/10 dark:bg-white/[0.03]">
+              <ConsultEmptyState
+                icon={Archive}
+                size="sm"
+                title={c.emptyArchivedTitle}
+                description={c.emptyArchivedHint}
+              />
+            </div>
           </div>
         </div>
-        <div className={`${dashPanel} flex flex-1 items-center justify-center p-6 text-center text-sm text-muted`}>
-          {c.emptyList}
+        <div
+          className={`${dashPanel} flex flex-1 items-center justify-center overflow-hidden`}
+        >
+          <ConsultEmptyState
+            icon={Archive}
+            size="lg"
+            title={c.emptyArchivedWorkspaceTitle}
+            description={c.emptyArchivedWorkspaceHint}
+            action={{
+              label: c.goActive,
+              onClick: () => room.switchFilter('active'),
+            }}
+          />
         </div>
       </div>
     );
@@ -51,16 +70,18 @@ export default function ConsultationRoom() {
   if (!room.activeConv.id) {
     return (
       <div
-        className={`${dashPanel} flex h-[calc(100vh-10rem)] flex-col items-center justify-center gap-3 p-6 text-center sm:h-[calc(100vh-11rem)]`}
+        className={`${dashPanel} flex h-[calc(100vh-10rem)] flex-col items-center justify-center overflow-hidden sm:h-[calc(100vh-11rem)]`}
       >
-        <p className="text-sm text-muted">{room.loadError || c.loadFail}</p>
-        <button
-          type="button"
-          onClick={() => void room.reload()}
-          className="rounded-lg bg-brand px-4 py-2 text-xs font-bold text-on-brand cursor-pointer"
-        >
-          {c.retry}
-        </button>
+        <ConsultEmptyState
+          icon={CloudOff}
+          size="lg"
+          title={room.loadError ? c.loadFailTitle : c.emptyActiveTitle}
+          description={room.loadError || c.loadFailHint}
+          action={{
+            label: c.retry,
+            onClick: () => void room.reload(),
+          }}
+        />
       </div>
     );
   }

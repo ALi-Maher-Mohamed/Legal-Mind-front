@@ -1,11 +1,14 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react';
+import { Archive } from 'lucide-react';
 import type {
   Citation,
   Conversation,
   ConversationFilter,
 } from '@/types/consultation.types';
+import { consultCopy as c } from '../../data/consultCopy';
+import { dashPanel } from '../../lib/panelStyles';
 import ConversationsSidebar from './ConversationsSidebar';
 import WorkspaceHeader from './WorkspaceHeader';
 import MessageThread from './MessageThread';
@@ -127,8 +130,26 @@ export default function ActiveWorkspace(p: Props) {
             isSending={p.isSending}
           />
         ) : (
-          <div className="shrink-0 border-t border-brand/10 pt-3 text-center text-xs text-muted dark:border-white/10">
-            هذه الجلسة مؤرشفة — استعدها للإرسال من جديد.
+          <div
+            className={`${dashPanel} shrink-0 flex items-start gap-3 border-s-4 border-s-muted p-4 dark:border-s-white/20`}
+          >
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-brand/15 bg-[#f0f4ff] text-muted dark:border-white/10 dark:bg-white/5">
+              <Archive className="h-4 w-4" strokeWidth={1.75} />
+            </div>
+            <div className="min-w-0 flex-1 text-start">
+              <p className="text-xs font-bold text-foreground">{c.archivedBannerTitle}</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted">
+                {c.archivedBannerHint}
+              </p>
+              <button
+                type="button"
+                onClick={p.onUnarchive}
+                disabled={p.isMutating}
+                className="mt-2 text-[11px] font-bold text-brand hover:underline disabled:opacity-50 cursor-pointer"
+              >
+                {c.unarchive}
+              </button>
+            </div>
           </div>
         )}
       </div>
