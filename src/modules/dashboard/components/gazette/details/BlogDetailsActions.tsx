@@ -37,7 +37,7 @@ export default function BlogDetailsActions({
   onDelete,
 }: Props) {
   return (
-    <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e8ee] pt-6 dark:border-white/10">
+    <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e8ee] pt-5 dark:border-white/10">
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"

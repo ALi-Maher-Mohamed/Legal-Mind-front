@@ -196,8 +196,8 @@ export default function PublicBlogDetailsPage() {
             </Link>
           </div>
         ) : (
-          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-12">
-            <article className="rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8 lg:col-span-8">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-6 lg:grid-cols-12">
+            <article className="h-auto rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8 lg:col-span-8">
               <Link
                 href={ROUTES.gazette}
                 className="mb-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand"
@@ -245,24 +245,24 @@ export default function PublicBlogDetailsPage() {
                 <BlogCover
                   src={cover}
                   alt={blog.title}
-                  className="mb-8 h-52 w-full rounded-lg sm:h-64 md:h-72"
+                  className="mb-6 aspect-[16/9] w-full rounded-lg sm:mb-8"
                   iconClassName="h-14 w-14"
                 />
               ) : null}
 
               {looksLikeHtml(blog.content) ? (
                 <div
-                  className="contract-editor-prose blog-article-prose text-[#1f2937] dark:text-foreground/90"
+                  className="contract-editor-prose blog-article-prose h-auto min-h-0 text-[#1f2937] dark:text-foreground/90"
                   dangerouslySetInnerHTML={{ __html: blog.content }}
                 />
               ) : (
-                <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
+                <div className="h-auto min-h-0 whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
                   {blog.content}
                 </div>
               )}
 
               {blog.tags?.length ? (
-                <div className="mt-8 flex flex-wrap gap-2">
+                <div className="mt-6 flex flex-wrap gap-2">
                   {blog.tags.map((tag) => (
                     <span
                       key={tag}
@@ -274,7 +274,7 @@ export default function PublicBlogDetailsPage() {
                 </div>
               ) : null}
 
-              <div className="mt-10 flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e8ee] pt-6 dark:border-white/10">
+              <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-[#e5e8ee] pt-5 dark:border-white/10">
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"

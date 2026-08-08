@@ -291,19 +291,26 @@ html:not(.dark) .lm-surface-soft {
   background: color-mix(in srgb, white 6%, transparent);
 }
 
-/* Gazette article body (TipTap HTML) */
+/* Gazette article body (TipTap HTML) — height follows content only */
 .blog-editor-prose {
   font-size: 0.9375rem;
   line-height: 1.95;
 }
 
 .blog-article-prose {
+  /* Do not inherit .contract-editor-prose min-height: 100% (creates empty gap above comments) */
+  min-height: 0 !important;
+  height: auto;
   font-size: 1rem;
   line-height: 2;
 }
 
 .blog-article-prose p {
   margin-block: 0.7em;
+}
+
+.blog-article-prose p:last-child {
+  margin-block-end: 0;
 }
 
 .blog-article-prose h2 {

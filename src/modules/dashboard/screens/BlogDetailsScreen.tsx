@@ -22,7 +22,7 @@ export default function BlogDetailsScreen() {
   if (d.isLoading) {
     return (
       <div className={`min-h-screen ${dashPageBg} px-4 py-10`} dir="rtl">
-        <div className="mx-auto h-96 max-w-5xl animate-pulse rounded-xl bg-white dark:bg-card" />
+        <div className="mx-auto h-48 max-w-5xl animate-pulse rounded-xl bg-white dark:bg-card" />
       </div>
     );
   }
@@ -53,57 +53,59 @@ export default function BlogDetailsScreen() {
       className={`min-h-screen ${dashPageBg} px-4 py-6 text-start sm:px-6 sm:py-8 lg:px-8`}
       dir="rtl"
     >
-      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-12">
-        <article className="rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8 lg:col-span-8">
-          <button
-            type="button"
-            onClick={d.goBack}
-            className="mb-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand cursor-pointer"
-          >
-            <ArrowRight className="h-3.5 w-3.5" />
-            {c.backToIndex}
-          </button>
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-start gap-6 lg:grid-cols-12">
+        <div className="flex h-auto flex-col gap-0 lg:col-span-8">
+          <article className="h-auto rounded-xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.05)] dark:border-white/10 dark:bg-card sm:p-8">
+            <button
+              type="button"
+              onClick={d.goBack}
+              className="mb-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted hover:text-brand cursor-pointer"
+            >
+              <ArrowRight className="h-3.5 w-3.5" />
+              {c.backToIndex}
+            </button>
 
-          <span className="mb-3 inline-flex items-center gap-1.5 rounded-md border border-[#002045]/15 bg-[#002045] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm dark:border-white/20 dark:bg-[#1a365d]">
-            <FolderOpen className="h-3.5 w-3.5 text-[#fed488]" />
-            {d.categoryLabel}
-          </span>
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-md border border-[#002045]/15 bg-[#002045] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm dark:border-white/20 dark:bg-[#1a365d]">
+              <FolderOpen className="h-3.5 w-3.5 text-[#fed488]" />
+              {d.categoryLabel}
+            </span>
 
-          <h1 className="mb-5 text-2xl font-bold leading-snug text-[#002045] dark:text-foreground sm:text-3xl md:text-4xl">
-            {blog.title}
-          </h1>
+            <h1 className="mb-5 text-2xl font-bold leading-snug text-[#002045] dark:text-foreground sm:text-3xl md:text-4xl">
+              {blog.title}
+            </h1>
 
-          <BlogDetailsMeta
-            authorName={authorName}
-            avatar={getAuthorAvatar(blog)}
-            author={d.author}
-            date={blog.publishedAt || blog.createdAt}
-            readingTime={blog.readingTime}
-            views={blog.views}
-          />
+            <BlogDetailsMeta
+              authorName={authorName}
+              avatar={getAuthorAvatar(blog)}
+              author={d.author}
+              date={blog.publishedAt || blog.createdAt}
+              readingTime={blog.readingTime}
+              views={blog.views}
+            />
 
-          <BlogDetailsBody
-            title={blog.title}
-            content={blog.content}
-            cover={getCoverImage(blog)}
-            tags={blog.tags}
-          />
+            <BlogDetailsBody
+              title={blog.title}
+              content={blog.content}
+              cover={getCoverImage(blog)}
+              tags={blog.tags}
+            />
 
-          <BlogDetailsActions
-            blogId={d.blogId}
-            bookmarked={d.bookmarked}
-            isBookmarking={d.isBookmarking}
-            isSpeaking={d.isSpeaking}
-            isDeleting={d.isDeleting}
-            canManage={d.canManage}
-            onBookmark={() => void d.bookmark()}
-            onShare={() => void d.share()}
-            onSpeech={d.toggleSpeech}
-            onDelete={() => void d.remove()}
-          />
+            <BlogDetailsActions
+              blogId={d.blogId}
+              bookmarked={d.bookmarked}
+              isBookmarking={d.isBookmarking}
+              isSpeaking={d.isSpeaking}
+              isDeleting={d.isDeleting}
+              canManage={d.canManage}
+              onBookmark={() => void d.bookmark()}
+              onShare={() => void d.share()}
+              onSpeech={d.toggleSpeech}
+              onDelete={() => void d.remove()}
+            />
 
-          <BlogComments blogId={d.blogId} />
-        </article>
+            <BlogComments blogId={d.blogId} />
+          </article>
+        </div>
 
         <BlogRelatedAside related={d.related} tags={blog.tags} />
       </div>

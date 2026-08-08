@@ -12,29 +12,29 @@ type Props = {
 
 export default function BlogDetailsBody({ title, content, cover, tags }: Props) {
   return (
-    <>
+    <div className="w-full">
       {cover ? (
         <BlogCover
           src={cover}
           alt={title}
-          className="mb-8 h-52 w-full rounded-lg sm:h-64 md:h-72"
+          className="mb-6 aspect-[16/9] w-full rounded-lg sm:mb-8"
           iconClassName="h-14 w-14"
         />
       ) : null}
 
       {looksLikeHtml(content) ? (
         <div
-          className="contract-editor-prose blog-article-prose text-[#1f2937] dark:text-foreground/90"
+          className="contract-editor-prose blog-article-prose h-auto min-h-0 text-[#1f2937] dark:text-foreground/90"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       ) : (
-        <div className="whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
+        <div className="h-auto min-h-0 whitespace-pre-wrap text-base leading-[2] text-[#1f2937] dark:text-foreground/90">
           {content}
         </div>
       )}
 
       {tags?.length ? (
-        <div className="mt-8 flex flex-wrap gap-2">
+        <div className="mt-6 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <span
               key={tag}
@@ -45,6 +45,6 @@ export default function BlogDetailsBody({ title, content, cover, tags }: Props) 
           ))}
         </div>
       ) : null}
-    </>
+    </div>
   );
 }

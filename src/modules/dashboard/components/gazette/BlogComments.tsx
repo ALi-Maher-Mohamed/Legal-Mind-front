@@ -143,7 +143,7 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
   };
 
   return (
-    <section className="mt-10 border-t border-[#e5e8ee] pt-8 dark:border-white/10" dir="rtl">
+    <section className="mt-8 border-t border-[#e5e8ee] pt-6 dark:border-white/10" dir="rtl">
       <div className="mb-5 flex items-center gap-2">
         <MessageSquare className="h-5 w-5 text-[#002045] dark:text-foreground" />
         <h2 className="text-lg font-bold text-[#002045] dark:text-foreground">
