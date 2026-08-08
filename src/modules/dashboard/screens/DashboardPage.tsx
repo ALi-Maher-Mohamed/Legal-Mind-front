@@ -61,17 +61,19 @@ export default function DashboardPage() {
     let active = true;
 
     const bootstrap = async () => {
-      const session = authService.getSession();
-      if (!session) {
-        router.replace(ROUTES.login);
-        return;
-      }
-
-      setUser(session.user);
-      setShowOnboarding(!hasCompletedOnboarding(session.user.id));
-      setReady(true);
-
       try {
+        const session = await authService.restoreSession();
+        if (!active) return;
+
+        if (!session) {
+          router.replace(ROUTES.login);
+          return;
+        }
+
+        setUser(session.user);
+        setShowOnboarding(!hasCompletedOnboarding(session.user.id));
+        setReady(true);
+
         const freshUser = await authService.me();
         if (!active) return;
         setUser(freshUser);

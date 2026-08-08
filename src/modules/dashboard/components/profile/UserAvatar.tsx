@@ -17,14 +17,14 @@ export default function UserAvatar({
   textClassName = 'text-xs',
   roundedClassName = 'rounded-full',
 }: Props) {
-  const initials = getInitials(user.displayName || user.name);
+  const initials = getInitials(user.name);
 
   if (user.avatarUrl) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src={user.avatarUrl}
-        alt={user.displayName || user.name}
+        alt={user.name}
         className={`${className} ${roundedClassName} object-cover`}
       />
     );

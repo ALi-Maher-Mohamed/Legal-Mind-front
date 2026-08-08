@@ -38,7 +38,11 @@ export function getPasswordRules(password: string): PasswordRule[] {
 }
 
 export function isPasswordValid(password: string): boolean {
-  return password.length >= 8 && PASSWORD_PATTERN.test(password);
+  return (
+    password.length >= 8 &&
+    password.length <= 128 &&
+    PASSWORD_PATTERN.test(password)
+  );
 }
 
 export function validateEmail(email: string): string | null {
@@ -51,6 +55,7 @@ export function validateEmail(email: string): string | null {
 export function validatePassword(password: string): string | null {
   if (!password) return 'كلمة المرور مطلوبة';
   if (password.length < 8) return 'يجب ألا تقل كلمة المرور عن 8 أحرف';
+  if (password.length > 128) return 'يجب ألا تتجاوز كلمة المرور 128 حرفاً';
   if (!PASSWORD_PATTERN.test(password)) {
     return 'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم واحد على الأقل';
   }
@@ -94,7 +99,6 @@ export function validateRegisterStep(step: number, draft: RegisterDraft): string
     if (!TEAM_SIZES.includes(draft.teamSize)) {
       return 'يجب أن يكون حجم الفريق أحد الخيارات التالية: فردي، صغير، متوسط، كبير';
     }
-    if (!draft.lawyerIdDocument) return 'ارفع مستند هوية المحامي';
   }
 
   return null;

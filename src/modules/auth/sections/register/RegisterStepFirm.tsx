@@ -1,6 +1,6 @@
 'use client';
 
-import { Briefcase, Scale, FileUp } from 'lucide-react';
+import { Briefcase, Scale } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import AuthInput from '../../components/AuthInput';
 import type { RegisterDraft, TeamSizeValue } from '@/types/auth.types';
@@ -22,7 +22,6 @@ const TEAM_OPTIONS: {
 
 export default function RegisterStepFirm({ draft, onChange }: Props) {
   const { t } = useLanguage();
-  const fileName = draft.lawyerIdDocument?.name;
 
   return (
     <div className="space-y-4 pt-2">
@@ -58,23 +57,6 @@ export default function RegisterStepFirm({ draft, onChange }: Props) {
             </option>
           ))}
         </select>
-      </div>
-
-      <div>
-        <label className="text-xs text-muted block mb-2 text-start">{t.auth.idDocumentLabel}</label>
-        <label className="flex cursor-pointer items-center gap-3 rounded-lg border border-dashed border-brand/25 bg-white px-4 py-3 text-sm text-foreground transition hover:border-brand/50 dark:border-white/15 dark:bg-white/5">
-          <FileUp className="h-4 w-4 shrink-0 text-brand" />
-          <span className="truncate text-start text-muted">
-            {fileName || t.auth.idDocumentPlaceholder}
-          </span>
-          <input
-            type="file"
-            accept="image/*,.pdf,application/pdf"
-            className="sr-only"
-            onChange={(e) => onChange('lawyerIdDocument', e.target.files?.[0] ?? null)}
-          />
-        </label>
-        <p className="mt-1.5 text-[11px] text-muted text-start">{t.auth.idDocumentHint}</p>
       </div>
     </div>
   );

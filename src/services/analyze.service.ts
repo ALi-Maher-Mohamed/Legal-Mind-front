@@ -37,44 +37,44 @@ function parseSseChunk(chunk: string, onEvent: (event: ProgressLog) => void) {
 
 export const analyzeService = {
   async listJobs(): Promise<AnalyzeJobListItem[]> {
-    const response = await api.get<AnalyzeJobListItem[]>('/api/analyze', { auth: true });
-    return response.data ?? [];
+    const response = await api.get<AnalyzeJobListItem[] | { jobs?: AnalyzeJobListItem[] }>(
+      '/api/v1/analyze',
+      { auth: true },
+    );
+    if (Array.isArray(response)) return response;
+    return response?.jobs ?? [];
   },
 
   async uploadContract(file: File): Promise<UploadJobResponse> {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await api.post<UploadJobResponse>('/api/analyze', { formData }, { auth: true });
-    return response.data;
+    return api.post<UploadJobResponse>('/api/v1/analyze', { formData }, { auth: true });
   },
 
   async startAnalysis(jobId: string): Promise<StartAnalysisResponse> {
-    const response = await api.post<StartAnalysisResponse>(
-      `/api/analyze/${jobId}/start`,
+    return api.post<StartAnalysisResponse>(
+      `/api/v1/analyze/${jobId}/start`,
       {},
       { auth: true },
     );
-    return response.data;
   },
 
   async getJob(jobId: string): Promise<AnalyzeJobDetail> {
-    const response = await api.get<AnalyzeJobDetail>(`/api/analyze/${jobId}`, { auth: true });
-    return response.data;
+    return api.get<AnalyzeJobDetail>(`/api/v1/analyze/${jobId}`, { auth: true });
   },
 
   async getProgress(jobId: string): Promise<ProgressLogsResponse> {
-    const response = await api.get<ProgressLogsResponse>(`/api/analyze/${jobId}/progress`, {
+    return api.get<ProgressLogsResponse>(`/api/v1/analyze/${jobId}/progress`, {
       auth: true,
     });
-    return response.data;
   },
 
   async deleteJob(jobId: string): Promise<void> {
-    await api.delete<{ jobId: string }>(`/api/analyze/${jobId}`, { auth: true });
+    await api.delete(`/api/v1/analyze/${jobId}`, { auth: true });
   },
 
   async downloadReport(jobId: string, fallbackName: string): Promise<void> {
-    const { blob, fileName } = await api.download(`/api/analyze/${jobId}/report/download`, {
+    const { blob, fileName } = await api.download(`/api/v1/analyze/${jobId}/report/download`, {
       auth: true,
     });
 
@@ -99,8 +99,9 @@ export const analyzeService = {
 
   async streamProgress(jobId: string, handlers: StreamHandlers): Promise<void> {
     const token = sessionStore.getAccessToken();
-    const response = await fetch(`${env.apiBaseUrl}/api/analyze/${jobId}/stream`, {
+    const response = await fetch(`${env.apiBaseUrl}/api/v1/analyze/${jobId}/stream`, {
       method: 'GET',
+      credentials: 'include',
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       signal: handlers.signal,
     });

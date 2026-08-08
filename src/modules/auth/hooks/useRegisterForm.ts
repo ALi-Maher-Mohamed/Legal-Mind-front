@@ -16,7 +16,6 @@ const initialDraft: RegisterDraft = {
   firmName: '',
   barId: '',
   teamSize: 'solo',
-  lawyerIdDocument: null,
   selectedPractices: [],
 };
 
@@ -55,7 +54,7 @@ export function useRegisterForm(onComplete: (email: string) => void) {
     setIsLoading(true);
     try {
       const result = await authService.register(draft);
-      toastApiSuccess(result.message);
+      toastApiSuccess(result.message || 'تم إنشاء الحساب. يرجى تفعيل بريدك الإلكتروني');
       onComplete(draft.email.trim());
     } catch (error) {
       toastApiError(error, 'تعذّر إنشاء الحساب');

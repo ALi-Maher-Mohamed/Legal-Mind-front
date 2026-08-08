@@ -97,7 +97,7 @@ export default function ProfileHero({
               {t.dashboard.profileBadge}
             </p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-white sm:text-[32px] sm:leading-10 dark:text-[#dae2fd]">
-              {user.displayName || user.name}
+              {user.name}
             </h1>
             <p className="mt-1 text-base text-white/75 dark:text-[#d3c5ac]">
               {user.firmName || t.dashboard.workspace}
@@ -185,7 +185,7 @@ export default function ProfileHero({
         <ProfileImagePreview
           open={previewOpen}
           src={user.avatarUrl}
-          alt={user.displayName || user.name}
+          alt={user.name}
           title={t.dashboard.profileAvatarPreviewTitle}
           onClose={() => setPreviewOpen(false)}
         />

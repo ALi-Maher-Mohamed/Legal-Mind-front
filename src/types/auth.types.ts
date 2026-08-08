@@ -2,6 +2,24 @@ export type AuthMode = 'login' | 'register' | 'onboarding' | 'forgot' | 'reset';
 
 export type TeamSizeValue = 'solo' | 'small' | 'medium' | 'large';
 
+/** API public user shape from backend-ts. */
+export type PublicUser = {
+  id: string;
+  fullName: string;
+  email: string;
+  officeName: string;
+  teamSize: TeamSizeValue | string;
+  phone?: string;
+  barAssociationNumber?: string;
+  avatarUrl: string | null;
+  isActive: boolean;
+  isEmailVerified: boolean;
+  organizationId: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+/** UI-facing user with local display mappings. */
 export type AuthUser = {
   id: string;
   name: string;
@@ -15,36 +33,13 @@ export type AuthUser = {
   teamSize: string;
   isEmailVerified: boolean;
   isActive: boolean;
-  firstName?: string;
-  lastName?: string;
-  displayName?: string;
-  lawyerIdDocument?: string;
+  organizationId?: string | null;
   createdAt?: string;
   updatedAt?: string;
-  lastLogin?: string;
 };
 
-export type ApiUser = {
-  id?: string;
-  _id?: string;
-  fullName: string;
-  firstName?: string;
-  lastName?: string;
-  displayName?: string;
-  email: string;
-  officeName: string;
-  barAssociationNumber: string;
-  lawyerIdDocument?: string;
-  teamSize: string;
-  role: string;
-  isActive: boolean;
-  isEmailVerified: boolean;
-  phone?: string;
-  avatar?: string;
-  createdAt?: string;
-  updatedAt?: string;
-  lastLogin?: string;
-};
+/** @deprecated Use PublicUser — kept as alias during migration. */
+export type ApiUser = PublicUser;
 
 export type UpdateProfilePayload = {
   fullName: string;
@@ -62,13 +57,13 @@ export type RegisterDraft = {
   firmName: string;
   barId: string;
   teamSize: TeamSizeValue;
-  lawyerIdDocument: File | null;
   selectedPractices: string[];
 };
 
 export type LoginCredentials = {
   email: string;
   password: string;
+  /** Presentation-only; does not change backend refresh-cookie lifetime. */
   rememberMe?: boolean;
 };
 
@@ -77,9 +72,13 @@ export type ResetPasswordPayload = {
   password: string;
 };
 
+export type AuthSessionResponse = {
+  access_token: string;
+  user: PublicUser;
+};
+
 export type AuthSessionPayload = {
   user: AuthUser;
   accessToken: string;
-  refreshToken?: string | null;
-  message: string;
+  message?: string;
 };

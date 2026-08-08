@@ -76,23 +76,6 @@ export default function ProfileActivityCard({ user }: Props) {
           </div>
         </MetaRow>
 
-        <MetaRow>
-          <div className="flex items-start justify-between gap-3">
-            <div className="text-start">
-              <p className={profileLabel}>{t.dashboard.profileTime}</p>
-              <p className="mt-1 text-sm text-foreground dark:text-[#dae2fd]">
-                {formatProfileTimeOnly(user.lastLogin)}
-              </p>
-            </div>
-            <div className="text-end">
-              <p className={profileLabel}>{t.dashboard.profileLastLogin}</p>
-              <p className="mt-1 text-sm text-foreground dark:text-[#dae2fd]">
-                {formatProfileDateOnly(user.lastLogin)}
-              </p>
-            </div>
-          </div>
-        </MetaRow>
-
         <div className="flex items-start justify-between gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

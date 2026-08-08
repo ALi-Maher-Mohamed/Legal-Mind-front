@@ -8,6 +8,8 @@ export type BlogAuthor = {
   email?: string;
   officeName?: string;
   teamSize?: string;
+  avatarUrl?: string | null;
+  /** @deprecated Use avatarUrl */
   avatar?: string | null;
 };
 
@@ -92,6 +94,8 @@ export type BlogCommentAuthor = {
   id?: string;
   fullName?: string;
   displayName?: string;
+  avatarUrl?: string | null;
+  /** @deprecated Use avatarUrl */
   avatar?: string | null;
 };
 

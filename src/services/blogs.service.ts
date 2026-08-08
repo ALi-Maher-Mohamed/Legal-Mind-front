@@ -14,7 +14,6 @@ function buildQuery(params: BlogListParams = {}) {
   if (params.page) query.set('page', String(params.page));
   if (params.limit) query.set('limit', String(params.limit));
   if (params.sort) query.set('sort', params.sort);
-  // Only append filters when they have a real value (empty = all posts)
   const search = params.search?.trim();
   const category = params.category?.trim();
   const tags = params.tags?.trim();
@@ -30,95 +29,100 @@ type ListResponse = {
   pagination: BlogListResult['pagination'];
 };
 
-type BlogEnvelope = {
+type BlogResponse = {
   blog: Blog;
 };
 
-type CategoriesEnvelope = {
+type CategoriesResponse = {
   categories: BlogCategory[];
 };
 
 export const blogsService = {
   async list(params: BlogListParams = {}): Promise<BlogListResult> {
-    const response = await api.get<ListResponse | Blog[]>(`/api/blogs${buildQuery(params)}`);
-    const data = response.data;
+    const response = await api.get<ListResponse | Blog[]>(
+      `/api/v1/blogs${buildQuery(params)}`,
+    );
 
-    if (Array.isArray(data)) {
+    if (Array.isArray(response)) {
       return {
-        blogs: data,
+        blogs: response,
         pagination: {
           page: params.page ?? 1,
-          limit: params.limit ?? data.length,
-          total: data.length,
+          limit: params.limit ?? response.length,
+          total: response.length,
           pages: 1,
         },
       };
     }
 
     return {
-      blogs: data?.blogs ?? [],
-      pagination: data?.pagination ?? {
+      blogs: response?.blogs ?? [],
+      pagination: response?.pagination ?? {
         page: params.page ?? 1,
         limit: params.limit ?? 10,
-        total: data?.blogs?.length ?? 0,
+        total: response?.blogs?.length ?? 0,
         pages: 1,
       },
     };
   },
 
   async getCategories(): Promise<BlogCategory[]> {
-    const response = await api.get<CategoriesEnvelope>('/api/blogs/categories');
-    return response.data?.categories ?? [];
+    const response = await api.get<CategoriesResponse>('/api/v1/blogs/categories');
+    return response?.categories ?? [];
   },
 
   async getPopular(limit = 10): Promise<Blog[]> {
-    const response = await api.get<{ blogs: Blog[] }>(`/api/blogs/popular?limit=${limit}`);
-    return response.data?.blogs ?? [];
+    const response = await api.get<{ blogs: Blog[] }>(
+      `/api/v1/blogs/popular?limit=${limit}`,
+    );
+    return response?.blogs ?? [];
   },
 
   async getTrending(limit = 10): Promise<Blog[]> {
-    const response = await api.get<{ blogs: Blog[] }>(`/api/blogs/trending?limit=${limit}`);
-    return response.data?.blogs ?? [];
+    const response = await api.get<{ blogs: Blog[] }>(
+      `/api/v1/blogs/trending?limit=${limit}`,
+    );
+    return response?.blogs ?? [];
   },
 
   async getById(blogId: string): Promise<Blog> {
-    const response = await api.get<BlogEnvelope>(`/api/blogs/${blogId}`, { auth: true });
-    return response.data.blog;
+    const response = await api.get<BlogResponse>(`/api/v1/blogs/${blogId}`, {
+      auth: true,
+    });
+    return response.blog;
   },
 
   async create(payload: CreateBlogPayload): Promise<Blog> {
-    const response = await api.post<BlogEnvelope>(
-      '/api/blogs',
+    const response = await api.post<BlogResponse>(
+      '/api/v1/blogs',
       { json: payload },
       { auth: true },
     );
-    return response.data.blog;
+    return response.blog;
   },
 
   async update(blogId: string, payload: UpdateBlogPayload): Promise<Blog> {
-    const response = await api.put<BlogEnvelope>(
-      `/api/blogs/${blogId}`,
+    const response = await api.put<BlogResponse>(
+      `/api/v1/blogs/${blogId}`,
       { json: payload },
       { auth: true },
     );
-    const blog = response.data?.blog;
-    if (!blog) {
-      throw new Error(response.message || 'تعذّر تحديث المقال');
+    if (!response?.blog) {
+      throw new Error('تعذّر تحديث المقال');
     }
-    return blog;
+    return response.blog;
   },
 
   async remove(blogId: string): Promise<string> {
-    const response = await api.delete<null>(`/api/blogs/${blogId}`, { auth: true });
-    return response.message || 'تم حذف المقالة بنجاح';
+    await api.delete(`/api/v1/blogs/${blogId}`, { auth: true });
+    return 'تم حذف المقالة بنجاح';
   },
 
   async toggleBookmark(blogId: string): Promise<BookmarkResult> {
-    const response = await api.post<BookmarkResult>(
-      `/api/blogs/${blogId}/bookmark`,
+    return api.post<BookmarkResult>(
+      `/api/v1/blogs/${blogId}/bookmark`,
       undefined,
       { auth: true },
     );
-    return response.data;
   },
 };

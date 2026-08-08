@@ -1,12 +1,21 @@
 export class ApiError extends Error {
   readonly status: number;
   readonly errors: unknown;
+  readonly errorCode: string | null;
+  readonly requestId: string | null;
 
-  constructor(message: string, status = 500, errors: unknown = null) {
+  constructor(
+    message: string,
+    status = 500,
+    errors: unknown = null,
+    options: { errorCode?: string | null; requestId?: string | null } = {},
+  ) {
     super(message);
     this.name = 'ApiError';
     this.status = status;
     this.errors = errors;
+    this.errorCode = options.errorCode ?? null;
+    this.requestId = options.requestId ?? null;
   }
 }
 
@@ -16,18 +25,42 @@ type FieldError = {
 };
 
 function extractDetailMessages(errors: unknown): string[] {
-  if (!Array.isArray(errors)) return [];
+  if (!errors) return [];
 
-  return errors
-    .map((item) => {
-      if (typeof item === 'string') return item.trim();
-      if (item && typeof item === 'object' && 'message' in item) {
-        const message = (item as FieldError).message;
-        return typeof message === 'string' ? message.trim() : '';
-      }
-      return '';
-    })
-    .filter(Boolean);
+  if (Array.isArray(errors)) {
+    return errors
+      .map((item) => {
+        if (typeof item === 'string') return item.trim();
+        if (item && typeof item === 'object' && 'message' in item) {
+          const message = (item as FieldError).message;
+          return typeof message === 'string' ? message.trim() : '';
+        }
+        return '';
+      })
+      .filter(Boolean);
+  }
+
+  if (typeof errors === 'object') {
+    const details = errors as {
+      fields?: Record<string, string[]>;
+      issues?: Array<{ field: string; message: string; code: string }>;
+    };
+
+    if (Array.isArray(details.issues)) {
+      return details.issues
+        .map((issue) => issue?.message?.trim())
+        .filter((message): message is string => Boolean(message));
+    }
+
+    if (details.fields && typeof details.fields === 'object') {
+      return Object.values(details.fields)
+        .flat()
+        .map((message) => (typeof message === 'string' ? message.trim() : ''))
+        .filter(Boolean);
+    }
+  }
+
+  return [];
 }
 
 /** Prefer field-level API messages over generic envelopes like "Validation error". */

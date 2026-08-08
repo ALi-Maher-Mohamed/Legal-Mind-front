@@ -88,7 +88,7 @@ export function useCreateBlogForm() {
       .map((tag) => tag.trim())
       .filter(Boolean);
 
-    // PUT /api/blogs/:blogId — تحديث مقال الكاتب
+    // PUT /api/v1/blogs/:blogId — تحديث مقال الكاتب
     const payload = {
       title: title.trim(),
       content: content.trim(),

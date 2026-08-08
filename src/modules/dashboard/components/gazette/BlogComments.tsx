@@ -233,15 +233,13 @@ export default function BlogComments({ blogId, onRequireLogin }: Props) {
                         avatar ||
                         (isOwner ? resolveMediaUrl(currentUser?.avatarUrl) : null)
                       }
-                      name={isOwner ? currentUser?.displayName || currentUser?.name || name : name}
+                      name={isOwner ? currentUser?.name || name : name}
                       className="h-9 w-9"
                       textClassName="text-[10px]"
                     />
                     <div className="min-w-0">
                       <p className="truncate text-sm font-semibold text-[#002045] dark:text-foreground">
-                        {isOwner
-                          ? currentUser?.displayName || currentUser?.name || name
-                          : name}
+                        {isOwner ? currentUser?.name || name : name}
                       </p>
                       <p className="text-xs text-muted">{formatBlogDate(comment.createdAt)}</p>
                     </div>

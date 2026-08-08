@@ -9,7 +9,6 @@ import ProfileBookmarksCard from './ProfileBookmarksCard';
 import ProfileDetailsCard, {
   type ProfileDetailsHandle,
 } from './ProfileDetailsCard';
-import ProfileDocumentCard from './ProfileDocumentCard';
 import ProfileHero from './ProfileHero';
 import ProfileSecurityCard from './ProfileSecurityCard';
 
@@ -57,7 +56,6 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
               onEditingChange={setEditing}
               onSave={(draft) => saveProfile(draft)}
             />
-            <ProfileDocumentCard user={user} />
           </div>
 
           <aside className="lg:col-span-1">

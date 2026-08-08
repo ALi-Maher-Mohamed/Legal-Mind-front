@@ -1,23 +1,23 @@
 import { api } from '@/lib/api/client';
 import type { BlogComment, BlogCommentsResult, BlogPagination } from '@/types/blog.types';
 
-type CommentsEnvelope = {
+type CommentsResponse = {
   comments: BlogComment[];
   pagination: BlogPagination;
 };
 
-type CommentEnvelope = {
+type CommentResponse = {
   comment: BlogComment;
 };
 
 export const commentsService = {
   async list(blogId: string, page = 1, limit = 20): Promise<BlogCommentsResult> {
-    const response = await api.get<CommentsEnvelope>(
-      `/api/blogs/${blogId}/comments?page=${page}&limit=${limit}`,
+    const response = await api.get<CommentsResponse>(
+      `/api/v1/blogs/${blogId}/comments?page=${page}&limit=${limit}`,
     );
     return {
-      comments: response.data?.comments ?? [],
-      pagination: response.data?.pagination ?? {
+      comments: response?.comments ?? [],
+      pagination: response?.pagination ?? {
         page,
         limit,
         total: 0,
@@ -27,27 +27,27 @@ export const commentsService = {
   },
 
   async create(blogId: string, content: string): Promise<BlogComment> {
-    const response = await api.post<CommentEnvelope>(
-      `/api/blogs/${blogId}/comments`,
+    const response = await api.post<CommentResponse>(
+      `/api/v1/blogs/${blogId}/comments`,
       { json: { content } },
       { auth: true },
     );
-    return response.data.comment;
+    return response.comment;
   },
 
   async update(commentId: string, content: string): Promise<BlogComment> {
-    const response = await api.put<CommentEnvelope>(
-      `/api/comments/${commentId}`,
+    const response = await api.put<CommentResponse>(
+      `/api/v1/comments/${commentId}`,
       { json: { content } },
       { auth: true },
     );
-    return response.data.comment;
+    return response.comment;
   },
 
   async remove(commentId: string): Promise<string> {
-    const response = await api.delete<null>(`/api/comments/${commentId}`, {
+    await api.delete(`/api/v1/comments/${commentId}`, {
       auth: true,
     });
-    return response.message || 'تم حذف التعليق بنجاح';
+    return 'تم حذف التعليق بنجاح';
   },
 };

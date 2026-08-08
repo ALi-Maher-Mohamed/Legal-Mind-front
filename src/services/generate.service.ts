@@ -78,68 +78,65 @@ export function resolveContractTitle(job: GenerateJob, fallback: string): string
 
 export const generateService = {
   async createJob(prompt: string): Promise<CreateGenerateResponse> {
-    const response = await api.post<CreateGenerateResponse>(
-      '/api/generate',
+    return api.post<CreateGenerateResponse>(
+      '/api/v1/generate',
       { json: { prompt: prompt.trim() } },
       { auth: true },
     );
-    return response.data;
   },
 
   async listJobs(): Promise<GenerateJobListItem[]> {
-    const response = await api.get<unknown>('/api/generate', { auth: true });
-    return normalizeJobsList(response.data);
+    const response = await api.get<unknown>('/api/v1/generate', { auth: true });
+    return normalizeJobsList(response);
   },
 
   async getJob(jobId: string): Promise<GenerateJob> {
-    const response = await api.get<GenerateJob>(`/api/generate/${jobId}`, { auth: true });
-    return response.data;
+    return api.get<GenerateJob>(`/api/v1/generate/${jobId}`, { auth: true });
   },
 
   async updateContract(jobId: string, editedMarkdown: string): Promise<string> {
-    const response = await api.put<unknown>(
-      `/api/generate/${jobId}`,
+    const response = await api.put<{ message?: string }>(
+      `/api/v1/generate/${jobId}`,
       { json: { editedMarkdown } },
       { auth: true },
     );
-    return response.message;
+    return response?.message || 'تم حفظ التعديلات';
   },
 
   async regenerate(jobId: string, instructions: string): Promise<GenerateJob | CreateGenerateResponse> {
-    const response = await api.post<GenerateJob | CreateGenerateResponse>(
-      `/api/generate/${jobId}/regenerate`,
+    return api.post<GenerateJob | CreateGenerateResponse>(
+      `/api/v1/generate/${jobId}/regenerate`,
       { json: { instructions: instructions.trim() } },
       { auth: true },
     );
-    return response.data;
   },
 
   async validate(jobId: string): Promise<ValidateGenerateResponse> {
-    const response = await api.post<ValidateGenerateResponse>(
-      `/api/generate/${jobId}/validate`,
+    return api.post<ValidateGenerateResponse>(
+      `/api/v1/generate/${jobId}/validate`,
       undefined,
       { auth: true },
     );
-    return response.data;
   },
 
   async cancelJob(jobId: string): Promise<string> {
-    const response = await api.post<unknown>(`/api/generate/${jobId}/cancel`, undefined, {
-      auth: true,
-    });
-    return response.message || 'تم إلغاء التوليد';
+    const response = await api.post<{ message?: string }>(
+      `/api/v1/generate/${jobId}/cancel`,
+      undefined,
+      { auth: true },
+    );
+    return response?.message || 'تم إلغاء التوليد';
   },
 
   async deleteJob(jobId: string): Promise<void> {
-    await api.delete<unknown>(`/api/generate/${jobId}`, { auth: true });
+    await api.delete(`/api/v1/generate/${jobId}`, { auth: true });
   },
 
   async getProgress(jobId: string): Promise<GenerateProgressLogsResponse> {
-    const response = await api.get<GenerateProgressLogsResponse | GenerateStreamEvent[]>(
-      `/api/generate/${jobId}/progress`,
+    const data = await api.get<GenerateProgressLogsResponse | GenerateStreamEvent[]>(
+      `/api/v1/generate/${jobId}/progress`,
       { auth: true },
     );
-    const data = response.data;
     if (Array.isArray(data)) {
       return { jobId, logs: data, totalLogs: data.length };
     }
@@ -155,7 +152,7 @@ export const generateService = {
   },
 
   async downloadContract(jobId: string, fallbackName = 'contract.md'): Promise<void> {
-    const { blob, fileName } = await api.download(`/api/generate/${jobId}/download`, {
+    const { blob, fileName } = await api.download(`/api/v1/generate/${jobId}/download`, {
       auth: true,
     });
     const resolvedName = fileName || fallbackName;
@@ -171,8 +168,9 @@ export const generateService = {
 
   async streamProgress(jobId: string, handlers: StreamHandlers): Promise<void> {
     const token = sessionStore.getAccessToken();
-    const response = await fetch(`${env.apiBaseUrl}/api/generate/${jobId}/stream`, {
+    const response = await fetch(`${env.apiBaseUrl}/api/v1/generate/${jobId}/stream`, {
       method: 'GET',
+      credentials: 'include',
       headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       signal: handlers.signal,
     });

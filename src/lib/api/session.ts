@@ -2,14 +2,15 @@ import type { AuthUser } from '@/types/auth.types';
 import { getCookie, removeCookie, setCookie } from './cookies';
 
 const USER_KEY = 'legalmind_user';
-const TOKEN_KEY = 'legalmind_token';
-const REFRESH_KEY = 'legalmind_refresh_token';
-const REMEMBER_KEY = 'legalmind_remember';
+/** Legacy keys cleared on persist/clear — tokens must not live in JS-readable storage. */
+const LEGACY_TOKEN_KEY = 'legalmind_token';
+const LEGACY_REFRESH_KEY = 'legalmind_refresh_token';
+const LEGACY_REMEMBER_KEY = 'legalmind_remember';
 
-/** ~7 days when "remember me" is enabled */
-const REMEMBER_MAX_AGE = 60 * 60 * 24 * 7;
-/** Access token cookie lifetime when not remembering (browser session-like, 1 day) */
-const SESSION_MAX_AGE = 60 * 60 * 24;
+/** Cached public user for UI hydration (not a credential). */
+const USER_MAX_AGE = 60 * 60 * 24 * 7;
+
+let accessTokenMemory: string | null = null;
 
 function canUseDom() {
   return typeof window !== 'undefined';
@@ -18,34 +19,34 @@ function canUseDom() {
 function clearLegacyStorage() {
   if (!canUseDom()) return;
   window.localStorage.removeItem(USER_KEY);
-  window.localStorage.removeItem(TOKEN_KEY);
-  window.localStorage.removeItem(REFRESH_KEY);
+  window.localStorage.removeItem(LEGACY_TOKEN_KEY);
+  window.localStorage.removeItem(LEGACY_REFRESH_KEY);
+  window.localStorage.removeItem('token');
   window.sessionStorage.removeItem(USER_KEY);
-  window.sessionStorage.removeItem(TOKEN_KEY);
-  window.sessionStorage.removeItem(REFRESH_KEY);
-}
-
-function cookieOptions(rememberMe: boolean) {
-  return rememberMe
-    ? { maxAgeSeconds: REMEMBER_MAX_AGE }
-    : { maxAgeSeconds: SESSION_MAX_AGE };
+  window.sessionStorage.removeItem(LEGACY_TOKEN_KEY);
+  window.sessionStorage.removeItem(LEGACY_REFRESH_KEY);
+  window.sessionStorage.removeItem('token');
+  removeCookie(LEGACY_TOKEN_KEY);
+  removeCookie(LEGACY_REFRESH_KEY);
+  removeCookie(LEGACY_REMEMBER_KEY);
 }
 
 export type PersistSessionOptions = {
+  /** Presentation-only; backend refresh-cookie lifetime is not controlled by the UI. */
   rememberMe?: boolean;
-  refreshToken?: string | null;
 };
 
 export const sessionStore = {
   getAccessToken(): string | null {
-    return getCookie(TOKEN_KEY);
+    return accessTokenMemory;
   },
 
-  getRefreshToken(): string | null {
-    return getCookie(REFRESH_KEY);
+  setAccessToken(token: string | null) {
+    accessTokenMemory = token;
   },
 
   getUser(): AuthUser | null {
+    if (!canUseDom()) return null;
     const raw = getCookie(USER_KEY);
     if (!raw) return null;
     try {
@@ -64,31 +65,22 @@ export const sessionStore = {
     return { user, token };
   },
 
-  persist(user: AuthUser, accessToken: string, options: PersistSessionOptions = {}) {
+  persist(user: AuthUser, accessToken: string, _options: PersistSessionOptions = {}) {
     if (!canUseDom()) return;
 
-    const rememberMe =
-      options.rememberMe ?? getCookie(REMEMBER_KEY) === '1';
-    const opts = cookieOptions(rememberMe);
-
     clearLegacyStorage();
+    accessTokenMemory = accessToken;
+    setCookie(USER_KEY, JSON.stringify(user), { maxAgeSeconds: USER_MAX_AGE });
+  },
 
-    setCookie(REMEMBER_KEY, rememberMe ? '1' : '0', opts);
-    setCookie(USER_KEY, JSON.stringify(user), opts);
-    setCookie(TOKEN_KEY, accessToken, opts);
-
-    if (options.refreshToken) {
-      setCookie(REFRESH_KEY, options.refreshToken, opts);
-    } else {
-      removeCookie(REFRESH_KEY);
-    }
+  updateUser(user: AuthUser) {
+    if (!canUseDom()) return;
+    setCookie(USER_KEY, JSON.stringify(user), { maxAgeSeconds: USER_MAX_AGE });
   },
 
   clear() {
+    accessTokenMemory = null;
     removeCookie(USER_KEY);
-    removeCookie(TOKEN_KEY);
-    removeCookie(REFRESH_KEY);
-    removeCookie(REMEMBER_KEY);
     clearLegacyStorage();
   },
 };

@@ -47,7 +47,7 @@ function toDraft(user: AuthUser): ProfileEditDraft {
     : 'small';
 
   return {
-    fullName: user.displayName || user.name || '',
+    fullName: user.name || '',
     officeName: user.firmName || '',
     barAssociationNumber: user.barId || '',
     phone: user.phone || '',

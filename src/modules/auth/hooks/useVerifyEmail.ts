@@ -21,7 +21,9 @@ function verifyOnce(token: string): Promise<VerifyResult> {
     .verifyEmail(token)
     .then((result) => {
       succeededTokens.add(token);
-      return result;
+      return {
+        message: result.message || 'تم تأكيد بريدك بنجاح',
+      };
     })
     .catch((error) => {
       if (!succeededTokens.has(token)) {

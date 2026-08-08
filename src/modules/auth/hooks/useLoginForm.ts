@@ -10,6 +10,7 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  /** Presentation-only; backend refresh-cookie lifetime is fixed. */
   const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,13 +25,7 @@ export function useLoginForm(onSuccess: (user: AuthUser) => void) {
     setIsLoading(true);
     try {
       const result = await authService.login({ email, password, rememberMe });
-
-      const data: any = result;
-      const theToken = data.token || data.accessToken || data.user?.token;
-      if (theToken) {
-        localStorage.setItem("token", theToken);
-      }
-      toastApiSuccess(result.message);
+      toastApiSuccess(result.message || 'تم تسجيل الدخول بنجاح');
       onSuccess(result.user);
     } catch (error) {
       toastApiError(error, 'تعذّر تسجيل الدخول');

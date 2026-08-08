@@ -62,7 +62,7 @@ export default function GazetteView() {
           return;
         }
 
-        // الكل / بدون فلتر → /api/blogs?page=&limit=&sort=newest فقط
+        // الكل / بدون فلتر → /api/v1/blogs?page=&limit=&sort=newest فقط
         const result = await blogsService.list({
           page: nextPage,
           limit: PAGE_LIMIT,

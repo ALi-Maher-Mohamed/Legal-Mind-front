@@ -1,16 +1,13 @@
 import { api } from '@/lib/api/client';
 import { sessionStore } from '@/lib/api/session';
 import { mapApiUserToAuthUser } from '@/modules/auth/lib/mapAuthUser';
-import type { ApiUser, AuthUser, UpdateProfilePayload } from '@/types/auth.types';
+import type { AuthUser, PublicUser, UpdateProfilePayload } from '@/types/auth.types';
 import type { Blog, BlogBookmark, BlogBookmarksResult, BlogPagination } from '@/types/blog.types';
-import { blogsService } from '@/services/blogs.service';
 
-type UserEnvelope = { user: ApiUser };
+type ProfileResponse = { message?: string; user: PublicUser };
 
-type BookmarksEnvelope = {
+type BookmarksResponse = {
   bookmarks?: unknown[];
-  items?: unknown[];
-  blogs?: unknown[];
   pagination?: Partial<BlogPagination>;
 };
 
@@ -18,10 +15,14 @@ function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' ? (value as Record<string, unknown>) : null;
 }
 
+function pickString(value: unknown): string {
+  return typeof value === 'string' ? value : '';
+}
+
 function pickId(value: unknown): string {
   const record = asRecord(value);
   if (!record) return typeof value === 'string' ? value : '';
-  return String(record._id || record.id || '');
+  return String(record.id || record._id || '');
 }
 
 function coerceBlog(value: unknown): Blog | null {
@@ -57,39 +58,42 @@ function normalizeBookmark(raw: unknown): BlogBookmark | null {
   const record = asRecord(raw);
   if (!record) return null;
 
-  const nestedBlog = coerceBlog(record.blog) || coerceBlog(record.post) || coerceBlog(record.article);
-  const asBlog = nestedBlog || coerceBlog(record);
-  if (!asBlog) return null;
+  const nestedBlog = coerceBlog(record.blog);
+  if (!nestedBlog) return null;
 
-  const blogId = pickId(record.blogId) || pickId(record.postId) || asBlog._id;
+  const blogId =
+    pickString(record.blog_id) ||
+    pickId(record.blogId) ||
+    nestedBlog.id ||
+    nestedBlog._id;
   const bookmarkId =
+    pickString(record.bookmark_id) ||
     pickId(record.bookmarkId) ||
-    pickId(record._id) ||
-    pickId(record.id) ||
-    blogId;
+    pickId(record);
 
-  if (!blogId) return null;
+  if (!blogId || !bookmarkId) return null;
 
   return {
     bookmarkId,
     blogId,
-    blog: { ...asBlog, _id: blogId, id: blogId, isBookmarked: true },
+    blog: { ...nestedBlog, _id: blogId, id: blogId, isBookmarked: true },
     createdAt:
-      (typeof record.createdAt === 'string' && record.createdAt) ||
-      asBlog.publishedAt ||
-      asBlog.createdAt ||
+      pickString(record.created_at) ||
+      pickString(record.createdAt) ||
+      nestedBlog.publishedAt ||
+      nestedBlog.createdAt ||
       undefined,
   };
 }
 
-function persistMappedUser(apiUser: ApiUser): AuthUser {
+function persistMappedUser(apiUser: PublicUser): AuthUser {
   const practiceAreas = sessionStore.getUser()?.practiceAreas ?? [];
   const user = mapApiUserToAuthUser(apiUser, practiceAreas);
   const token = sessionStore.getAccessToken();
   if (token) {
-    sessionStore.persist(user, token, {
-      refreshToken: sessionStore.getRefreshToken(),
-    });
+    sessionStore.persist(user, token);
+  } else {
+    sessionStore.updateUser(user);
   }
   return user;
 }
@@ -97,9 +101,9 @@ function persistMappedUser(apiUser: ApiUser): AuthUser {
 export const usersService = {
   async updateProfile(
     payload: UpdateProfilePayload,
-  ): Promise<{ user: AuthUser; message: string }> {
-    const response = await api.patch<UserEnvelope>(
-      '/api/users/profile',
+  ): Promise<{ user: AuthUser; message?: string }> {
+    const response = await api.patch<ProfileResponse>(
+      '/api/v1/users/profile',
       {
         json: {
           fullName: payload.fullName.trim(),
@@ -113,40 +117,39 @@ export const usersService = {
     );
 
     return {
-      user: persistMappedUser(response.data.user),
+      user: persistMappedUser(response.user),
       message: response.message,
     };
   },
 
-  async uploadAvatar(file: File): Promise<{ user: AuthUser; message: string }> {
+  async uploadAvatar(file: File): Promise<{ user: AuthUser; message?: string }> {
     const formData = new FormData();
     formData.append('avatar', file);
 
-    const response = await api.post<UserEnvelope>(
-      '/api/users/profile/avatar',
+    const response = await api.post<ProfileResponse>(
+      '/api/v1/users/profile/avatar',
       { formData },
       { auth: true },
     );
 
     return {
-      user: persistMappedUser(response.data.user),
+      user: persistMappedUser(response.user),
       message: response.message,
     };
   },
 
   async getBookmarks(page = 1, limit = 10): Promise<BlogBookmarksResult> {
-    const response = await api.get<BookmarksEnvelope>(
-      `/api/users/me/bookmarks?page=${page}&limit=${limit}`,
+    const response = await api.get<BookmarksResponse>(
+      `/api/v1/users/me/bookmarks?page=${page}&limit=${limit}`,
       { auth: true },
     );
 
-    const data = response.data ?? {};
-    const rawList = data.bookmarks ?? data.items ?? data.blogs ?? [];
+    const rawList = response.bookmarks ?? [];
     const bookmarks = (Array.isArray(rawList) ? rawList : [])
       .map(normalizeBookmark)
       .filter((item): item is BlogBookmark => Boolean(item));
 
-    const pagination = data.pagination ?? {};
+    const pagination = response.pagination ?? {};
     return {
       bookmarks,
       pagination: {
@@ -158,26 +161,10 @@ export const usersService = {
     };
   },
 
-  /**
-   * Remove a saved bookmark.
-   * Prefer DELETE /api/users/me/bookmarks/:id (aligned with GET).
-   * Fallback: toggle bookmark on the blog (known working endpoint).
-   * Note: Postman lists DELETE /api/users/:bookmarkId which would risk user deletion — not used.
-   */
-  async removeBookmark(bookmark: Pick<BlogBookmark, 'bookmarkId' | 'blogId'>): Promise<string> {
-    try {
-      const response = await api.delete<null>(
-        `/api/users/me/bookmarks/${bookmark.bookmarkId}`,
-        { auth: true },
-      );
-      return response.message || 'تمت إزالة المقالة من المفضلة';
-    } catch {
-      const result = await blogsService.toggleBookmark(bookmark.blogId);
-      if (result.bookmarked) {
-        // Toggle accidentally re-added — toggle once more to force remove.
-        await blogsService.toggleBookmark(bookmark.blogId);
-      }
-      return 'تمت إزالة المقالة من المفضلة';
-    }
+  async removeBookmark(bookmark: Pick<BlogBookmark, 'bookmarkId'>): Promise<string> {
+    await api.delete(`/api/v1/users/me/bookmarks/${bookmark.bookmarkId}`, {
+      auth: true,
+    });
+    return 'تمت إزالة المقالة من المفضلة';
   },
 };

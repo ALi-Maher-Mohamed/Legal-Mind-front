@@ -18,7 +18,7 @@ export function getAuthorName(blog: Blog) {
 
 export function getAuthorAvatar(blog: Blog) {
   const author = getBlogAuthor(blog);
-  return resolveMediaUrl(author?.avatar) || null;
+  return resolveMediaUrl(author?.avatarUrl || author?.avatar) || null;
 }
 
 export function getAuthorInitials(name?: string) {
@@ -91,7 +91,7 @@ export function getCommentAuthorName(comment: BlogComment) {
 
 export function getCommentAuthorAvatar(comment: BlogComment) {
   const author = getCommentAuthor(comment);
-  return resolveMediaUrl(author?.avatar) || null;
+  return resolveMediaUrl(author?.avatarUrl || author?.avatar) || null;
 }
 
 export function collectTags(blogs: Blog[], limit = 8) {
