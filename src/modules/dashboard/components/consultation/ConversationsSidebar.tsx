@@ -12,6 +12,7 @@ import {
 import type { Conversation, ConversationFilter } from '@/types/consultation.types';
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
+import { ConversationListSkeleton } from './ConsultShimmer';
 
 type Props = {
   conversations: Conversation[];
@@ -19,6 +20,7 @@ type Props = {
   filter: ConversationFilter;
   isCreating?: boolean;
   isLoadingMore?: boolean;
+  isListLoading?: boolean;
   hasMoreList?: boolean;
   onFilterChange: (filter: ConversationFilter) => void;
   onSelect: (id: string) => void;
@@ -33,6 +35,7 @@ export default function ConversationsSidebar({
   filter,
   isCreating = false,
   isLoadingMore = false,
+  isListLoading = false,
   hasMoreList = false,
   onFilterChange,
   onSelect,
@@ -90,7 +93,9 @@ export default function ConversationsSidebar({
       </button>
 
       <div className="min-h-0 flex-1 space-y-2 overflow-y-auto pe-1">
-        {conversations.length === 0 ? (
+        {isListLoading ? (
+          <ConversationListSkeleton rows={7} />
+        ) : conversations.length === 0 ? (
           <div className="rounded-xl border border-dashed border-brand/20 bg-[#f8faff] p-4 text-center dark:border-white/10 dark:bg-white/5">
             {filter === 'archived' ? (
               <Archive className="mx-auto mb-2 h-5 w-5 text-muted" />
@@ -150,16 +155,21 @@ export default function ConversationsSidebar({
           })
         )}
 
-        {hasMoreList ? (
-          <button
-            type="button"
-            disabled={isLoadingMore}
-            onClick={onLoadMore}
-            className="flex w-full items-center justify-center gap-1 rounded-lg border border-brand/15 py-2 text-[11px] font-bold text-brand hover:bg-brand/5 disabled:opacity-60 cursor-pointer dark:border-white/10"
-          >
-            <ChevronDown className="h-3.5 w-3.5" />
-            {isLoadingMore ? c.loadingOlder : 'المزيد من الجلسات'}
-          </button>
+        {hasMoreList && !isListLoading ? (
+          <>
+            {isLoadingMore ? <ConversationListSkeleton rows={2} /> : null}
+            <button
+              type="button"
+              disabled={isLoadingMore}
+              onClick={onLoadMore}
+              className="flex w-full items-center justify-center gap-1 rounded-lg border border-brand/15 py-2 text-[11px] font-bold text-brand hover:bg-brand/5 disabled:opacity-60 cursor-pointer dark:border-white/10"
+            >
+              <ChevronDown
+                className={`h-3.5 w-3.5 ${isLoadingMore ? 'animate-pulse' : ''}`}
+              />
+              {isLoadingMore ? c.loadingOlder : 'المزيد من الجلسات'}
+            </button>
+          </>
         ) : null}
       </div>
 

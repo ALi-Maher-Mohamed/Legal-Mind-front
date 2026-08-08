@@ -1,10 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { ChevronUp, Scale, Sparkles } from 'lucide-react';
+import { ChevronUp, Scale } from 'lucide-react';
 import type { Citation, ConsultMessage } from '@/types/consultation.types';
 import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
+import {
+  MessageThreadSkeleton,
+  TypingDotsSkeleton,
+} from './ConsultShimmer';
 import MessageSheet from './MessageSheet';
 
 type Props = {
@@ -44,27 +48,30 @@ export default function MessageThread(props: Props) {
   }, [props.messages, props.isSending]);
 
   if (props.isLoadingMessages && props.messages.length === 0) {
-    return (
-      <div className="my-4 flex flex-1 items-center justify-center text-sm text-muted">
-        {c.loading}
-      </div>
-    );
+    return <MessageThreadSkeleton bubbles={4} />;
   }
 
   return (
     <div className="my-4 flex min-h-0 flex-1 flex-col overflow-hidden">
       <div className="min-h-0 flex-1 space-y-6 overflow-y-auto pe-1">
         {props.hasMoreMessages ? (
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-3">
             <button
               type="button"
               disabled={props.isLoadingOlder}
               onClick={props.onLoadOlder}
               className="inline-flex items-center gap-1 rounded-full border border-brand/15 bg-white px-3 py-1.5 text-[11px] font-bold text-brand shadow-sm hover:bg-brand/5 disabled:opacity-60 cursor-pointer dark:border-white/10 dark:bg-card"
             >
-              <ChevronUp className="h-3.5 w-3.5" />
+              <ChevronUp
+                className={`h-3.5 w-3.5 ${props.isLoadingOlder ? 'animate-pulse' : ''}`}
+              />
               {props.isLoadingOlder ? c.loadingOlder : c.loadOlder}
             </button>
+            {props.isLoadingOlder ? (
+              <div className="w-full opacity-80">
+                <MessageThreadSkeleton bubbles={2} compact />
+              </div>
+            ) : null}
           </div>
         ) : null}
 
@@ -101,14 +108,7 @@ export default function MessageThread(props: Props) {
           ))
         )}
 
-        {props.isSending && (
-          <div
-            className={`${dashPanel} flex max-w-xl items-center gap-3 border-s-4 border-s-accent p-5 text-xs italic text-muted`}
-          >
-            <Sparkles className="h-4 w-4 shrink-0 animate-spin text-accent" />
-            {c.typing}
-          </div>
-        )}
+        {props.isSending && <TypingDotsSkeleton />}
         <div ref={endRef} />
       </div>
     </div>

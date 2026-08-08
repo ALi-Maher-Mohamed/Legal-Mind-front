@@ -6,6 +6,7 @@ import { consultCopy as c } from '../../data/consultCopy';
 import { dashPanel } from '../../lib/panelStyles';
 import ConfirmModal from '../ui/ConfirmModal';
 import ActiveWorkspace from './ActiveWorkspace';
+import ConsultationRoomSkeleton from './ConsultShimmer';
 import RenameConversationModal from './RenameConversationModal';
 import SourceViewerModal from './SourceViewerModal';
 
@@ -13,13 +14,7 @@ export default function ConsultationRoom() {
   const room = useConsultationRoom();
 
   if (room.isLoading) {
-    return (
-      <div
-        className={`${dashPanel} flex h-[calc(100vh-10rem)] items-center justify-center text-sm text-muted sm:h-[calc(100vh-11rem)]`}
-      >
-        {c.loading}
-      </div>
-    );
+    return <ConsultationRoomSkeleton />;
   }
 
   if (!room.activeConv.id && room.filter === 'archived') {
