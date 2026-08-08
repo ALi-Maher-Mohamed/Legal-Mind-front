@@ -1,12 +1,10 @@
 'use client';
 
-import { Mic, Paperclip, Send } from 'lucide-react';
-import type { ContextType } from '@/types/consultation.types';
+import { Mic, Send } from 'lucide-react';
 import { consultCopy as c } from '../../data/consultCopy';
 import { useDictation } from '../../hooks/useDictation';
 
 type Props = {
-  contextType: ContextType;
   value: string;
   onChange: (v: string) => void;
   onAppend: (chunk: string) => void;
@@ -15,7 +13,6 @@ type Props = {
 };
 
 export default function ComposerForm({
-  contextType,
   value,
   onChange,
   onAppend,
@@ -23,11 +20,14 @@ export default function ComposerForm({
   isSending,
 }: Props) {
   const { isDictating, toggleDictation } = useDictation(onAppend);
+  const length = value.trim().length;
+  const overLimit = length > 2000;
 
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
+        if (overLimit) return;
         onSend();
       }}
       className="shrink-0 border-t border-brand/10 pt-2 dark:border-white/10"
@@ -39,23 +39,16 @@ export default function ComposerForm({
           onKeyDown={(e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
               e.preventDefault();
-              onSend();
+              if (!overLimit) onSend();
             }
           }}
           placeholder={c.placeholder}
           rows={3}
+          maxLength={2000}
           className="w-full resize-none bg-transparent px-2 py-1 text-xs leading-relaxed text-foreground placeholder:italic placeholder:text-muted focus:outline-none sm:text-sm"
         />
         <div className="flex items-center justify-between gap-2 border-t border-brand/10 px-2 pt-2 dark:border-white/10">
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => alert(c.attachAlert)}
-              className="rounded-lg p-1.5 text-muted hover:text-foreground cursor-pointer"
-              aria-label="مرفق"
-            >
-              <Paperclip className="h-4 w-4" />
-            </button>
             <button
               type="button"
               onClick={toggleDictation}
@@ -68,9 +61,7 @@ export default function ComposerForm({
             >
               <Mic className="h-4 w-4" />
             </button>
-            <span className="rounded border border-brand/10 bg-[#f0f4ff] px-2 py-0.5 text-[10px] font-bold uppercase text-brand dark:border-white/10 dark:bg-white/5">
-              {contextType.toUpperCase()} {c.mode}
-            </span>
+            <span className="text-[10px] tabular-nums text-muted">{length}/2000</span>
             {isDictating && (
               <span className="hidden text-[9px] font-bold text-brand animate-pulse sm:inline">
                 {c.dictating}
@@ -79,7 +70,7 @@ export default function ComposerForm({
           </div>
           <button
             type="submit"
-            disabled={!value.trim() || isSending}
+            disabled={!value.trim() || isSending || overLimit}
             className="inline-flex shrink-0 items-center gap-1 rounded-lg bg-brand px-4 py-1.5 text-xs font-bold uppercase text-on-brand transition hover:opacity-90 disabled:bg-brand/30 cursor-pointer"
           >
             {c.send} <Send className="h-3 w-3" strokeWidth={2.5} />

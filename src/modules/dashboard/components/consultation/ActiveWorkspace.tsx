@@ -1,7 +1,11 @@
 'use client';
 
 import type { Dispatch, SetStateAction } from 'react';
-import type { Citation, Conversation } from '@/types/consultation.types';
+import type {
+  Citation,
+  Conversation,
+  ConversationFilter,
+} from '@/types/consultation.types';
 import ConversationsSidebar from './ConversationsSidebar';
 import WorkspaceHeader from './WorkspaceHeader';
 import MessageThread from './MessageThread';
@@ -12,20 +16,34 @@ type Props = {
   conversations: Conversation[];
   conversation: Conversation;
   citations: Citation[];
+  filter: ConversationFilter;
   inputText: string;
   setInputText: Dispatch<SetStateAction<string>>;
   isSending: boolean;
+  isCreating?: boolean;
+  isMutating?: boolean;
+  isLoadingMessages?: boolean;
+  isLoadingOlder?: boolean;
+  isLoadingMoreList?: boolean;
+  hasMoreList?: boolean;
   toast: 'share' | 'export' | null;
   speakingMsgId: string | null;
   speechRate: number;
   activeCitation: Citation | null;
   showHistory: boolean;
+  onFilterChange: (filter: ConversationFilter) => void;
   onShare: () => void;
   onExport: () => void;
   onToggleHistory: () => void;
   onCloseHistory: () => void;
   onSelectConversation: (id: string) => void;
   onNewConversation: () => void;
+  onLoadMoreList?: () => void;
+  onLoadOlder?: () => void;
+  onRename: () => void;
+  onArchive: () => void;
+  onUnarchive: () => void;
+  onDelete: () => void;
   onSend: () => void;
   onSpeak: (id: string, text: string) => void;
   onRateChange: (rate: number) => void;
@@ -36,12 +54,20 @@ type Props = {
 };
 
 export default function ActiveWorkspace(p: Props) {
+  const archived = p.conversation.status === 'archived';
+
   const sidebar = (
     <ConversationsSidebar
       conversations={p.conversations}
       activeId={p.conversation.id}
+      filter={p.filter}
+      onFilterChange={p.onFilterChange}
       onSelect={p.onSelectConversation}
       onNew={p.onNewConversation}
+      isCreating={p.isCreating}
+      isLoadingMore={p.isLoadingMoreList}
+      hasMoreList={p.hasMoreList}
+      onLoadMore={p.onLoadMoreList}
     />
   );
 
@@ -51,13 +77,60 @@ export default function ActiveWorkspace(p: Props) {
       {p.showHistory && (
         <div className="absolute inset-0 z-20 flex lg:hidden">
           <div className="relative z-10 h-full w-[min(100%,18rem)]">{sidebar}</div>
-          <button type="button" className="flex-1 bg-[#0b1326]/40 cursor-pointer" aria-label="إغلاق السجل" onClick={p.onCloseHistory} />
+          <button
+            type="button"
+            className="flex-1 bg-[#0b1326]/40 cursor-pointer"
+            aria-label="إغلاق السجل"
+            onClick={p.onCloseHistory}
+          />
         </div>
       )}
-      <div className="flex min-w-0 flex-1 flex-col justify-between">
-        <WorkspaceHeader conversation={p.conversation} toast={p.toast} onShare={p.onShare} onExport={p.onExport} onOpenHistory={p.onToggleHistory} />
-        <MessageThread messages={p.conversation.messages} isSending={p.isSending} speakingMsgId={p.speakingMsgId} speechRate={p.speechRate} activeCitation={p.activeCitation} onSpeak={p.onSpeak} onRateChange={p.onRateChange} onStopSpeak={p.onStopSpeak} onToggleCitation={p.onToggleCitation} onCloseCitation={p.onCloseCitation} onOpenViewer={p.onOpenViewer} />
-        <ComposerForm contextType={p.conversation.contextType} value={p.inputText} onChange={p.setInputText} onAppend={(chunk) => p.setInputText((prev) => (prev ? `${prev} ${chunk}` : chunk))} onSend={p.onSend} isSending={p.isSending} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <WorkspaceHeader
+          conversation={p.conversation}
+          toast={p.toast}
+          isMutating={p.isMutating}
+          onShare={p.onShare}
+          onExport={p.onExport}
+          onOpenHistory={p.onToggleHistory}
+          onRename={p.onRename}
+          onArchive={p.onArchive}
+          onUnarchive={p.onUnarchive}
+          onDelete={p.onDelete}
+        />
+        <MessageThread
+          messages={p.conversation.messages}
+          isSending={p.isSending}
+          isLoadingMessages={p.isLoadingMessages}
+          isLoadingOlder={p.isLoadingOlder}
+          hasMoreMessages={p.conversation.hasMoreMessages}
+          title={p.conversation.title}
+          speakingMsgId={p.speakingMsgId}
+          speechRate={p.speechRate}
+          activeCitation={p.activeCitation}
+          onLoadOlder={p.onLoadOlder}
+          onSpeak={p.onSpeak}
+          onRateChange={p.onRateChange}
+          onStopSpeak={p.onStopSpeak}
+          onToggleCitation={p.onToggleCitation}
+          onCloseCitation={p.onCloseCitation}
+          onOpenViewer={p.onOpenViewer}
+        />
+        {!archived ? (
+          <ComposerForm
+            value={p.inputText}
+            onChange={p.setInputText}
+            onAppend={(chunk) =>
+              p.setInputText((prev) => (prev ? `${prev} ${chunk}` : chunk))
+            }
+            onSend={p.onSend}
+            isSending={p.isSending}
+          />
+        ) : (
+          <div className="shrink-0 border-t border-brand/10 pt-3 text-center text-xs text-muted dark:border-white/10">
+            هذه الجلسة مؤرشفة — استعدها للإرسال من جديد.
+          </div>
+        )}
       </div>
       <CitationsDrawer citations={p.citations} onOpen={p.onOpenViewer} />
     </div>

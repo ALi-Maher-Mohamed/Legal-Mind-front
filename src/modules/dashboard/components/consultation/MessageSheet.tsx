@@ -48,7 +48,23 @@ export default function MessageSheet({
         <div className="mb-4 flex items-center justify-between border-b border-brand/10 pb-2.5 text-[10px] uppercase text-muted dark:border-white/10">
           <div className="flex items-center gap-1.5">
             {!isUser && <Scale className="h-3.5 w-3.5 text-brand" />}
-            <span className="font-bold text-foreground">{isUser ? c.userLabel : c.aiLabel}</span>
+            <span className="font-bold text-foreground">
+              {isUser
+                ? c.userLabel
+                : message.role === 'system'
+                  ? c.systemLabel
+                  : c.aiLabel}
+            </span>
+            {message.status === 'failed' || message.status === 'cancelled' ? (
+              <span className="rounded bg-danger/10 px-1.5 py-0.5 text-[9px] font-bold normal-case text-danger">
+                {c.failedMessage}
+              </span>
+            ) : null}
+            {message.status === 'pending' ? (
+              <span className="rounded bg-brand/10 px-1.5 py-0.5 text-[9px] font-bold normal-case text-brand">
+                ...
+              </span>
+            ) : null}
           </div>
           <div className="flex items-center gap-2">
             <button
