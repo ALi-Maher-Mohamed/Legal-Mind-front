@@ -8,6 +8,7 @@ import ConfirmModal from '../ui/ConfirmModal';
 import ActiveWorkspace from './ActiveWorkspace';
 import ConsultationRoomSkeleton from './ConsultShimmer';
 import RenameConversationModal from './RenameConversationModal';
+import NewConversationModal from './NewConversationModal';
 import SourceViewerModal from './SourceViewerModal';
 
 export default function ConsultationRoom() {
@@ -91,7 +92,7 @@ export default function ConsultationRoom() {
         onToggleHistory={() => room.setShowHistory((v) => !v)}
         onCloseHistory={() => room.setShowHistory(false)}
         onSelectConversation={(id) => void room.selectConversation(id)}
-        onNewConversation={() => void room.createGeneral()}
+        onNewConversation={() => room.setNewChatOpen(true)}
         onLoadMoreList={() => void room.loadMoreConversations()}
         onLoadOlder={() => void room.loadOlderMessages()}
         onRename={() => room.setRenameOpen(true)}
@@ -116,6 +117,15 @@ export default function ConsultationRoom() {
           onClose={() => room.setViewerSource(null)}
         />
       )}
+
+      <NewConversationModal
+        open={room.newChatOpen}
+        isLoading={room.isCreating}
+        onClose={() => {
+          if (!room.isCreating) room.setNewChatOpen(false);
+        }}
+        onCreate={(title) => room.createGeneral(title)}
+      />
 
       <RenameConversationModal
         open={room.renameOpen}

@@ -46,6 +46,7 @@ export function useConsultationRoom() {
   const [loadError, setLoadError] = useState('');
   const [renameOpen, setRenameOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [newChatOpen, setNewChatOpen] = useState(false);
 
   const activeConv = useMemo(() => {
     if (!conversations.length) {
@@ -224,12 +225,17 @@ export function useConsultationRoom() {
 
   const createGeneral = useCallback(
     async (title?: string) => {
-      if (isCreating) return;
+      if (isCreating) return false;
+      const nextTitle = title?.trim() ?? '';
+      if (!nextTitle) return false;
+      if (nextTitle.length > 160) {
+        toastApiError(new Error('يجب ألا يتجاوز العنوان 160 حرفاً'));
+        return false;
+      }
+
       setIsCreating(true);
       try {
-        const created = await conversationsService.create(
-          title?.trim() || c.newTitles.general,
-        );
+        const created = await conversationsService.create(nextTitle);
         const mapped = mapApiConversation(created, [], { messagesLoaded: true });
 
         if (filter !== 'active') {
@@ -251,8 +257,11 @@ export function useConsultationRoom() {
         setShowHistory(false);
         setInputText('');
         setActiveCitation(null);
+        setNewChatOpen(false);
+        return true;
       } catch (error) {
         toastApiError(error);
+        return false;
       } finally {
         setIsCreating(false);
       }
@@ -536,6 +545,8 @@ export function useConsultationRoom() {
     setRenameOpen,
     deleteOpen,
     setDeleteOpen,
+    newChatOpen,
+    setNewChatOpen,
     createGeneral,
     sendMessage,
     selectConversation,
