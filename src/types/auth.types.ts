@@ -63,8 +63,6 @@ export type RegisterDraft = {
 export type LoginCredentials = {
   email: string;
   password: string;
-  /** Presentation-only; does not change backend refresh-cookie lifetime. */
-  rememberMe?: boolean;
 };
 
 export type ResetPasswordPayload = {
@@ -75,6 +73,7 @@ export type ResetPasswordPayload = {
 export type AuthSessionResponse = {
   access_token: string;
   user: PublicUser;
+  message?: string;
 };
 
 export type AuthSessionPayload = {

@@ -66,10 +66,12 @@ export const sessionStore = {
   },
 
   persist(user: AuthUser, accessToken: string, _options: PersistSessionOptions = {}) {
+    // Access token stays in process memory (survives navigation, not full page reload).
+    accessTokenMemory = accessToken;
+
     if (!canUseDom()) return;
 
     clearLegacyStorage();
-    accessTokenMemory = accessToken;
     setCookie(USER_KEY, JSON.stringify(user), { maxAgeSeconds: USER_MAX_AGE });
   },
 

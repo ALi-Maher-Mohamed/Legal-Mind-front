@@ -1,7 +1,11 @@
 import { env } from '@/config/env';
 import { mapApiUserToAuthUser } from '@/modules/auth/lib/mapAuthUser';
 import type { PublicUser } from '@/types/auth.types';
-import { ApiError, resolveApiErrorMessage } from './errors';
+import {
+  ApiError,
+  REFRESHABLE_AUTH_CODES,
+  resolveApiErrorMessage,
+} from './errors';
 import { sessionStore } from './session';
 import type { ApiFailure } from './types';
 
@@ -23,15 +27,71 @@ type ParsedBody = {
   failure: ApiFailure | null;
 };
 
+/** Auth routes that must not trigger token refresh retry. */
+const NO_REFRESH_PATHS = new Set([
+  '/api/v1/auth/login',
+  '/api/v1/auth/register',
+  '/api/v1/auth/refresh-token',
+  '/api/v1/auth/logout',
+  '/api/v1/auth/verify-email',
+  '/api/v1/auth/resend-verification',
+  '/api/v1/auth/forgot-password',
+  '/api/v1/auth/reset-password',
+]);
+
 let refreshPromise: Promise<boolean> | null = null;
 
-function isApiFailure(value: unknown): value is ApiFailure {
-  return Boolean(
-    value &&
-      typeof value === 'object' &&
-      (value as ApiFailure).success === false &&
-      typeof (value as ApiFailure).message === 'string',
-  );
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === 'object' ? (value as Record<string, unknown>) : null;
+}
+
+function toApiFailure(payload: unknown, responseOk: boolean): ApiFailure | null {
+  const record = asRecord(payload);
+  if (!record) return null;
+
+  const message = typeof record.message === 'string' ? record.message : '';
+  const error = typeof record.error === 'string' ? record.error : '';
+  const requestId =
+    typeof record.request_id === 'string'
+      ? record.request_id
+      : typeof record.requestId === 'string'
+        ? record.requestId
+        : '';
+
+  // Standard envelope: { success: false, error, message, details?, request_id }
+  if (record.success === false) {
+    return {
+      success: false,
+      error: error || 'ERROR',
+      message: message || 'Request failed',
+      details: (record.details as ApiFailure['details']) ?? undefined,
+      request_id: requestId,
+    };
+  }
+
+  // Rate-limit / alternate auth failures: { error, message } without success:false
+  if (!responseOk && error && message) {
+    return {
+      success: false,
+      error,
+      message,
+      details: (record.details as ApiFailure['details']) ?? undefined,
+      request_id: requestId,
+    };
+  }
+
+  // Contract modules: { success: false already covered } — also catch explicit error field on non-OK
+  if (!responseOk && message) {
+    return {
+      success: false,
+      error: error || 'ERROR',
+      message,
+      details: (record.details as ApiFailure['details']) ?? undefined,
+      request_id: requestId,
+    };
+  }
+
+  return null;
 }
 
 async function parseBody(response: Response): Promise<ParsedBody> {
@@ -48,7 +108,7 @@ async function parseBody(response: Response): Promise<ParsedBody> {
     const payload: unknown = JSON.parse(text);
     return {
       payload,
-      failure: isApiFailure(payload) ? payload : null,
+      failure: toApiFailure(payload, response.ok),
     };
   } catch {
     return { payload: null, failure: null };
@@ -73,6 +133,22 @@ function throwApiFailure(status: number, failure: ApiFailure | null, fallback: s
   });
 }
 
+function shouldAttemptRefresh(
+  path: string,
+  status: number,
+  failure: ApiFailure | null,
+  options: RequestOptions,
+  allowRetry: boolean,
+): boolean {
+  if (!allowRetry || options.skipAuthRefresh) return false;
+  if (status !== 401) return false;
+  if (NO_REFRESH_PATHS.has(path)) return false;
+
+  // Prefer documented auth codes; if body is empty, still try once (expired access).
+  if (!failure?.error) return true;
+  return REFRESHABLE_AUTH_CODES.has(failure.error);
+}
+
 async function refreshAccessToken(): Promise<boolean> {
   if (refreshPromise) return refreshPromise;
 
@@ -81,7 +157,12 @@ async function refreshAccessToken(): Promise<boolean> {
       const response = await fetch(`${env.apiBaseUrl}/api/v1/auth/refresh-token`, {
         method: 'POST',
         credentials: 'include',
-        headers: { Accept: 'application/json' },
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        // Empty body: refresh cookie is on path /api/v1/auth only
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) {
@@ -154,21 +235,15 @@ async function executeRequest<T>(
     credentials: 'include',
   });
 
-  if (
-    response.status === 401 &&
-    allowRetry &&
-    !options.skipAuthRefresh &&
-    path !== '/api/v1/auth/refresh-token' &&
-    path !== '/api/v1/auth/login'
-  ) {
+  const { payload, failure } = await parseBody(response);
+
+  if (shouldAttemptRefresh(path, response.status, failure, options, allowRetry)) {
     const refreshed = await refreshAccessToken();
     if (refreshed) {
       return executeRequest<T>(path, options, false);
     }
     sessionStore.clear();
   }
-
-  const { payload, failure } = await parseBody(response);
 
   if (!response.ok || failure) {
     throwApiFailure(
@@ -212,12 +287,15 @@ export async function apiDownload(
     credentials: 'include',
   });
 
-  if (
-    response.status === 401 &&
-    !options.skipAuthRefresh &&
-    (await refreshAccessToken())
-  ) {
-    return apiDownload(path, { ...options, skipAuthRefresh: true });
+  if (response.status === 401 && !options.skipAuthRefresh) {
+    const { failure } = await parseBody(response.clone());
+    if (shouldAttemptRefresh(path, 401, failure, options, true)) {
+      const refreshed = await refreshAccessToken();
+      if (refreshed) {
+        return apiDownload(path, { ...options, skipAuthRefresh: true });
+      }
+      sessionStore.clear();
+    }
   }
 
   if (!response.ok) {

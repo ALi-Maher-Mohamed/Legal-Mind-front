@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/config/routes';
 import type { AuthMode } from '@/types/auth.types';
+import { authService } from '@/services/auth.service';
 import { useAuthMode } from '../hooks/useAuthMode';
 import AuthHeader from '../components/AuthHeader';
 import AuthBrandPanel from '../components/AuthBrandPanel';
@@ -23,8 +25,24 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
   const { mode, goLogin, goRegister, goForgot } = useAuthMode(initialMode);
 
   const enterDashboard = () => {
-    router.push(ROUTES.dashboard);
+    router.replace(ROUTES.dashboard);
   };
+
+  // If refresh cookie is still valid, skip login and enter the app.
+  useEffect(() => {
+    if (mode !== 'login') return;
+    let active = true;
+
+    void (async () => {
+      const session = await authService.restoreSession();
+      if (!active || !session) return;
+      router.replace(ROUTES.dashboard);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [mode, router]);
 
   const showTabs = mode === 'login' || mode === 'register';
 

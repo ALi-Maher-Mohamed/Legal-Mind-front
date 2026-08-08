@@ -16,6 +16,22 @@ type StreamHandlers = {
   signal?: AbortSignal;
 };
 
+/**
+ * Contract analyze endpoints use { success, message, data } envelopes
+ * (see FRONTEND_API_INTEGRATION.md §7.8).
+ */
+function unwrapContractData<T>(response: unknown): T {
+  if (
+    response &&
+    typeof response === 'object' &&
+    'data' in response &&
+    (response as { data: unknown }).data !== undefined
+  ) {
+    return (response as { data: T }).data;
+  }
+  return response as T;
+}
+
 function parseSseChunk(chunk: string, onEvent: (event: ProgressLog) => void) {
   const blocks = chunk.split(/\n\n/);
   for (const block of blocks) {
@@ -37,36 +53,54 @@ function parseSseChunk(chunk: string, onEvent: (event: ProgressLog) => void) {
 
 export const analyzeService = {
   async listJobs(): Promise<AnalyzeJobListItem[]> {
-    const response = await api.get<AnalyzeJobListItem[] | { jobs?: AnalyzeJobListItem[] }>(
-      '/api/v1/analyze',
-      { auth: true },
-    );
-    if (Array.isArray(response)) return response;
-    return response?.jobs ?? [];
+    const response = await api.get<unknown>('/api/v1/analyze', { auth: true });
+    const data = unwrapContractData<
+      AnalyzeJobListItem[] | { jobs?: AnalyzeJobListItem[] }
+    >(response);
+    if (Array.isArray(data)) return data;
+    return data?.jobs ?? [];
   },
 
   async uploadContract(file: File): Promise<UploadJobResponse> {
     const formData = new FormData();
     formData.append('file', file);
-    return api.post<UploadJobResponse>('/api/v1/analyze', { formData }, { auth: true });
+    const response = await api.post<unknown>(
+      '/api/v1/analyze',
+      { formData },
+      { auth: true },
+    );
+    return unwrapContractData<UploadJobResponse>(response);
   },
 
   async startAnalysis(jobId: string): Promise<StartAnalysisResponse> {
-    return api.post<StartAnalysisResponse>(
+    const response = await api.post<unknown>(
       `/api/v1/analyze/${jobId}/start`,
       {},
       { auth: true },
     );
+    return unwrapContractData<StartAnalysisResponse>(response);
   },
 
   async getJob(jobId: string): Promise<AnalyzeJobDetail> {
-    return api.get<AnalyzeJobDetail>(`/api/v1/analyze/${jobId}`, { auth: true });
+    const response = await api.get<unknown>(`/api/v1/analyze/${jobId}`, {
+      auth: true,
+    });
+    return unwrapContractData<AnalyzeJobDetail>(response);
   },
 
   async getProgress(jobId: string): Promise<ProgressLogsResponse> {
-    return api.get<ProgressLogsResponse>(`/api/v1/analyze/${jobId}/progress`, {
+    const response = await api.get<unknown>(`/api/v1/analyze/${jobId}/progress`, {
       auth: true,
     });
+    const data = unwrapContractData<ProgressLogsResponse>(response);
+    if (data && typeof data === 'object' && Array.isArray(data.logs)) {
+      return {
+        jobId: data.jobId || jobId,
+        logs: data.logs,
+        totalLogs: data.totalLogs ?? data.logs.length,
+      };
+    }
+    return { jobId, logs: [], totalLogs: 0 };
   },
 
   async deleteJob(jobId: string): Promise<void> {
@@ -74,9 +108,10 @@ export const analyzeService = {
   },
 
   async downloadReport(jobId: string, fallbackName: string): Promise<void> {
-    const { blob, fileName } = await api.download(`/api/v1/analyze/${jobId}/report/download`, {
-      auth: true,
-    });
+    const { blob, fileName } = await api.download(
+      `/api/v1/analyze/${jobId}/report/download`,
+      { auth: true },
+    );
 
     const resolvedName = (() => {
       if (fileName?.toLowerCase().endsWith('.pdf')) return fileName;
@@ -133,7 +168,9 @@ export const analyzeService = {
       }
     } catch (error) {
       if ((error as Error)?.name === 'AbortError') return;
-      handlers.onError?.(error instanceof Error ? error : new Error('انقطع بث التقدم'));
+      handlers.onError?.(
+        error instanceof Error ? error : new Error('انقطع بث التقدم'),
+      );
       throw error;
     }
   },
