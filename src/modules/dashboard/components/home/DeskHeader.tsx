@@ -20,32 +20,30 @@ export default function DeskHeader({ user, showEmpty, onToggleEmpty }: Props) {
   const todayAlt = useMemo(() => formatLocaleDate(true), []);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-4 border-b border-brand/15 pb-6 md:flex-row md:items-center md:justify-between dark:border-white/10">
-        <div className="text-start">
-          <span className="block text-xs font-semibold uppercase tracking-wider text-brand">
-            {t.dashboard.chambersOf} {user.firmName}
-          </span>
-          <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-            {t.dashboard.goodMorning.replace('{name}', firstName)}
-          </h1>
-        </div>
+    <div className="flex flex-col gap-4 border-b border-brand/12 pb-5 sm:flex-row sm:items-end sm:justify-between dark:border-white/10">
+      <div className="min-w-0 text-start">
+        <span className="block text-xs font-semibold uppercase tracking-wider text-brand">
+          {t.dashboard.chambersOf} {user.firmName}
+        </span>
+        <h1 className="mt-1 text-2xl font-bold tracking-tight text-foreground md:text-3xl">
+          {t.dashboard.goodMorning.replace('{name}', firstName)}
+        </h1>
+      </div>
 
-        <div className={`relative overflow-hidden px-4 py-3 text-end ${dashChip}`}>
+      <div className="flex flex-wrap items-center gap-2 sm:justify-end">
+        <div className={`relative overflow-hidden px-4 py-2.5 text-end ${dashChip}`}>
           <div className={dashAccentBarGold} />
           <span className="block text-xs font-semibold text-foreground">{todayLabel}</span>
           <span className="mt-0.5 block text-[11px] text-brand">{todayAlt}</span>
         </div>
-      </div>
-
-      <div className="flex justify-end">
         <button
           type="button"
           onClick={onToggleEmpty}
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs text-brand hover:bg-brand/5 cursor-pointer ${dashChip}`}
+          className={`inline-flex items-center gap-1.5 px-2.5 py-2 text-[11px] text-muted hover:bg-brand/5 hover:text-brand cursor-pointer ${dashChip}`}
+          title={t.dashboard.toggleDesk}
         >
           <Sparkles className="h-3.5 w-3.5 text-accent" />
-          {t.dashboard.toggleDesk}: {showEmpty ? t.dashboard.deskFilled : t.dashboard.deskClear}
+          {showEmpty ? t.dashboard.deskFilled : t.dashboard.deskClear}
         </button>
       </div>
     </div>

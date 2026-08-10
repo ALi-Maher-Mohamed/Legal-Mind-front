@@ -1,5 +1,6 @@
 import { env } from '@/config/env';
 import { api } from '@/lib/api/client';
+import { extractListWithPagination } from '@/lib/api/listPagination';
 import { sessionStore } from '@/lib/api/session';
 import type {
   CreateGenerateResponse,
@@ -36,16 +37,6 @@ function parseSseChunk(chunk: string, onEvent: (event: GenerateStreamEvent) => v
       // ignore non-JSON keep-alives
     }
   }
-}
-
-function normalizeJobsList(data: unknown): GenerateJobListItem[] {
-  if (Array.isArray(data)) return data as GenerateJobListItem[];
-  if (data && typeof data === 'object') {
-    const obj = data as { jobs?: GenerateJobListItem[]; items?: GenerateJobListItem[] };
-    if (Array.isArray(obj.jobs)) return obj.jobs;
-    if (Array.isArray(obj.items)) return obj.items;
-  }
-  return [];
 }
 
 function applyStreamEventToJob(jobId: string, event: GenerateStreamEvent): GenerateJob {
@@ -85,9 +76,42 @@ export const generateService = {
     );
   },
 
-  async listJobs(): Promise<GenerateJobListItem[]> {
-    const response = await api.get<unknown>('/api/v1/generate', { auth: true });
-    return normalizeJobsList(response);
+  async listJobsPage(
+    params: { page?: number; limit?: number } = {},
+  ): Promise<{
+    jobs: GenerateJobListItem[];
+    total: number;
+    page: number;
+    pages: number;
+    limit: number;
+  }> {
+    const query = new URLSearchParams();
+    query.set('page', String(params.page ?? 1));
+    query.set('limit', String(params.limit ?? 20));
+    const response = await api.get<unknown>(
+      `/api/v1/generate?${query.toString()}`,
+      { auth: true },
+    );
+    const { items, pagination } =
+      extractListWithPagination<GenerateJobListItem>(response);
+    return {
+      jobs: items,
+      total: pagination.total,
+      page: pagination.page,
+      pages: pagination.pages,
+      limit: pagination.limit,
+    };
+  },
+
+  async listJobs(params: { page?: number; limit?: number } = {}): Promise<GenerateJobListItem[]> {
+    const { jobs } = await generateService.listJobsPage(params);
+    return jobs;
+  },
+
+  /** pagination.total from GET /api/v1/generate */
+  async countJobs(): Promise<number> {
+    const result = await generateService.listJobsPage({ page: 1, limit: 1 });
+    return result.total;
   },
 
   async getJob(jobId: string): Promise<GenerateJob> {

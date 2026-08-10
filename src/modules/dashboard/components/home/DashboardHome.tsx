@@ -8,8 +8,8 @@ import DeskEmptyState from './DeskEmptyState';
 import StatsRow from './StatsRow';
 import DocumentsStrip from './DocumentsStrip';
 import ActivityFeed from './ActivityFeed';
-import ObligationsCalendar from './ObligationsCalendar';
 import BulletinCard from './BulletinCard';
+import DeskShortcuts from './DeskShortcuts';
 
 type Props = {
   user: AuthUser;
@@ -21,7 +21,7 @@ export default function DashboardHome({ user, documents, onNavigate }: Props) {
   const [showEmpty, setShowEmpty] = useState(false);
 
   return (
-    <div className="space-y-8">
+    <div className="mx-auto w-full max-w-7xl space-y-6">
       <DeskHeader
         user={user}
         showEmpty={showEmpty}
@@ -31,17 +31,24 @@ export default function DashboardHome({ user, documents, onNavigate }: Props) {
       {showEmpty ? (
         <DeskEmptyState onEnterEvidence={() => onNavigate('analysis')} />
       ) : (
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          <div className="space-y-8 lg:col-span-8">
-            <StatsRow documents={documents} />
-            <DocumentsStrip documents={documents} onOpenLibrary={() => onNavigate('analysis')} />
-            <ActivityFeed />
+        <>
+          <StatsRow />
+          <DocumentsStrip
+            documents={documents}
+            onOpenLibrary={() => onNavigate('analysis')}
+          />
+
+          <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-12">
+            <div className="min-w-0 xl:col-span-8">
+              <ActivityFeed />
+            </div>
+
+            <aside className="flex flex-col gap-5 xl:col-span-4 xl:sticky xl:top-4 xl:self-start">
+              <DeskShortcuts onNavigate={onNavigate} />
+              <BulletinCard onInspect={() => onNavigate('gazette')} />
+            </aside>
           </div>
-          <div className="space-y-8 lg:col-span-4">
-            <ObligationsCalendar />
-            <BulletinCard onInspect={() => onNavigate('gazette')} />
-          </div>
-        </div>
+        </>
       )}
     </div>
   );

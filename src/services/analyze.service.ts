@@ -1,5 +1,6 @@
 import { env } from '@/config/env';
 import { api } from '@/lib/api/client';
+import { extractListWithPagination } from '@/lib/api/listPagination';
 import { sessionStore } from '@/lib/api/session';
 import type {
   AnalyzeJobDetail,
@@ -52,13 +53,42 @@ function parseSseChunk(chunk: string, onEvent: (event: ProgressLog) => void) {
 }
 
 export const analyzeService = {
-  async listJobs(): Promise<AnalyzeJobListItem[]> {
-    const response = await api.get<unknown>('/api/v1/analyze', { auth: true });
-    const data = unwrapContractData<
-      AnalyzeJobListItem[] | { jobs?: AnalyzeJobListItem[] }
-    >(response);
-    if (Array.isArray(data)) return data;
-    return data?.jobs ?? [];
+  async listJobsPage(
+    params: { page?: number; limit?: number } = {},
+  ): Promise<{
+    jobs: AnalyzeJobListItem[];
+    total: number;
+    page: number;
+    pages: number;
+    limit: number;
+  }> {
+    const query = new URLSearchParams();
+    query.set('page', String(params.page ?? 1));
+    query.set('limit', String(params.limit ?? 20));
+    const response = await api.get<unknown>(
+      `/api/v1/analyze?${query.toString()}`,
+      { auth: true },
+    );
+    const { items, pagination } =
+      extractListWithPagination<AnalyzeJobListItem>(response);
+    return {
+      jobs: items,
+      total: pagination.total,
+      page: pagination.page,
+      pages: pagination.pages,
+      limit: pagination.limit,
+    };
+  },
+
+  async listJobs(params: { page?: number; limit?: number } = {}): Promise<AnalyzeJobListItem[]> {
+    const { jobs } = await analyzeService.listJobsPage(params);
+    return jobs;
+  },
+
+  /** pagination.total from GET /api/v1/analyze */
+  async countJobs(): Promise<number> {
+    const result = await analyzeService.listJobsPage({ page: 1, limit: 1 });
+    return result.total;
   },
 
   async uploadContract(file: File): Promise<UploadJobResponse> {

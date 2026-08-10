@@ -17,19 +17,51 @@ export type LegalDocument = {
   dateUploaded: string;
 };
 
-export type DeskActivity = {
-  id: number;
-  type: 'audit' | 'chat' | 'draft';
+export type DashboardActivityType =
+  | 'conversation'
+  | 'generation'
+  | 'comment'
+  | 'blog'
+  | 'analysis'
+  | 'bookmark'
+  | (string & {});
+
+export type DashboardActivityRecord = {
+  id?: string;
+  type: DashboardActivityType;
   title: string;
-  desc: string;
-  time: string;
-  date: string;
-  detail: string;
+  description: string;
+  timestamp: string;
+  metadata?: Record<string, unknown>;
 };
 
-export type DeskObligation = {
-  day: number;
-  title: string;
-  level: 'high' | 'medium';
-  desc: string;
+export type DashboardActivityDay = {
+  date: string;
+  label: string;
+  records: DashboardActivityRecord[];
+};
+
+export type DashboardActivityPeriod = {
+  start: string;
+  end: string;
+};
+
+export type DashboardActivityPagination = {
+  page: number;
+  limit: number;
+  total: number;
+  pages: number;
+};
+
+export type DashboardActivityResponse = {
+  period: DashboardActivityPeriod;
+  daily: DashboardActivityDay[];
+  pagination: DashboardActivityPagination;
+};
+
+export type DashboardActivityParams = {
+  startDate?: string;
+  endDate?: string;
+  page?: number;
+  limit?: number;
 };

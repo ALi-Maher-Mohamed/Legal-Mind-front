@@ -15,13 +15,15 @@ export default function DocumentsStrip({ documents, onOpenLibrary }: Props) {
   const { t } = useLanguage();
 
   return (
-    <DashPanel>
-      <div className="mb-4 flex items-center justify-between border-b border-brand/15 pb-4 dark:border-white/10">
-        <h2 className="text-lg font-bold text-foreground">{t.dashboard.activeCases}</h2>
+    <DashPanel className="!p-4 sm:!p-5">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-base font-bold text-foreground sm:text-lg">
+          {t.dashboard.activeCases}
+        </h2>
         <button
           type="button"
           onClick={onOpenLibrary}
-          className="inline-flex items-center gap-0.5 text-xs text-brand hover:opacity-80 cursor-pointer"
+          className="inline-flex shrink-0 items-center gap-0.5 text-xs font-semibold text-brand hover:opacity-80 cursor-pointer"
         >
           {t.dashboard.viewLibrary}
           <ChevronRight className="h-3.5 w-3.5 rotate-180" />
@@ -29,9 +31,11 @@ export default function DocumentsStrip({ documents, onOpenLibrary }: Props) {
       </div>
 
       {documents.length === 0 ? (
-        <p className="py-6 text-center text-xs text-muted">{t.dashboard.noDocuments}</p>
+        <p className="rounded-xl border border-dashed border-brand/15 py-6 text-center text-xs text-muted dark:border-white/10">
+          {t.dashboard.noDocuments}
+        </p>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-2">
+        <div className="flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {documents.map((doc, idx) => (
             <DocumentCard
               key={doc.id}
