@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { BookOpen, X } from 'lucide-react';
-import type { Citation } from '@/types/consultation.types';
-import { consultCopy as c } from '../../data/consultCopy';
+import { BookOpen, X } from "lucide-react";
+import type { Citation } from "@/types/consultation.types";
+import { consultCopy as c } from "../../data/consultCopy";
 
 type Props = {
   source: Citation;
@@ -16,9 +16,16 @@ export default function SourceViewerModal({ source, onClose }: Props) {
         <div className="flex items-center justify-between bg-brand px-5 py-4 text-on-brand sm:px-6">
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4 text-accent" />
-            <h4 className="text-sm font-bold uppercase tracking-wider">{c.viewerTitle}</h4>
+            <h4 className="text-sm font-bold uppercase tracking-wider">
+              {c.viewerTitle}
+            </h4>
           </div>
-          <button type="button" onClick={onClose} className="opacity-80 hover:opacity-100 cursor-pointer" aria-label="إغلاق">
+          <button
+            type="button"
+            onClick={onClose}
+            className="opacity-80 hover:opacity-100 cursor-pointer"
+            aria-label="إغلاق"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -31,13 +38,13 @@ export default function SourceViewerModal({ source, onClose }: Props) {
             <h3 className="mb-6 border-b border-brand/10 pb-3 text-center font-bold uppercase text-foreground dark:border-white/10">
               {source.sourceName}
             </h3>
-            <p className="mb-4 text-end text-xs italic text-muted">
-              {c.archiveId}: {source.id.toUpperCase()} • {c.page} {source.page || 1}
-            </p>
+
             <p className="border-s-4 border-brand bg-surface-raised py-2 ps-4 text-sm italic leading-relaxed dark:bg-white/5">
               &ldquo;{source.excerpt}&rdquo;
             </p>
-            <p className="mt-4 text-xs leading-relaxed text-muted">{c.viewerNote}</p>
+            <p className="mt-4 text-xs leading-relaxed text-muted">
+              {c.viewerNote}
+            </p>
           </div>
         </div>
 
