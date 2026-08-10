@@ -65,7 +65,7 @@ export default function BlogDetailsScreen() {
               {c.backToIndex}
             </button>
 
-            <span className="mb-3 inline-flex items-center gap-1.5 rounded-md border border-[#002045]/15 bg-[#002045] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm dark:border-white/20 dark:bg-[#1a365d]">
+            <span className="mb-3 inline-flex items-center gap-1.5 rounded-md border border-[#002045]/15 bg-[#002045] px-2.5 py-1 text-[11px] font-bold text-white shadow-sm dark:border-white/20 dark:bg-[#1c3468]">
               <FolderOpen className="h-3.5 w-3.5 text-[#fed488]" />
               {d.categoryLabel}
             </span>

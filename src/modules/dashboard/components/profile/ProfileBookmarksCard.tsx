@@ -74,7 +74,7 @@ export default function ProfileBookmarksCard() {
     <section className={profileCard} dir="rtl">
       <div className="mb-6 flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand dark:bg-[rgba(68,226,205,0.1)] dark:text-[#44e2cd]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand dark:bg-[rgba(77,126,247,0.12)] dark:text-[#7ba1f9]">
             <Bookmark className="h-5 w-5" />
           </div>
           <div>
@@ -84,7 +84,7 @@ export default function ProfileBookmarksCard() {
         </div>
         <Link
           href="/dashboard?view=gazette"
-          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-brand transition hover:brightness-110 dark:text-[#44e2cd]"
+          className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-brand transition hover:brightness-110 dark:text-[#7ba1f9]"
         >
           {t.dashboard.profileBookmarksBrowse}
           <ExternalLink className="h-3.5 w-3.5" />
@@ -106,21 +106,21 @@ export default function ProfileBookmarksCard() {
           <button
             type="button"
             onClick={() => void load(1, false)}
-            className="text-sm font-bold text-brand underline cursor-pointer dark:text-[#44e2cd]"
+            className="text-sm font-bold text-brand underline cursor-pointer dark:text-[#7ba1f9]"
           >
             {t.dashboard.profileBookmarksRetry}
           </button>
         </div>
       ) : items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand/20 bg-[#e8eefc]/60 px-4 py-12 text-center dark:border-[rgba(79,70,51,0.4)] dark:bg-[#2d3449]/40">
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-brand/20 bg-[#e8eefc]/60 px-4 py-12 text-center dark:border-white/15 dark:bg-[#16223c]/40">
           <Bookmark className="mb-3 h-8 w-8 text-muted opacity-50" />
-          <p className="mb-1 text-sm font-semibold text-foreground dark:text-[#dae2fd]">
+          <p className="mb-1 text-sm font-semibold text-foreground dark:text-[#e6edfc]">
             {t.dashboard.profileBookmarksEmpty}
           </p>
           <p className={profileMuted}>{t.dashboard.profileBookmarksEmptyHint}</p>
           <Link
             href="/dashboard?view=gazette"
-            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:brightness-110 dark:bg-[#44e2cd] dark:text-[#0b1326]"
+            className="mt-4 inline-flex items-center gap-2 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition hover:brightness-110 dark:bg-[#4d7ef7] dark:text-[#f4f7ff]"
           >
             {t.dashboard.profileBookmarksBrowse}
           </Link>
@@ -134,7 +134,7 @@ export default function ProfileBookmarksCard() {
               return (
                 <li
                   key={item.bookmarkId}
-                  className="flex gap-3 rounded-xl border border-brand/10 bg-[#f7f9ff] p-3 transition hover:border-brand/25 dark:border-[rgba(79,70,51,0.25)] dark:bg-[#060e20]"
+                  className="flex gap-3 rounded-xl border border-brand/10 bg-[#f7f9ff] p-3 transition hover:border-brand/25 dark:border-white/10 dark:bg-[#0d1528]"
                 >
                   <Link
                     href={`/dashboard/gazette/${item.blogId}`}
@@ -146,10 +146,10 @@ export default function ProfileBookmarksCard() {
                       iconClassName="h-5 w-5"
                     />
                     <div className="min-w-0 flex-1">
-                      <p className="line-clamp-2 text-sm font-bold leading-snug text-foreground dark:text-[#dae2fd]">
+                      <p className="line-clamp-2 text-sm font-bold leading-snug text-foreground dark:text-[#e6edfc]">
                         {item.blog.title}
                       </p>
-                      <p className="mt-1 truncate text-xs text-muted dark:text-[#d3c5ac]">
+                      <p className="mt-1 truncate text-xs text-muted dark:text-[#9dabc9]">
                         {item.blog.category || authorName}
                         {' · '}
                         {formatBlogDate(item.createdAt || item.blog.publishedAt || item.blog.createdAt)}
@@ -178,7 +178,7 @@ export default function ProfileBookmarksCard() {
                 type="button"
                 disabled={isLoadingMore}
                 onClick={() => void load(page + 1, true)}
-                className="inline-flex items-center gap-2 rounded-lg border border-brand/20 px-5 py-2 text-sm font-bold text-brand transition hover:bg-brand/5 disabled:opacity-50 cursor-pointer dark:border-white/15 dark:text-[#44e2cd]"
+                className="inline-flex items-center gap-2 rounded-lg border border-brand/20 px-5 py-2 text-sm font-bold text-brand transition hover:bg-brand/5 disabled:opacity-50 cursor-pointer dark:border-white/15 dark:text-[#7ba1f9]"
               >
                 {t.dashboard.profileBookmarksMore}
                 <ChevronDown className={`h-4 w-4 ${isLoadingMore ? 'animate-bounce' : ''}`} />

@@ -94,7 +94,7 @@ const ProfileDetailsCard = forwardRef<ProfileDetailsHandle, Props>(
                 onEditingChange(false);
               }}
               disabled={isSaving}
-              className="text-sm text-muted transition hover:text-foreground disabled:opacity-60 cursor-pointer dark:text-[#d3c5ac] dark:hover:text-[#dae2fd]"
+              className="text-sm text-muted transition hover:text-foreground disabled:opacity-60 cursor-pointer dark:text-[#9dabc9] dark:hover:text-[#e6edfc]"
             >
               {t.dashboard.profileCancelEdit}
             </button>
@@ -185,7 +185,7 @@ const ProfileDetailsCard = forwardRef<ProfileDetailsHandle, Props>(
                   <option
                     key={option.value}
                     value={option.value}
-                    className="bg-white text-foreground dark:bg-[#0b1326] dark:text-[#dae2fd]"
+                    className="bg-white text-foreground dark:bg-[#0d1528] dark:text-[#e6edfc]"
                   >
                     {teamSizeLabel(option.value)}
                   </option>
@@ -210,7 +210,7 @@ const ProfileDetailsCard = forwardRef<ProfileDetailsHandle, Props>(
             >
               <div className="min-w-0 text-end">
                 <p className={profileLabel}>{t.dashboard.profileTeamSize}</p>
-                <p className="mt-1 text-base font-bold text-foreground dark:text-[#dae2fd]">
+                <p className="mt-1 text-base font-bold text-foreground dark:text-[#e6edfc]">
                   {teamSizeLabel(user.teamSize)}
                 </p>
               </div>

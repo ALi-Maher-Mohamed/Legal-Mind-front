@@ -89,7 +89,7 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
     >
       <button
         type="button"
-        className="absolute inset-0 bg-[#0b1326]/45 backdrop-blur-[2px] cursor-pointer dark:bg-[#0b1326]/70 dark:backdrop-blur-sm"
+        className="absolute inset-0 bg-[#0b1326]/45 backdrop-blur-[2px] cursor-pointer dark:bg-[#050a17]/75 dark:backdrop-blur-sm"
         aria-label={c.streamClose}
         onClick={onClose}
       />
@@ -190,7 +190,7 @@ export default function AnalysisStreamModal({ open, doc, onClose }: Props) {
                         ? 'bg-danger/10 text-danger'
                         : index === stream.logs.length - 1
                           ? 'bg-brand/10 text-foreground dark:bg-brand/15'
-                          : 'bg-white/70 text-muted dark:bg-transparent dark:text-[#a8b0c2]'
+                          : 'bg-white/70 text-muted dark:bg-transparent dark:text-[#9dabc9]'
                     }`}
                   >
                     <div className="mb-1 flex items-center justify-between gap-2 text-[10px] opacity-70">

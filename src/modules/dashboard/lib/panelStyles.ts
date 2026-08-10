@@ -6,7 +6,7 @@ export const dashCardShadow = 'shadow-[var(--lm-card-shadow)] dark:shadow-none';
 export const dashCardShadowMd = 'shadow-[var(--lm-card-shadow-md)] dark:shadow-none';
 
 export const dashPanel =
-  `rounded-2xl border border-brand/12 bg-card ${dashCardShadow} dark:border-white/10 dark:bg-[rgba(23,31,51,0.85)] dark:backdrop-blur-[6px]`;
+  `rounded-2xl border border-brand/12 bg-card ${dashCardShadow} dark:border-white/10 dark:bg-[rgba(16,26,48,0.85)] dark:backdrop-blur-[6px]`;
 
 export const dashPanelPad = `${dashPanel} p-5 sm:p-6`;
 

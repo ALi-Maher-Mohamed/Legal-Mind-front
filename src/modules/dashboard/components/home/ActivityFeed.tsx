@@ -102,7 +102,7 @@ export default function ActivityFeed() {
           <div className="space-y-6">
             {daily.map((day) => (
               <section key={day.date}>
-                <div className="sticky top-0 z-[1] -mx-1 mb-3 flex items-center gap-2 bg-card/95 px-1 py-1.5 backdrop-blur-sm dark:bg-[rgba(23,31,51,0.92)]">
+                <div className="sticky top-0 z-[1] -mx-1 mb-3 flex items-center gap-2 bg-card/95 px-1 py-1.5 backdrop-blur-sm dark:bg-[rgba(16,26,48,0.92)]">
                   <span className="h-1.5 w-1.5 rounded-full bg-accent" />
                   <h3 className="text-sm font-bold text-foreground">{day.label}</h3>
                   <span className="text-[11px] text-muted">{day.date}</span>

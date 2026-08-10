@@ -29,7 +29,7 @@ const TYPE_META: Record<
   generation: {
     label: 'صياغة',
     icon: FilePenLine,
-    tone: 'text-[#0d6e63] bg-[#44e2cd]/15 border-[#44e2cd]/30 dark:text-[#44e2cd] dark:bg-[#44e2cd]/10',
+    tone: 'text-[#0d6e63] bg-[#44e2cd]/15 border-[#44e2cd]/30 dark:text-[#f2c14e] dark:bg-[#f2c14e]/10 dark:border-[#f2c14e]/25',
   },
   comment: {
     label: 'تعليق',
@@ -89,7 +89,7 @@ export default function ActivityItem({
   const body = (
     <>
       <span
-        className={`absolute -start-[1.4rem] top-4 flex h-5 w-5 items-center justify-center rounded-full border border-brand/20 bg-card text-brand dark:border-white/15 dark:bg-[rgba(23,31,51,1)] ${canExpand ? 'group-hover:border-accent group-hover:text-accent' : ''}`}
+        className={`absolute -start-[1.4rem] top-4 flex h-5 w-5 items-center justify-center rounded-full border border-brand/20 bg-card text-brand dark:border-white/15 dark:bg-[#101a30] ${canExpand ? 'group-hover:border-accent group-hover:text-accent' : ''}`}
       >
         <Icon className="h-2.5 w-2.5" strokeWidth={2.5} />
       </span>

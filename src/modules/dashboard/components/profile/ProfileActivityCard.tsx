@@ -45,7 +45,7 @@ export default function ProfileActivityCard({ user }: Props) {
       <div className="space-y-4">
         <MetaRow>
           <p className={profileLabel}>{t.dashboard.profileEmail}</p>
-          <p className="mt-1 break-all text-sm text-foreground dark:text-[#dae2fd]" dir="ltr">
+          <p className="mt-1 break-all text-sm text-foreground dark:text-[#e6edfc]" dir="ltr">
             {user.email}
           </p>
         </MetaRow>
@@ -63,13 +63,13 @@ export default function ProfileActivityCard({ user }: Props) {
           <div className="flex items-start justify-between gap-3">
             <div className="text-start">
               <p className={profileLabel}>{t.dashboard.profileTime}</p>
-              <p className="mt-1 text-sm text-foreground dark:text-[#dae2fd]">
+              <p className="mt-1 text-sm text-foreground dark:text-[#e6edfc]">
                 {formatProfileTimeOnly(user.createdAt)}
               </p>
             </div>
             <div className="text-end">
               <p className={profileLabel}>{t.dashboard.profileCreatedAt}</p>
-              <p className="mt-1 text-sm text-foreground dark:text-[#dae2fd]">
+              <p className="mt-1 text-sm text-foreground dark:text-[#e6edfc]">
                 {formatProfileDateOnly(user.createdAt)}
               </p>
             </div>
@@ -87,7 +87,7 @@ export default function ProfileActivityCard({ user }: Props) {
           />
           <div className="text-end">
             <p className={profileLabel}>{t.dashboard.profileUpdatedAt}</p>
-            <p className="mt-1 text-sm text-foreground dark:text-[#dae2fd]">
+            <p className="mt-1 text-sm text-foreground dark:text-[#e6edfc]">
               {formatRelativeTime(user.updatedAt)}
             </p>
           </div>

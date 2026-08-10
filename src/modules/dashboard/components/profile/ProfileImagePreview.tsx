@@ -44,12 +44,12 @@ export default function ProfileImagePreview({ open, src, alt, title, onClose }: 
     >
       <button
         type="button"
-        className="absolute inset-0 bg-[#0b1326]/80 backdrop-blur-sm cursor-pointer"
+        className="absolute inset-0 bg-[#050a17]/80 backdrop-blur-sm cursor-pointer"
         aria-label={t.dashboard.cancel}
         onClick={onClose}
       />
 
-      <div className="relative z-10 flex w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#0b1326] shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
+      <div className="relative z-10 flex w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#101a30] shadow-[0_28px_80px_rgba(0,0,0,0.45)]">
         <div className="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-5">
           <div className="flex min-w-0 items-center gap-2 text-start">
             <ZoomIn className="h-4 w-4 shrink-0 text-accent" />
