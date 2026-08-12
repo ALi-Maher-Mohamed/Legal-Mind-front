@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { ImageIcon, Loader2, Trash2, Upload } from 'lucide-react';
 import { resolveMediaUrl } from '@/lib/api/media';
+import { toastApiError } from '@/lib/api/toast';
 import { gazetteCopy as c } from '../../../data/gazetteCopy';
 import { gazetteInputClass, gazetteLabelClass } from '../lib/formStyles';
 
@@ -28,8 +29,27 @@ export default function CreateBlogCoverPanel({
   onClearCover,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
+
   const previewSrc =
     resolveMediaUrl(coverImage.trim()) || coverImage.trim() || '';
+
+  const pickFile = (file: File) => {
+    const allowed = new Set([
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+    ]);
+    if (!allowed.has(file.type)) {
+      toastApiError(new Error(c.coverTypeError), c.coverTypeError);
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toastApiError(new Error(c.coverSizeError), c.coverSizeError);
+      return;
+    }
+    onUploadFile(file);
+  };
 
   return (
     <section className="rounded-2xl border border-[#c4c6cf] bg-white p-5 shadow-[0_4px_20px_rgba(26,54,93,0.04)] dark:border-white/10 dark:bg-card">
@@ -46,7 +66,7 @@ export default function CreateBlogCoverPanel({
           <img
             src={previewSrc}
             alt=""
-            className="h-40 w-full object-cover"
+            className="mx-auto block h-auto max-h-[420px] w-full object-contain"
             onError={onCoverBroken}
           />
         ) : (
@@ -94,7 +114,7 @@ export default function CreateBlogCoverPanel({
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = '';
-          if (file) onUploadFile(file);
+          if (file) pickFile(file);
         }}
       />
 

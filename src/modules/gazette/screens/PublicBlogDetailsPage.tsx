@@ -245,7 +245,8 @@ export default function PublicBlogDetailsPage() {
                 <BlogCover
                   src={cover}
                   alt={blog.title}
-                  className="mb-6 aspect-[16/9] w-full rounded-lg sm:mb-8"
+                  fit="contain"
+                  className="mb-6 w-full rounded-lg sm:mb-8"
                   iconClassName="h-14 w-14"
                 />
               ) : null}

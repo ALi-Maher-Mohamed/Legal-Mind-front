@@ -297,6 +297,39 @@ html:not(.dark) .lm-surface-soft {
   line-height: 1.95;
 }
 
+.blog-editor-prose img.blog-content-image,
+.blog-article-prose img.blog-content-image,
+.blog-editor-prose img,
+.blog-article-prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.75rem;
+  object-fit: contain;
+  margin-block: 0.75rem;
+}
+
+.blog-editor-prose img.ProseMirror-selectednode,
+.blog-editor-prose img.blog-content-image.ProseMirror-selectednode {
+  outline: 2px solid var(--lm-brand, #003ec7);
+  outline-offset: 2px;
+}
+
+.blog-editor-prose img[data-align='center'],
+.blog-article-prose img[data-align='center'] {
+  margin-inline: auto;
+}
+
+.blog-editor-prose img[data-align='left'],
+.blog-article-prose img[data-align='left'] {
+  margin-inline: 0 auto 0 0;
+}
+
+.blog-editor-prose img[data-align='right'],
+.blog-article-prose img[data-align='right'] {
+  margin-inline: 0 0 0 auto;
+}
+
 .blog-article-prose {
   /* Do not inherit .contract-editor-prose min-height: 100% (creates empty gap above comments) */
   min-height: 0 !important;
