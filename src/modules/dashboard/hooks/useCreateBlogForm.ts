@@ -24,6 +24,7 @@ export function useCreateBlogForm() {
   const [isLoading, setIsLoading] = useState(Boolean(editId));
   const [error, setError] = useState('');
   const [coverBroken, setCoverBroken] = useState(false);
+  const [isUploadingCover, setIsUploadingCover] = useState(false);
 
   const pageTitle = useMemo(() => (editId ? c.editTitle : c.createTitle), [editId]);
   const pageSubtitle = useMemo(
@@ -64,6 +65,40 @@ export function useCreateBlogForm() {
 
   const goBack = () => {
     router.push(editId ? `/dashboard/gazette/${editId}` : '/dashboard?view=gazette');
+  };
+
+  const uploadCover = async (file: File) => {
+    const allowed = new Set([
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+    ]);
+    if (!allowed.has(file.type)) {
+      toastApiError(new Error(c.coverTypeError), c.coverTypeError);
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toastApiError(new Error(c.coverSizeError), c.coverSizeError);
+      return;
+    }
+
+    setIsUploadingCover(true);
+    try {
+      const result = await blogsService.uploadImage(file);
+      setCoverImage(result.url);
+      setCoverBroken(false);
+      toastApiSuccess(result.message || c.coverUploadOk);
+    } catch (err) {
+      toastApiError(err, c.coverUploadFail);
+    } finally {
+      setIsUploadingCover(false);
+    }
+  };
+
+  const clearCover = () => {
+    setCoverImage('');
+    setCoverBroken(false);
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -138,10 +173,13 @@ export function useCreateBlogForm() {
     error,
     coverBroken,
     setCoverBroken,
+    isUploadingCover,
     pageTitle,
     pageSubtitle,
     showCover: Boolean(coverImage.trim()) && !coverBroken,
     goBack,
+    uploadCover,
+    clearCover,
     submit,
   };
 }

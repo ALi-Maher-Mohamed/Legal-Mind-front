@@ -6,6 +6,7 @@ import { useProfileActions } from './hooks/useProfileActions';
 import { profilePage } from './lib/profileStyles';
 import ProfileActivityCard from './ProfileActivityCard';
 import ProfileBookmarksCard from './ProfileBookmarksCard';
+import ProfileMyBlogsCard from './ProfileMyBlogsCard';
 import ProfileDetailsCard, {
   type ProfileDetailsHandle,
 } from './ProfileDetailsCard';
@@ -62,6 +63,8 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
             <ProfileActivityCard user={user} />
           </aside>
         </section>
+
+        <ProfileMyBlogsCard />
 
         <ProfileBookmarksCard />
 

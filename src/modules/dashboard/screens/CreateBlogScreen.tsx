@@ -76,11 +76,14 @@ function CreateBlogForm() {
             <CreateBlogCoverPanel
               coverImage={form.coverImage}
               showCover={form.showCover}
+              isUploading={form.isUploadingCover}
               onCoverChange={(value) => {
                 form.setCoverImage(value);
                 form.setCoverBroken(false);
               }}
               onCoverBroken={() => form.setCoverBroken(true)}
+              onUploadFile={(file) => void form.uploadCover(file)}
+              onClearCover={form.clearCover}
             />
 
             <div className="sticky bottom-4 lg:bottom-6">

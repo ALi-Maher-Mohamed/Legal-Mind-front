@@ -64,12 +64,19 @@ export type CreateBlogPayload = {
   title: string;
   content: string;
   category: string;
+  excerpt?: string;
   coverImage?: string;
   tags?: string[];
   status?: BlogStatus | string;
 };
 
 export type UpdateBlogPayload = Partial<CreateBlogPayload>;
+
+export type BlogImageUploadResult = {
+  url: string;
+  key?: string;
+  message?: string;
+};
 
 export type BookmarkResult = {
   bookmarked: boolean;
