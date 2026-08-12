@@ -300,6 +300,13 @@ export const translations = {
     profileBookmarkRemove: "إزالة من المحفوظات",
     profileBookmarkRemoved: "تمت إزالة المقالة من المفضلة",
     profileBookmarkRemoveError: "تعذّر إزالة المقالة من المفضلة",
+    profileMyBlogs: "مقالاتي",
+    profileMyBlogsHint: "كل المقالات التي أنشأتها بأي حالة نشر",
+    profileMyBlogsCreate: "مقال جديد",
+    profileMyBlogsEmpty: "لم تنشر أي مقالات بعد",
+    profileMyBlogsEmptyHint: "أنشئ مقالاً من الجريدة ليظهر هنا",
+    profileMyBlogsRetry: "إعادة المحاولة",
+    profileMyBlogsMore: "عرض المزيد",
     profileSecurity: "أمان الحساب والجلسات",
     profileLogoutAllTitle: "الخروج من جميع الأجهزة",
     profileLogoutAllDesc:

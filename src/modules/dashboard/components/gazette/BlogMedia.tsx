@@ -9,6 +9,8 @@ type CoverProps = {
   alt?: string;
   className?: string;
   iconClassName?: string;
+  /** `cover` fills the box (cards). `contain` shows the full image. */
+  fit?: 'cover' | 'contain';
 };
 
 /** Cover image with navy/gold placeholder when missing or broken. */
@@ -17,23 +19,33 @@ export function BlogCover({
   alt = '',
   className = '',
   iconClassName = 'h-10 w-10',
+  fit = 'cover',
 }: CoverProps) {
   const [broken, setBroken] = useState(false);
   const showImage = Boolean(src) && !broken;
+  const isContain = fit === 'contain';
 
   return (
-    <div className={`relative overflow-hidden bg-[#e8eef8] dark:bg-white/5 ${className}`}>
+    <div
+      className={`relative overflow-hidden bg-[#e8eef8] dark:bg-white/5 ${className}`}
+    >
       {showImage ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={src!}
           alt={alt}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={
+            isContain
+              ? 'mx-auto block h-auto max-h-[560px] w-full object-contain'
+              : 'absolute inset-0 h-full w-full object-cover'
+          }
           onError={() => setBroken(true)}
         />
       ) : (
         <div
-          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-[#002045] via-[#1a365d] to-[#775a19]/70"
+          className={`${
+            isContain ? 'flex min-h-40' : 'absolute inset-0 flex'
+          } items-center justify-center bg-gradient-to-br from-[#002045] via-[#1a365d] to-[#775a19]/70`}
           aria-hidden
         >
           <Scale className={`${iconClassName} text-[#fed488]/55`} />

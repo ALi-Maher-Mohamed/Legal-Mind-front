@@ -2,6 +2,7 @@ import { api } from '@/lib/api/client';
 import type {
   Blog,
   BlogCategory,
+  BlogImageUploadResult,
   BlogListParams,
   BlogListResult,
   BookmarkResult,
@@ -91,6 +92,49 @@ export const blogsService = {
       auth: true,
     });
     return response.blog;
+  },
+
+  /** GET /api/v1/blogs/me/my-blogs — all statuses owned by the current user. */
+  async listMyBlogs(page = 1, limit = 10): Promise<BlogListResult> {
+    const response = await api.get<ListResponse>(
+      `/api/v1/blogs/me/my-blogs?page=${page}&limit=${limit}`,
+      { auth: true },
+    );
+    return {
+      blogs: response?.blogs ?? [],
+      pagination: response?.pagination ?? {
+        page,
+        limit,
+        total: response?.blogs?.length ?? 0,
+        pages: 1,
+      },
+    };
+  },
+
+  /**
+   * POST /api/v1/blogs/upload-image — multipart form field `image`.
+   * Do not set Content-Type manually; the client sets the multipart boundary.
+   */
+  async uploadImage(file: File): Promise<BlogImageUploadResult> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const response = await api.post<{
+      message?: string;
+      image?: { url?: string; key?: string };
+      url?: string;
+    }>('/api/v1/blogs/upload-image', { formData }, { auth: true });
+
+    const url = response?.image?.url || response?.url || '';
+    if (!url) {
+      throw new Error(response?.message || 'تعذّر رفع صورة الغلاف');
+    }
+
+    return {
+      url,
+      key: response?.image?.key,
+      message: response?.message,
+    };
   },
 
   async create(payload: CreateBlogPayload): Promise<{ blog: Blog; message?: string }> {
