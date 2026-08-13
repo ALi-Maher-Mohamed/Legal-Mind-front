@@ -64,4 +64,10 @@ export type PaymentHistoryResult = {
 };
 
 /** Checkout catalog keys used by the frontend UI. */
-export type CheckoutPlanKey = 'pro-monthly' | 'pro-yearly';
+export type CheckoutPlanKey =
+  | 'basic-monthly'
+  | 'basic-yearly'
+  | 'pro-monthly'
+  | 'pro-yearly';
+
+export type SubscriptionTierId = 'free' | 'basic' | 'pro';

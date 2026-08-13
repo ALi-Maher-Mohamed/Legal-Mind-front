@@ -8,6 +8,7 @@ import { Button, Card, SectionTitle } from '@/components/ui';
 import { ROUTES } from '@/config/routes';
 import { toastApiError } from '@/lib/api/toast';
 import { startCheckout } from '@/modules/payments';
+import { resolveCheckoutPlanKey } from '@/modules/payments/data/plans';
 import { pricingService } from '@/services/pricing.service';
 import { PricingPlan } from '@/types/pricing.types';
 import { Check, Loader2 } from 'lucide-react';
@@ -17,7 +18,7 @@ export default function Pricing() {
   const router = useRouter();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [isYearly, setIsYearly] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   useEffect(() => {
     pricingService.getPlans().then((data) => setPlans(data));
@@ -28,28 +29,32 @@ export default function Pricing() {
       router.push(ROUTES.login);
       return;
     }
-    if (plan.id === 'enterprise') {
-      window.location.href = 'mailto:hello@legalmind.app?subject=Enterprise%20Plan';
-      return;
-    }
-    if (plan.id !== 'pro' || checkoutLoading) return;
+    if (plan.id !== 'basic' && plan.id !== 'pro') return;
+    if (checkoutLoading) return;
 
-    setCheckoutLoading(true);
+    setCheckoutLoading(plan.id);
     try {
-      await startCheckout(isYearly ? 'pro-yearly' : 'pro-monthly');
+      await startCheckout(resolveCheckoutPlanKey(plan.id, isYearly));
     } catch (err) {
       toastApiError(err);
-      setCheckoutLoading(false);
+      setCheckoutLoading(null);
     }
   };
 
   return (
     <section id="pricing" className="relative scroll-mt-20 bg-background py-16 md:py-20">
       <div className="lm-container relative z-10">
-        <SectionTitle badge="PRICING" title={t.pricing.title} subtitle={t.pricing.subtitle} align="center" />
+        <SectionTitle
+          badge="PRICING"
+          title={t.pricing.title}
+          subtitle={t.pricing.subtitle}
+          align="center"
+        />
 
         <div className="mb-10 flex items-center justify-center gap-3 select-none sm:mb-12 sm:gap-4">
-          <span className={`text-xs sm:text-sm font-medium ${!isYearly ? 'text-foreground' : 'text-muted'}`}>
+          <span
+            className={`text-xs sm:text-sm font-medium ${!isYearly ? 'text-foreground' : 'text-muted'}`}
+          >
             {t.common.monthly}
           </span>
           <button
@@ -65,7 +70,9 @@ export default function Pricing() {
               className={`absolute top-0.5 h-[18px] w-[18px] rounded-full bg-brand ${isYearly ? 'right-0.5' : 'left-0.5'}`}
             />
           </button>
-          <span className={`text-xs sm:text-sm font-medium flex items-center gap-1.5 ${isYearly ? 'text-foreground' : 'text-muted'}`}>
+          <span
+            className={`text-xs sm:text-sm font-medium flex items-center gap-1.5 ${isYearly ? 'text-foreground' : 'text-muted'}`}
+          >
             {t.common.yearly}
             <span className="rounded-full border border-brand/30 bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
               {t.common.save20}
@@ -75,12 +82,10 @@ export default function Pricing() {
 
         <div className="mx-auto grid max-w-5xl grid-cols-1 items-stretch gap-6 md:grid-cols-3 md:gap-8">
           {plans.map((plan) => {
-            const isFree = plan.id === 'free';
-            const isEnterprise = plan.id === 'enterprise';
-            let priceText = '';
-            if (isFree) priceText = t.pricing.freePrice;
-            else if (isEnterprise) priceText = t.pricing.enterprisePrice;
-            else priceText = `$${isYearly ? plan.priceYearly : plan.priceMonthly}`;
+            const priceText =
+              plan.id === 'free'
+                ? t.pricing.freePrice
+                : `$${isYearly ? plan.priceYearly : plan.priceMonthly}`;
 
             return (
               <motion.div
@@ -105,24 +110,41 @@ export default function Pricing() {
                       </span>
                     )}
                     <h3 className="mb-2 text-lg font-bold text-foreground">
-                      {t.pricing[plan.nameKey as keyof typeof t.pricing] as string}
+                      {
+                        t.pricing[
+                          plan.nameKey as keyof typeof t.pricing
+                        ] as string
+                      }
                     </h3>
                     <div className="mb-6 mt-3 flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold tracking-tight text-foreground">{priceText}</span>
-                      {!isEnterprise && (
+                      <span className="text-3xl font-extrabold tracking-tight text-foreground">
+                        {priceText}
+                      </span>
+                      {plan.id !== 'free' && (
                         <span className="text-xs text-muted">
-                          {isYearly ? t.pricing.yearlyLabel : t.pricing.monthlyLabel}
+                          {isYearly
+                            ? t.pricing.yearlyLabel
+                            : t.pricing.monthlyLabel}
                         </span>
                       )}
                     </div>
                     <div className="my-5 h-px bg-outline/40" />
                     <ul className="space-y-3">
                       {plan.featuresKeys.map((featKey) => (
-                        <li key={featKey} className="flex items-start gap-3 text-xs sm:text-sm text-muted">
+                        <li
+                          key={featKey}
+                          className="flex items-start gap-3 text-xs sm:text-sm text-muted"
+                        >
                           <span className="flex size-5 shrink-0 items-center justify-center rounded-md border border-brand/20 bg-brand/10 text-brand">
                             <Check className="h-3 w-3" />
                           </span>
-                          <span>{t.pricing.features[featKey as keyof typeof t.pricing.features] as string}</span>
+                          <span>
+                            {
+                              t.pricing.features[
+                                featKey as keyof typeof t.pricing.features
+                              ] as string
+                            }
+                          </span>
                         </li>
                       ))}
                     </ul>
@@ -132,16 +154,18 @@ export default function Pricing() {
                       variant={plan.highlighted ? 'primary' : 'secondary'}
                       fullWidth
                       size="md"
-                      disabled={checkoutLoading && plan.id === 'pro'}
+                      disabled={checkoutLoading === plan.id}
                       onClick={() => void handleCta(plan)}
                     >
-                      {checkoutLoading && plan.id === 'pro' ? (
+                      {checkoutLoading === plan.id ? (
                         <span className="inline-flex items-center gap-2">
                           <Loader2 className="h-4 w-4 animate-spin" />
                           {t.common.loading}
                         </span>
                       ) : (
-                        (t.pricing[plan.ctaKey as keyof typeof t.pricing] as string)
+                        (t.pricing[
+                          plan.ctaKey as keyof typeof t.pricing
+                        ] as string)
                       )}
                     </Button>
                   </div>

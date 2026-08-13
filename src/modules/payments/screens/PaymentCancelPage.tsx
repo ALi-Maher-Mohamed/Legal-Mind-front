@@ -22,7 +22,7 @@ export default function PaymentCancelPage() {
   const [isRetrying, setIsRetrying] = useState(false);
 
   const handleRetry = async () => {
-    const planKey: CheckoutPlanKey = readLastCheckoutPlan() || 'pro-monthly';
+    const planKey: CheckoutPlanKey = readLastCheckoutPlan() || 'basic-monthly';
 
     setIsRetrying(true);
     try {

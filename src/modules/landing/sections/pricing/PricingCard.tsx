@@ -9,6 +9,7 @@ import { Button, Card } from '@/components/ui';
 import { ROUTES } from '@/config/routes';
 import { toastApiError } from '@/lib/api/toast';
 import { startCheckout } from '@/modules/payments';
+import { resolveCheckoutPlanKey } from '@/modules/payments/data/plans';
 import { PricingPlan } from '@/types/pricing.types';
 
 type PricingCardProps = {
@@ -16,9 +17,12 @@ type PricingCardProps = {
   isYearly: boolean;
 };
 
-function getPriceText(plan: PricingPlan, isYearly: boolean, t: ReturnType<typeof useLanguage>['t']) {
+function getPriceText(
+  plan: PricingPlan,
+  isYearly: boolean,
+  t: ReturnType<typeof useLanguage>['t'],
+) {
   if (plan.id === 'free') return t.pricing.freePrice;
-  if (plan.id === 'enterprise') return t.pricing.enterprisePrice;
   return `$${isYearly ? plan.priceYearly : plan.priceMonthly}`;
 }
 
@@ -26,7 +30,6 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
   const { t } = useLanguage();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const isEnterprise = plan.id === 'enterprise';
   const priceText = getPriceText(plan, isYearly, t);
 
   const handleCta = async () => {
@@ -34,16 +37,12 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
       router.push(ROUTES.login);
       return;
     }
-    if (plan.id === 'enterprise') {
-      window.location.href =
-        'mailto:hello@legalmind.app?subject=Enterprise%20Plan';
-      return;
-    }
-    if (plan.id !== 'pro' || isLoading) return;
+    if (plan.id !== 'basic' && plan.id !== 'pro') return;
+    if (isLoading) return;
 
     setIsLoading(true);
     try {
-      await startCheckout(isYearly ? 'pro-yearly' : 'pro-monthly');
+      await startCheckout(resolveCheckoutPlanKey(plan.id, isYearly));
     } catch (err) {
       toastApiError(err);
       setIsLoading(false);
@@ -59,7 +58,11 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
       className="h-full"
     >
       <Card
-        glowColor={plan.highlighted ? 'rgba(59, 130, 246, 0.25)' : 'rgba(255, 255, 255, 0.05)'}
+        glowColor={
+          plan.highlighted
+            ? 'rgba(59, 130, 246, 0.25)'
+            : 'rgba(255, 255, 255, 0.05)'
+        }
         className={`p-8 border h-full flex flex-col justify-between transition-all duration-300 ${
           plan.highlighted
             ? 'border-blue-500/30 bg-[#121212] shadow-[0_10px_35px_rgba(59,130,246,0.15)] ring-1 ring-blue-500/10'
@@ -76,8 +79,10 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
             {t.pricing[plan.nameKey as keyof typeof t.pricing] as string}
           </h3>
           <div className="flex items-baseline gap-1 mt-4 mb-6">
-            <span className="text-3xl font-extrabold text-white tracking-tight">{priceText}</span>
-            {!isEnterprise && (
+            <span className="text-3xl font-extrabold text-white tracking-tight">
+              {priceText}
+            </span>
+            {plan.id !== 'free' && (
               <span className="text-xs text-gray-500">
                 {isYearly ? t.pricing.yearlyLabel : t.pricing.monthlyLabel}
               </span>
@@ -86,11 +91,20 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
           <div className="h-px bg-white/5 my-6" />
           <ul className="space-y-4">
             {plan.featuresKeys.map((featKey) => (
-              <li key={featKey} className="flex items-start gap-3 text-xs sm:text-sm text-gray-400">
+              <li
+                key={featKey}
+                className="flex items-start gap-3 text-xs sm:text-sm text-gray-400"
+              >
                 <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
                   <Check className="h-3 w-3" />
                 </div>
-                <span>{t.pricing.features[featKey as keyof typeof t.pricing.features] as string}</span>
+                <span>
+                  {
+                    t.pricing.features[
+                      featKey as keyof typeof t.pricing.features
+                    ] as string
+                  }
+                </span>
               </li>
             ))}
           </ul>
