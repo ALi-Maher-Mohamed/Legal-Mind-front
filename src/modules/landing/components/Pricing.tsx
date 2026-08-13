@@ -2,20 +2,46 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button, Card, SectionTitle } from '@/components/ui';
+import { ROUTES } from '@/config/routes';
+import { toastApiError } from '@/lib/api/toast';
+import { startCheckout } from '@/modules/payments';
 import { pricingService } from '@/services/pricing.service';
 import { PricingPlan } from '@/types/pricing.types';
-import { Check } from 'lucide-react';
+import { Check, Loader2 } from 'lucide-react';
 
 export default function Pricing() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [plans, setPlans] = useState<PricingPlan[]>([]);
   const [isYearly, setIsYearly] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   useEffect(() => {
     pricingService.getPlans().then((data) => setPlans(data));
   }, []);
+
+  const handleCta = async (plan: PricingPlan) => {
+    if (plan.id === 'free') {
+      router.push(ROUTES.login);
+      return;
+    }
+    if (plan.id === 'enterprise') {
+      window.location.href = 'mailto:hello@legalmind.app?subject=Enterprise%20Plan';
+      return;
+    }
+    if (plan.id !== 'pro' || checkoutLoading) return;
+
+    setCheckoutLoading(true);
+    try {
+      await startCheckout(isYearly ? 'pro-yearly' : 'pro-monthly');
+    } catch (err) {
+      toastApiError(err);
+      setCheckoutLoading(false);
+    }
+  };
 
   return (
     <section id="pricing" className="relative scroll-mt-20 bg-background py-16 md:py-20">
@@ -102,8 +128,21 @@ export default function Pricing() {
                     </ul>
                   </div>
                   <div className="mt-8">
-                    <Button variant={plan.highlighted ? 'primary' : 'secondary'} fullWidth size="md">
-                      {t.pricing[plan.ctaKey as keyof typeof t.pricing] as string}
+                    <Button
+                      variant={plan.highlighted ? 'primary' : 'secondary'}
+                      fullWidth
+                      size="md"
+                      disabled={checkoutLoading && plan.id === 'pro'}
+                      onClick={() => void handleCta(plan)}
+                    >
+                      {checkoutLoading && plan.id === 'pro' ? (
+                        <span className="inline-flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          {t.common.loading}
+                        </span>
+                      ) : (
+                        (t.pricing[plan.ctaKey as keyof typeof t.pricing] as string)
+                      )}
                     </Button>
                   </div>
                 </Card>

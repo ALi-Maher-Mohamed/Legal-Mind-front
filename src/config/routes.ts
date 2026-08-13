@@ -14,7 +14,9 @@ export const ROUTES = {
   verifyEmail: "/verify-email",
   checkEmail: "/check-email",
   resetPassword: "/reset-password",
-  dashboard: "/dashboard"
+  dashboard: "/dashboard",
+  paymentSuccess: "/payment/success",
+  paymentCancel: "/payment/cancel",
 };
 
 export const SOCIAL_LINKS = {

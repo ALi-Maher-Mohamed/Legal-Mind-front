@@ -1,4 +1,5 @@
 // src/services/pricing.service.ts
+import { CHECKOUT_PLANS } from '@/modules/payments/data/plans';
 import { PricingPlan } from '@/types/pricing.types';
 
 export const pricingService = {
@@ -12,27 +13,27 @@ export const pricingService = {
           priceYearly: 0,
           featuresKeys: ['f1', 'f2', 'f3'],
           highlighted: false,
-          ctaKey: 'ctaFree'
+          ctaKey: 'ctaFree',
         },
         {
           id: 'pro',
           nameKey: 'proName',
-          priceMonthly: 49,
-          priceYearly: 39, // Billed annually ($39/mo instead of $49/mo)
+          priceMonthly: CHECKOUT_PLANS['pro-monthly'].displayPrice,
+          priceYearly: CHECKOUT_PLANS['pro-yearly'].displayPrice,
           featuresKeys: ['f4', 'f5', 'f6', 'f7', 'f8'],
           highlighted: true,
-          ctaKey: 'ctaPro'
+          ctaKey: 'ctaPro',
         },
         {
           id: 'enterprise',
           nameKey: 'enterpriseName',
-          priceMonthly: 999, // Represents a placeholder for custom
+          priceMonthly: 999,
           priceYearly: 799,
           featuresKeys: ['f9', 'f10', 'f11', 'f12'],
           highlighted: false,
-          ctaKey: 'ctaEnterprise'
-        }
+          ctaKey: 'ctaEnterprise',
+        },
       ]);
     });
-  }
+  },
 };

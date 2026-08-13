@@ -1,9 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check } from 'lucide-react';
+import { Check, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Button, Card } from '@/components/ui';
+import { ROUTES } from '@/config/routes';
+import { toastApiError } from '@/lib/api/toast';
+import { startCheckout } from '@/modules/payments';
 import { PricingPlan } from '@/types/pricing.types';
 
 type PricingCardProps = {
@@ -19,8 +24,31 @@ function getPriceText(plan: PricingPlan, isYearly: boolean, t: ReturnType<typeof
 
 export default function PricingCard({ plan, isYearly }: PricingCardProps) {
   const { t } = useLanguage();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const isEnterprise = plan.id === 'enterprise';
   const priceText = getPriceText(plan, isYearly, t);
+
+  const handleCta = async () => {
+    if (plan.id === 'free') {
+      router.push(ROUTES.login);
+      return;
+    }
+    if (plan.id === 'enterprise') {
+      window.location.href =
+        'mailto:hello@legalmind.app?subject=Enterprise%20Plan';
+      return;
+    }
+    if (plan.id !== 'pro' || isLoading) return;
+
+    setIsLoading(true);
+    try {
+      await startCheckout(isYearly ? 'pro-yearly' : 'pro-monthly');
+    } catch (err) {
+      toastApiError(err);
+      setIsLoading(false);
+    }
+  };
 
   return (
     <motion.div
@@ -68,8 +96,22 @@ export default function PricingCard({ plan, isYearly }: PricingCardProps) {
           </ul>
         </div>
         <div className="mt-8">
-          <Button variant={plan.highlighted ? 'primary' : 'secondary'} fullWidth size="md">
-            {t.pricing[plan.ctaKey as keyof typeof t.pricing] as string}
+          <Button
+            variant={plan.highlighted ? 'primary' : 'secondary'}
+            fullWidth
+            size="md"
+            isLoading={isLoading}
+            disabled={isLoading}
+            onClick={() => void handleCta()}
+          >
+            {isLoading ? (
+              <span className="inline-flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t.common.loading}
+              </span>
+            ) : (
+              (t.pricing[plan.ctaKey as keyof typeof t.pricing] as string)
+            )}
           </Button>
         </div>
       </Card>

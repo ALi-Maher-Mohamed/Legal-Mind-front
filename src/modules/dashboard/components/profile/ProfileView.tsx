@@ -5,8 +5,10 @@ import type { AuthUser } from '@/types/auth.types';
 import { useProfileActions } from './hooks/useProfileActions';
 import { profilePage } from './lib/profileStyles';
 import ProfileActivityCard from './ProfileActivityCard';
+import ProfileBillingCard from './ProfileBillingCard';
 import ProfileBookmarksCard from './ProfileBookmarksCard';
 import ProfileMyBlogsCard from './ProfileMyBlogsCard';
+import ProfilePaymentHistoryCard from './ProfilePaymentHistoryCard';
 import ProfileDetailsCard, {
   type ProfileDetailsHandle,
 } from './ProfileDetailsCard';
@@ -65,6 +67,10 @@ export default function ProfileView({ user, onUserUpdate }: Props) {
         </section>
 
         <ProfileMyBlogsCard />
+
+        <ProfileBillingCard />
+
+        <ProfilePaymentHistoryCard />
 
         <ProfileBookmarksCard />
 

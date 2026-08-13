@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { ROUTES } from '@/config/routes';
 import type { AuthMode } from '@/types/auth.types';
 import { authService } from '@/services/auth.service';
+import { resumePendingCheckoutOrDashboard } from '@/modules/payments';
 import { useAuthMode } from '../hooks/useAuthMode';
 import AuthHeader from '../components/AuthHeader';
 import AuthBrandPanel from '../components/AuthBrandPanel';
@@ -25,7 +26,10 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
   const { mode, goLogin, goRegister, goForgot } = useAuthMode(initialMode);
 
   const enterDashboard = () => {
-    router.replace(ROUTES.dashboard);
+    void (async () => {
+      const target = await resumePendingCheckoutOrDashboard();
+      router.replace(target);
+    })();
   };
 
   // If refresh cookie is still valid, skip login and enter the app.
@@ -36,7 +40,9 @@ export default function AuthPage({ initialMode = 'login', resetToken = null }: P
     void (async () => {
       const session = await authService.restoreSession();
       if (!active || !session) return;
-      router.replace(ROUTES.dashboard);
+      const target = await resumePendingCheckoutOrDashboard();
+      if (!active) return;
+      router.replace(target);
     })();
 
     return () => {
