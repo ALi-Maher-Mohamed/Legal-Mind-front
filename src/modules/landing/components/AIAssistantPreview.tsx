@@ -6,6 +6,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { SectionTitle, ChatBubble } from '@/components/ui';
 import { Message, Attachment } from '@/types/chat.types';
 import { chatService } from '@/services/chat.service';
+import { formatChatTime } from '@/modules/landing/lib/formatChatTime';
 import { Send, Paperclip, FileText, X } from 'lucide-react';
 
 export default function AIAssistantPreview() {
@@ -15,11 +16,16 @@ export default function AIAssistantPreview() {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [attachedFiles, setAttachedFiles] = useState<Attachment[]>([]);
+  const [welcomeTimestamp, setWelcomeTimestamp] = useState('');
   const [usedSuggestions, setUsedSuggestions] = useState<{
     lease: boolean;
     developer: boolean;
   }>({ lease: false, developer: false });
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setWelcomeTimestamp(formatChatTime());
+  }, []);
 
   useEffect(() => {
     if (messages.length === 0 && !isTyping) return;
@@ -36,10 +42,7 @@ export default function AIAssistantPreview() {
       id: `msg-${Date.now()}`,
       role: 'user',
       content: text || 'مستند مرفق للتحليل',
-      timestamp: new Date().toLocaleTimeString('ar-EG', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: formatChatTime(),
       attachments: overrideAttachments,
     };
 
@@ -109,10 +112,7 @@ export default function AIAssistantPreview() {
                   id: 'msg-welcome',
                   role: 'assistant' as const,
                   content: t.aiPreview.welcomeMessage,
-                  timestamp: new Date().toLocaleTimeString('ar-EG', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  }),
+                  timestamp: welcomeTimestamp,
                 },
                 ...messages,
               ].map((msg) => (
