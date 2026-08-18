@@ -1,5 +1,5 @@
+import { BRAND_NAME, BRAND_SUFFIX, BRAND_WORDMARK } from "@/config/brand";
 import { ROUTES } from "@/config/routes";
-import { useLanguage } from "@/hooks/useLanguage";
 import Link from "next/link";
 import { useId } from "react";
 
@@ -10,7 +10,6 @@ export function Logo({
   compact?: boolean;
   onNavigate?: () => void;
 }) {
-  const { t } = useLanguage();
   const gradId = useId().replace(/:/g, "");
 
   const scrollToTop = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -29,7 +28,7 @@ export function Logo({
       href={ROUTES.dashboard}
       onClick={scrollToTop}
       className="flex items-center gap-2 group select-none shrink-0 min-w-0"
-      aria-label={`${t.common.brandName} ${t.common.brandSuffix}`}
+      aria-label={BRAND_WORDMARK}
     >
       <svg
         className={`${compact ? "h-8 w-8" : "h-9 w-9"} shrink-0`}
@@ -66,12 +65,13 @@ export function Logo({
         </defs>
       </svg>
       <span
+        dir="ltr"
         className={`${
           compact ? "text-sm" : "text-base sm:text-lg"
         } font-bold tracking-tight text-foreground leading-none truncate`}
       >
-        {t.common.brandName}
-        <span className="text-brand ms-1">{t.common.brandSuffix}</span>
+        {BRAND_NAME}
+        <span className="text-brand ms-1">{BRAND_SUFFIX}</span>
       </span>
     </Link>
   );

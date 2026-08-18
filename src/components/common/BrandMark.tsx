@@ -1,7 +1,7 @@
 'use client';
 
 import { useId } from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { BRAND_NAME, BRAND_SUFFIX } from '@/config/brand';
 
 type Props = {
   size?: 'md' | 'lg' | 'xl';
@@ -30,7 +30,6 @@ export default function BrandMark({
   iconClassName = '',
   wordmarkClassName = '',
 }: Props) {
-  const { t } = useLanguage();
   const gradId = useId().replace(/:/g, '');
 
   return (
@@ -72,10 +71,11 @@ export default function BrandMark({
 
       {showWordmark ? (
         <p
+          dir="ltr"
           className={`${TEXT_SIZE[size]} font-bold tracking-tight text-foreground leading-none ${wordmarkClassName}`}
         >
-          {t.common.brandName}
-          <span className="ms-1.5 text-brand">{t.common.brandSuffix}</span>
+          {BRAND_NAME}
+          <span className="ms-1.5 text-brand">{BRAND_SUFFIX}</span>
         </p>
       ) : null}
     </div>

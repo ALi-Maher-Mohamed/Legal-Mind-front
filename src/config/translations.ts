@@ -24,7 +24,7 @@ export const translations = {
     popular: "الأكثر شيوعاً",
     send: "إرسال",
     attachmentLabel: "الملف المرفق: ",
-    brandName: "ليجال مايند",
+    brandName: "LegalMind",
     brandSuffix: "AI",
     notFoundTitle: "الصفحة غير موجودة",
     notFoundDesc:

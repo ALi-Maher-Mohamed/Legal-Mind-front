@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { LogOut, Sun, Moon } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { BRAND_NAME, BRAND_SUFFIX } from '@/config/brand';
 import { useThemeContext } from '@/lib/providers/ThemeProvider';
 import { ROUTES } from '@/config/routes';
 import type { AuthUser } from '@/types/auth.types';
@@ -22,9 +23,9 @@ export default function DashboardTopBar({ user, onLogout, onOpenProfile }: Props
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-brand/12 bg-card/92 px-4 py-3 shadow-[var(--lm-card-shadow)] backdrop-blur-md dark:border-white/10 dark:bg-background/90 dark:shadow-none sm:px-6">
       <div className="min-w-0">
         <Link href={ROUTES.home} className="block select-none">
-          <span className="text-sm font-bold tracking-tight text-foreground sm:text-base">
-            {t.common.brandName}
-            <span className="ms-1 text-brand">{t.common.brandSuffix}</span>
+          <span dir="ltr" className="text-sm font-bold tracking-tight text-foreground sm:text-base">
+            {BRAND_NAME}
+            <span className="ms-1 text-brand">{BRAND_SUFFIX}</span>
           </span>
         </Link>
         <p className="mt-0.5 truncate text-[11px] text-muted">

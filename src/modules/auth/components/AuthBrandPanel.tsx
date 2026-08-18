@@ -1,5 +1,6 @@
 "use client";
 
+import { BRAND_NAME, BRAND_SUFFIX } from "@/config/brand";
 import { useLanguage } from "@/hooks/useLanguage";
 
 export default function AuthBrandPanel() {
@@ -12,9 +13,9 @@ export default function AuthBrandPanel() {
       <div className="absolute bottom-1/4 end-1/4 w-[300px] h-[300px] rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
 
       <div className="relative z-10">
-        <span className="text-lg font-bold tracking-tight text-white">
-          {t.common.brandName}
-          <span className="text-accent ms-1">{t.common.brandSuffix}</span>
+        <span dir="ltr" className="text-lg font-bold tracking-tight text-white">
+          {BRAND_NAME}
+          <span className="text-accent ms-1">{BRAND_SUFFIX}</span>
         </span>
       </div>
 
