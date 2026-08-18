@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useLanguage } from '@/hooks/useLanguage';
-import { Button } from '@/components/ui';
-import AuthEntryLink from '@/components/common/AuthEntryLink';
+import { motion } from "framer-motion";
+import { useLanguage } from "@/hooks/useLanguage";
+import { Button } from "@/components/ui";
+import AuthEntryLink from "@/components/common/AuthEntryLink";
 
 export default function HeroContent() {
   const { t } = useLanguage();
@@ -50,7 +50,9 @@ export default function HeroContent() {
             {t.hero.ctaStart}
           </Button>
         </AuthEntryLink>
-        <Button variant="secondary" size="lg" className="w-full sm:w-auto">{t.hero.ctaDemo}</Button>
+        <Button variant="secondary" size="lg" className="w-full sm:w-auto">
+          {t.hero.ctaDemo}
+        </Button>
       </motion.div>
     </div>
   );
