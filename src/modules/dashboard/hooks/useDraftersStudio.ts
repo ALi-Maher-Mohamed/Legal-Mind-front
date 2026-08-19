@@ -21,7 +21,7 @@ import type {
 } from '@/types/generate.types';
 import { drafterCopy as c } from '../data/drafterCopy';
 import { compileTemplateDraft } from '../lib/compileDraft';
-import { exportContractPdf } from '../lib/exportContractPdf';
+import { exportContractDocx } from '../lib/exportContractDocx';
 
 const DESKTOP_MQ = '(min-width: 1024px)';
 
@@ -450,10 +450,9 @@ export function useDraftersStudio() {
 
     setIsDownloading(true);
     try {
-      await exportContractPdf({
+      await exportContractDocx({
         title: editorTitle,
         content: editorContent,
-        jobId: activeJobId,
         fileName: editorTitle,
       });
       toastApiSuccess(c.downloadOk);
@@ -462,7 +461,7 @@ export function useDraftersStudio() {
     } finally {
       setIsDownloading(false);
     }
-  }, [activeJobId, editorContent, editorTitle, isDownloading]);
+  }, [editorContent, editorTitle, isDownloading]);
 
   return {
     viewMode,
