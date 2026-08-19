@@ -18,7 +18,6 @@ export default function HeroContent() {
       >
         <span>تكنولوجيا المستقبل القانونية</span>
       </motion.div>
-
       <motion.h1
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}

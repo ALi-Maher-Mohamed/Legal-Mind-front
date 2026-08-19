@@ -21,32 +21,10 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative flex min-h-[80vh] items-center overflow-hidden bg-background pt-32 pb-20 md:min-h-[92vh] md:pt-40 md:pb-36">
-      <div className="pointer-events-none absolute inset-0">
-        <motion.div
-          initial={{ opacity: 0, scale: 1.08 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.35, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={
-              theme === "dark"
-                ? "/images/hero-dark.png"
-                : "/images/hero-light.png"
-            }
-            alt=""
-            fill
-            priority
-            sizes="112vw"
-            className="object-cover object-[center_12%] opacity-[0.42] transition-opacity duration-700 dark:opacity-[0.34]"
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-background/60 to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_20%,var(--lm-brand),transparent_55%)] opacity-10" />
-      </div>
+    <section className="relative overflow-hidden bg-background pt-28 pb-16 md:pt-36 md:pb-24">
+      <div className="pointer-events-none absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_30%_20%,var(--lm-brand),transparent_55%)]" />
 
-      <div className="lm-container relative z-10 w-full">
+      <div className="lm-container relative z-10">
         {/* Text first in DOM → start side in LTR & RTL via document dir */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-10 lg:gap-8">
           <motion.div
@@ -80,7 +58,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.15 }}
-            className="w-full lg:max-w-[512px]"
+            className="w-full lg:max-w-[512px] flex flex-col gap-6"
           >
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {chips.map((chip) => {
@@ -88,7 +66,7 @@ export default function Hero() {
                 return (
                   <div
                     key={chip.title}
-                    className="glass-panel flex items-center justify-start gap-2 rounded-lg px-3 py-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-[0_10px_24px_-12px_rgba(15,23,42,0.28)] dark:hover:border-brand/35 dark:hover:shadow-[0_10px_24px_-12px_rgba(0,0,0,0.45)]"
+                    className="glass-panel flex items-center justify-start gap-2 rounded-lg px-3 py-3.5"
                   >
                     <Icon className="h-4 w-4 shrink-0 text-brand" />
                     <span className="text-[11px] sm:text-xs font-bold tracking-wide text-foreground text-start">
@@ -97,6 +75,22 @@ export default function Hero() {
                   </div>
                 );
               })}
+            </div>
+
+            <div className="relative h-48 sm:h-64 w-full overflow-hidden rounded-2xl border border-outline bg-white shadow-xl dark:bg-surface dark:border-outline/40">
+              <Image
+                src={
+                  theme === "dark"
+                    ? "/images/hero-dark.png"
+                    : "/images/hero-light.png"
+                }
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 512px"
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/60 to-transparent opacity-60" />
             </div>
           </motion.div>
         </div>

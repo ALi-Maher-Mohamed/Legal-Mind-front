@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { toastApiError, toastApiSuccess } from '@/lib/api/toast';
 import {
   generateService,
@@ -22,6 +23,22 @@ import type {
 import { drafterCopy as c } from '../data/drafterCopy';
 import { compileTemplateDraft } from '../lib/compileDraft';
 import { exportContractPdf } from '../lib/exportContractPdf';
+
+const DESKTOP_MQ = '(min-width: 1024px)';
+
+function subscribeDesktop(onChange: () => void) {
+  const mq = window.matchMedia(DESKTOP_MQ);
+  mq.addEventListener('change', onChange);
+  return () => mq.removeEventListener('change', onChange);
+}
+
+function getDesktopSnapshot() {
+  return window.matchMedia(DESKTOP_MQ).matches;
+}
+
+function getDesktopServerSnapshot() {
+  return false;
+}
 
 const TODAY = new Date().toLocaleDateString('ar-EG', {
   day: 'numeric',
@@ -47,6 +64,14 @@ function toProgress(job: GenerateJob, fallbackStage: string): GenerateProgressSt
   };
 }
 
+function sortJobsByDate(list: GenerateJobListItem[]): GenerateJobListItem[] {
+  return [...list].sort((a, b) => {
+    const aTime = new Date(a.createdAt || a.completedAt || 0).getTime();
+    const bTime = new Date(b.createdAt || b.completedAt || 0).getTime();
+    return bTime - aTime;
+  });
+}
+
 export function useDraftersStudio() {
   const [viewMode, setViewMode] = useState<DrafterViewMode>('library');
   const [selectedTemplate, setSelectedTemplate] = useState<ContractTemplate | null>(null);
@@ -57,9 +82,15 @@ export function useDraftersStudio() {
   const [wizardValues, setWizardValues] = useState<Record<string, string>>({});
   const [editorTitle, setEditorTitle] = useState('مسودة اتفاقية');
   const [editorContent, setEditorContent] = useState('');
-  // Closed by default on phone/tablet so the editor owns the viewport; open on desktop.
-  const [showAiAssist, setShowAiAssist] = useState(false);
-  const [showRiskScanner, setShowRiskScanner] = useState(false);
+  const isDesktop = useSyncExternalStore(
+    subscribeDesktop,
+    getDesktopSnapshot,
+    getDesktopServerSnapshot,
+  );
+  const [aiAssistOverride, setAiAssistOverride] = useState<boolean | null>(null);
+  const [riskScannerOverride, setRiskScannerOverride] = useState<boolean | null>(null);
+  const showAiAssist = aiAssistOverride ?? isDesktop;
+  const showRiskScanner = riskScannerOverride ?? isDesktop;
   const [editorHistory, setEditorHistory] = useState<DraftVersion[]>([
     { v: 'v1.0.0', date: TODAY, content: '' },
   ]);
@@ -72,25 +103,36 @@ export function useDraftersStudio() {
   const [isRewriting, setIsRewriting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [jobs, setJobs] = useState<GenerateJobListItem[]>([]);
-  const [isLoadingJobs, setIsLoadingJobs] = useState(false);
+  const [isLoadingJobs, setIsLoadingJobs] = useState(true);
   const [deletingJobId, setDeletingJobId] = useState<string | null>(null);
   const [jobPendingDelete, setJobPendingDelete] = useState<GenerateJobListItem | null>(null);
   const abortRef = useRef<AbortController | null>(null);
   const draftingJobIdRef = useRef<string | null>(null);
 
+  const setShowAiAssist = useCallback<Dispatch<SetStateAction<boolean>>>(
+    (value) => {
+      setAiAssistOverride((prev) => {
+        const current = prev ?? isDesktop;
+        return typeof value === 'function' ? value(current) : value;
+      });
+    },
+    [isDesktop],
+  );
+
+  const setShowRiskScanner = useCallback<Dispatch<SetStateAction<boolean>>>(
+    (value) => {
+      setRiskScannerOverride((prev) => {
+        const current = prev ?? isDesktop;
+        return typeof value === 'function' ? value(current) : value;
+      });
+    },
+    [isDesktop],
+  );
+
   const openWizard = useCallback((tmpl: ContractTemplate) => {
     setSelectedTemplate(tmpl);
     setWizardValues({});
     setViewMode('wizard');
-  }, []);
-
-  const goLibrary = useCallback(() => {
-    abortRef.current?.abort();
-    abortRef.current = null;
-    draftingJobIdRef.current = null;
-    setIsDrafting(false);
-    setDraftProgress(null);
-    setViewMode('library');
   }, []);
 
   const openEditor = useCallback(
@@ -119,13 +161,7 @@ export function useDraftersStudio() {
     setIsLoadingJobs(true);
     try {
       const list = await generateService.listJobs();
-      setJobs(
-        [...list].sort((a, b) => {
-          const aTime = new Date(a.createdAt || a.completedAt || 0).getTime();
-          const bTime = new Date(b.createdAt || b.completedAt || 0).getTime();
-          return bTime - aTime;
-        }),
-      );
+      setJobs(sortJobsByDate(list));
     } catch (error) {
       toastApiError(error, c.jobsOpenFail);
     } finally {
@@ -133,18 +169,36 @@ export function useDraftersStudio() {
     }
   }, []);
 
-  useLayoutEffect(() => {
-    if (window.matchMedia('(min-width: 1024px)').matches) {
-      setShowAiAssist(true);
-      setShowRiskScanner(true);
-    }
-  }, []);
+  const goLibrary = useCallback(() => {
+    abortRef.current?.abort();
+    abortRef.current = null;
+    draftingJobIdRef.current = null;
+    setIsDrafting(false);
+    setDraftProgress(null);
+    setViewMode('library');
+    void refreshJobs();
+  }, [refreshJobs]);
 
   useEffect(() => {
-    if (viewMode === 'library') {
-      void refreshJobs();
+    let cancelled = false;
+
+    async function loadInitialJobs() {
+      try {
+        const list = await generateService.listJobs();
+        if (cancelled) return;
+        setJobs(sortJobsByDate(list));
+      } catch (error) {
+        if (!cancelled) toastApiError(error, c.jobsOpenFail);
+      } finally {
+        if (!cancelled) setIsLoadingJobs(false);
+      }
     }
-  }, [viewMode, refreshJobs]);
+
+    void loadInitialJobs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const openCompletedJob = useCallback(
     (job: GenerateJob) => {
