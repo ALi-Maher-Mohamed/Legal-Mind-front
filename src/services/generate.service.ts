@@ -14,6 +14,23 @@ import type {
 const POLL_MS = 1800;
 const POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
+function unwrapGenerateData<T>(response: unknown): T {
+  if (
+    response &&
+    typeof response === 'object' &&
+    'data' in response &&
+    (response as { data: unknown }).data !== undefined &&
+    (response as { data: unknown }).data !== null
+  ) {
+    return (response as { data: T }).data;
+  }
+  return response as T;
+}
+
+function pickMarkdown(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : '';
+}
+
 type StreamHandlers = {
   onEvent: (event: GenerateStreamEvent) => void;
   onError?: (error: Error) => void;
@@ -51,8 +68,12 @@ function applyStreamEventToJob(jobId: string, event: GenerateStreamEvent): Gener
 }
 
 export function resolveContractMarkdown(job: GenerateJob): string {
-  const generated = job.result?.contractMarkdown?.trim() || '';
-  const edited = job.result?.editedMarkdown?.trim() || '';
+  const nested = unwrapGenerateData<GenerateJob>(job);
+  const result = nested.result;
+  const generated =
+    pickMarkdown(result?.contractMarkdown) ||
+    pickMarkdown((result as { contract_markdown?: string } | undefined)?.contract_markdown);
+  const edited = pickMarkdown(result?.editedMarkdown);
 
   // Ignore short stub edits that would overwrite a full generated contract.
   if (edited.length > 300) return edited;
@@ -60,20 +81,22 @@ export function resolveContractMarkdown(job: GenerateJob): string {
 }
 
 export function resolveContractTitle(job: GenerateJob, fallback: string): string {
-  const jobDesc = job.result?.contractSpec?.job_description?.trim();
+  const nested = unwrapGenerateData<GenerateJob>(job);
+  const jobDesc = nested.result?.contractSpec?.job_description?.trim();
   if (jobDesc) return `عقد عمل — ${jobDesc}`;
-  if (job.contractType === 'employment') return 'عقد عمل';
-  if (job.contractType) return `عقد ${job.contractType}`;
+  if (nested.contractType === 'employment') return 'عقد عمل';
+  if (nested.contractType) return `عقد ${nested.contractType}`;
   return fallback;
 }
 
 export const generateService = {
   async createJob(prompt: string): Promise<CreateGenerateResponse> {
-    return api.post<CreateGenerateResponse>(
+    const response = await api.post<unknown>(
       '/api/v1/generate',
       { json: { prompt: prompt.trim() } },
       { auth: true },
     );
+    return unwrapGenerateData<CreateGenerateResponse>(response);
   },
 
   async listJobsPage(
@@ -115,7 +138,8 @@ export const generateService = {
   },
 
   async getJob(jobId: string): Promise<GenerateJob> {
-    return api.get<GenerateJob>(`/api/v1/generate/${jobId}`, { auth: true });
+    const response = await api.get<unknown>(`/api/v1/generate/${jobId}`, { auth: true });
+    return unwrapGenerateData<GenerateJob>(response);
   },
 
   async updateContract(jobId: string, editedMarkdown: string): Promise<string> {
@@ -128,19 +152,21 @@ export const generateService = {
   },
 
   async regenerate(jobId: string, instructions: string): Promise<GenerateJob | CreateGenerateResponse> {
-    return api.post<GenerateJob | CreateGenerateResponse>(
+    const response = await api.post<unknown>(
       `/api/v1/generate/${jobId}/regenerate`,
       { json: { instructions: instructions.trim() } },
       { auth: true },
     );
+    return unwrapGenerateData<GenerateJob | CreateGenerateResponse>(response);
   },
 
   async validate(jobId: string): Promise<ValidateGenerateResponse> {
-    return api.post<ValidateGenerateResponse>(
+    const response = await api.post<unknown>(
       `/api/v1/generate/${jobId}/validate`,
       undefined,
       { auth: true },
     );
+    return unwrapGenerateData<ValidateGenerateResponse>(response);
   },
 
   async cancelJob(jobId: string): Promise<string> {
@@ -157,10 +183,11 @@ export const generateService = {
   },
 
   async getProgress(jobId: string): Promise<GenerateProgressLogsResponse> {
-    const data = await api.get<GenerateProgressLogsResponse | GenerateStreamEvent[]>(
+    const raw = await api.get<unknown>(
       `/api/v1/generate/${jobId}/progress`,
       { auth: true },
     );
+    const data = unwrapGenerateData<GenerateProgressLogsResponse | GenerateStreamEvent[]>(raw);
     if (Array.isArray(data)) {
       return { jobId, logs: data, totalLogs: data.length };
     }
