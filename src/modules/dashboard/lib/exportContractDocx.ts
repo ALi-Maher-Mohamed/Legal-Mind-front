@@ -79,9 +79,9 @@ function textRuns(node: Node, style: RunStyle = {}): TextRun[] {
       italics: style.italics,
       rightToLeft: true,
       language: RTL_LANG,
+      ...(style.underline ? { underline: {} } : {}),
+      ...(style.highlight ? { highlight: 'yellow' as const } : {}),
     };
-    if (style.underline) options.underline = {};
-    if (style.highlight) options.highlight = 'yellow';
     return [new TextRun(options)];
   }
 
