@@ -1,18 +1,16 @@
 'use client';
 
-import { ArrowRight, Download, ShieldAlert, Sparkles } from 'lucide-react';
+import { ArrowRight, Download, Sparkles } from 'lucide-react';
 import { drafterCopy as c } from '../../data/drafterCopy';
 
 type Props = {
   title: string;
   onTitleChange: (v: string) => void;
   showAiAssist: boolean;
-  showRiskScanner: boolean;
   isSaving?: boolean;
   isDownloading?: boolean;
   canDownload?: boolean;
   onToggleAi: () => void;
-  onToggleRisk: () => void;
   onBack: () => void;
   onSave: () => void;
   onDownload?: () => void;
@@ -22,12 +20,10 @@ export default function EditorHeader({
   title,
   onTitleChange,
   showAiAssist,
-  showRiskScanner,
   isSaving = false,
   isDownloading = false,
   canDownload = false,
   onToggleAi,
-  onToggleRisk,
   onBack,
   onSave,
   onDownload,
@@ -63,10 +59,6 @@ export default function EditorHeader({
           <button type="button" onClick={onToggleAi} className={toggleCls(showAiAssist)}>
             <Sparkles className="h-3.5 w-3.5 shrink-0" />
             <span className="truncate">{c.aiLibrary}</span>
-          </button>
-          <button type="button" onClick={onToggleRisk} className={toggleCls(showRiskScanner)}>
-            <ShieldAlert className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{c.riskScanner}</span>
           </button>
         </div>
 

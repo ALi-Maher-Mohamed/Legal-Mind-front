@@ -18,7 +18,6 @@ import type {
   GenerateJob,
   GenerateJobListItem,
   GenerateProgressState,
-  GenerateValidationResult,
 } from '@/types/generate.types';
 import { drafterCopy as c } from '../data/drafterCopy';
 import { compileTemplateDraft } from '../lib/compileDraft';
@@ -88,18 +87,14 @@ export function useDraftersStudio() {
     getDesktopServerSnapshot,
   );
   const [aiAssistOverride, setAiAssistOverride] = useState<boolean | null>(null);
-  const [riskScannerOverride, setRiskScannerOverride] = useState<boolean | null>(null);
   const showAiAssist = aiAssistOverride ?? isDesktop;
-  const showRiskScanner = riskScannerOverride ?? isDesktop;
   const [editorHistory, setEditorHistory] = useState<DraftVersion[]>([
     { v: 'v1.0.0', date: TODAY, content: '' },
   ]);
   const [activeVersion, setActiveVersion] = useState('v1.0.0');
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
-  const [validation, setValidation] = useState<GenerateValidationResult | null>(null);
   const [reportUrl, setReportUrl] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [isValidating, setIsValidating] = useState(false);
   const [isRewriting, setIsRewriting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [jobs, setJobs] = useState<GenerateJobListItem[]>([]);
@@ -119,16 +114,6 @@ export function useDraftersStudio() {
     [isDesktop],
   );
 
-  const setShowRiskScanner = useCallback<Dispatch<SetStateAction<boolean>>>(
-    (value) => {
-      setRiskScannerOverride((prev) => {
-        const current = prev ?? isDesktop;
-        return typeof value === 'function' ? value(current) : value;
-      });
-    },
-    [isDesktop],
-  );
-
   const openWizard = useCallback((tmpl: ContractTemplate) => {
     setSelectedTemplate(tmpl);
     setWizardValues({});
@@ -141,7 +126,6 @@ export function useDraftersStudio() {
       content: string,
       options?: {
         jobId?: string | null;
-        validation?: GenerateValidationResult | null;
         reportUrl?: string | null;
       },
     ) => {
@@ -150,7 +134,6 @@ export function useDraftersStudio() {
       setEditorHistory([{ v: 'v1.0.0', date: TODAY, content }]);
       setActiveVersion('v1.0.0');
       setActiveJobId(options?.jobId ?? null);
-      setValidation(options?.validation ?? null);
       setReportUrl(options?.reportUrl ?? null);
       setViewMode('editor');
     },
@@ -209,7 +192,6 @@ export function useDraftersStudio() {
       const title = resolveContractTitle(job, `${c.customDraft}${c.draftSuffix}`);
       openEditor(title, content, {
         jobId: job.jobId,
-        validation: job.result?.validationResult ?? null,
         reportUrl: job.files?.report ?? null,
       });
     },
@@ -354,7 +336,6 @@ export function useDraftersStudio() {
     const content = compileTemplateDraft(selectedTemplate, wizardValues);
     openEditor(`${selectedTemplate.name}${c.draftSuffix}`, content, {
       jobId: null,
-      validation: null,
       reportUrl: null,
     });
   }, [selectedTemplate, wizardValues, openEditor]);
@@ -370,16 +351,6 @@ export function useDraftersStudio() {
     try {
       const message = await generateService.updateContract(activeJobId, editorContent);
       toastApiSuccess(message || c.saveOk);
-
-      try {
-        setIsValidating(true);
-        const validated = await generateService.validate(activeJobId);
-        setValidation(validated.validationResult);
-      } catch {
-        // Save succeeded; validation is optional.
-      } finally {
-        setIsValidating(false);
-      }
     } catch (error) {
       toastApiError(error, c.saveFail);
     } finally {
@@ -449,7 +420,6 @@ export function useDraftersStudio() {
 
         const content = resolveContractMarkdown(completed);
         if (content) setEditorContent(content);
-        setValidation(completed.result?.validationResult ?? null);
         setReportUrl(completed.files?.report ?? null);
         toastApiSuccess(c.rewriteOk);
         void refreshJobs();
@@ -470,21 +440,6 @@ export function useDraftersStudio() {
     },
     [activeJobId, editorContent, isRewriting, refreshJobs],
   );
-
-  const runValidation = useCallback(async () => {
-    if (!activeJobId || isValidating) return;
-    setIsValidating(true);
-    try {
-      await generateService.updateContract(activeJobId, editorContent).catch(() => undefined);
-      const validated = await generateService.validate(activeJobId);
-      setValidation(validated.validationResult);
-      toastApiSuccess(c.validateOk);
-    } catch (error) {
-      toastApiError(error, c.validateFail);
-    } finally {
-      setIsValidating(false);
-    }
-  }, [activeJobId, editorContent, isValidating]);
 
   const downloadDraft = useCallback(async () => {
     if (!editorContent.trim()) {
@@ -526,15 +481,11 @@ export function useDraftersStudio() {
     setEditorContent,
     showAiAssist,
     setShowAiAssist,
-    showRiskScanner,
-    setShowRiskScanner,
     editorHistory,
     activeVersion,
     activeJobId,
-    validation,
     reportUrl,
     isSaving,
-    isValidating,
     isRewriting,
     isDownloading,
     jobs,
@@ -551,7 +502,6 @@ export function useDraftersStudio() {
     restoreVersion,
     insertClause,
     rewriteDraft,
-    runValidation,
     downloadDraft,
     refreshJobs,
     openJob,

@@ -26,9 +26,7 @@ export default function DraftersStudio() {
         content={d.editorContent}
         onContentChange={d.setEditorContent}
         showAiAssist={d.showAiAssist}
-        showRiskScanner={d.showRiskScanner}
         onToggleAi={() => d.setShowAiAssist((v) => !v)}
-        onToggleRisk={() => d.setShowRiskScanner((v) => !v)}
         onBack={d.goLibrary}
         onSave={() => void d.saveDraft()}
         onDownload={() => void d.downloadDraft()}
@@ -36,10 +34,6 @@ export default function DraftersStudio() {
         isSaving={d.isSaving}
         isDownloading={d.isDownloading}
         isRewriting={d.isRewriting}
-        validation={d.validation}
-        isValidating={d.isValidating}
-        canValidate={Boolean(d.activeJobId)}
-        onValidate={() => void d.runValidation()}
         history={d.editorHistory}
         activeVersion={d.activeVersion}
         onRestore={d.restoreVersion}
