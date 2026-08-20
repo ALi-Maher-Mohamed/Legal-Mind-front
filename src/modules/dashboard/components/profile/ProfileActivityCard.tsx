@@ -9,8 +9,6 @@ import {
 } from "../../lib/profileLabels";
 import { PROFILE_ASSETS } from "./lib/profileAssets";
 import {
-  profileAccentCode,
-  profileAccentCodeWrap,
   profileCard,
   profileDivider,
   profileHeading,
