@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useLanguage } from '@/hooks/useLanguage';
-import type { AuthUser } from '@/types/auth.types';
+import { useLanguage } from "@/hooks/useLanguage";
+import type { AuthUser } from "@/types/auth.types";
 import {
   formatProfileDateOnly,
   formatProfileTimeOnly,
   formatRelativeTime,
-} from '../../lib/profileLabels';
-import { PROFILE_ASSETS } from './lib/profileAssets';
+} from "../../lib/profileLabels";
+import { PROFILE_ASSETS } from "./lib/profileAssets";
 import {
   profileAccentCode,
   profileAccentCodeWrap,
@@ -15,7 +15,7 @@ import {
   profileDivider,
   profileHeading,
   profileLabel,
-} from './lib/profileStyles';
+} from "./lib/profileStyles";
 
 type Props = {
   user: AuthUser;
@@ -45,18 +45,12 @@ export default function ProfileActivityCard({ user }: Props) {
       <div className="space-y-4">
         <MetaRow>
           <p className={profileLabel}>{t.dashboard.profileEmail}</p>
-          <p className="mt-1 break-all text-sm text-foreground dark:text-[#e6edfc]" dir="ltr">
+          <p
+            className="mt-1 break-all text-sm text-foreground dark:text-[#e6edfc]"
+            dir="ltr"
+          >
             {user.email}
           </p>
-        </MetaRow>
-
-        <MetaRow>
-          <p className={profileLabel}>{t.dashboard.profileUserId}</p>
-          <div className={profileAccentCodeWrap}>
-            <code className={profileAccentCode} dir="ltr">
-              {user.id}
-            </code>
-          </div>
         </MetaRow>
 
         <MetaRow>

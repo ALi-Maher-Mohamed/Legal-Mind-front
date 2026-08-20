@@ -14,6 +14,19 @@ type Props = {
 export default function AuditHeader({ doc, onBack, onDownload }: Props) {
   const score = doc.result?.overall.overall_score;
   const classification = doc.result?.overall.classification;
+  const resultLabel = classification
+    ? c.classificationLabels[classification] ?? classification
+    : typeof score === 'number'
+      ? score >= 85
+        ? c.classificationLabels.excellent
+        : score >= 70
+          ? c.classificationLabels.good
+          : score >= 50
+            ? c.classificationLabels.needs_review
+            : score >= 30
+              ? c.classificationLabels.high_risk
+              : c.classificationLabels.critical
+      : null;
 
   return (
     <div className="flex flex-col gap-4 border-b border-brand/15 pb-5 sm:flex-row sm:items-center sm:justify-between dark:border-white/10">
@@ -31,12 +44,9 @@ export default function AuditHeader({ doc, onBack, onDownload }: Props) {
             <span className="rounded bg-brand px-2 py-0.5 text-[10px] font-bold uppercase text-on-brand">
               {c.auditedBadge}
             </span>
-            {typeof score === "number" ? (
+            {resultLabel ? (
               <span className="rounded bg-accent/15 px-2 py-0.5 text-[10px] font-bold text-accent">
-                {score}/100
-                {classification
-                  ? ` • ${c.classificationLabels[classification] ?? classification}`
-                  : ""}
+                {resultLabel}
               </span>
             ) : null}
             <span className="font-mono text-xs text-muted">

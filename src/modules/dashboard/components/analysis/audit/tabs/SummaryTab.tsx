@@ -13,6 +13,22 @@ const SCORE_COLORS: Record<string, string> = {
   red: 'bg-danger/15 text-danger',
 };
 
+function classificationFromScore(score: number): keyof typeof c.classificationLabels {
+  if (score >= 85) return 'excellent';
+  if (score >= 70) return 'good';
+  if (score >= 50) return 'needs_review';
+  if (score >= 30) return 'high_risk';
+  return 'critical';
+}
+
+function resolveResultLabel(overall: NonNullable<AnalysisDocument['result']>['overall']) {
+  const key =
+    overall.classification in c.classificationLabels
+      ? overall.classification
+      : classificationFromScore(overall.overall_score);
+  return c.classificationLabels[key] ?? overall.classification;
+}
+
 export default function SummaryTab({ doc }: Props) {
   const overall = doc.result?.overall;
 
@@ -27,6 +43,8 @@ export default function SummaryTab({ doc }: Props) {
     { key: 'balance', value: overall.breakdown.balance },
   ];
 
+  const resultLabel = resolveResultLabel(overall);
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-3">
@@ -34,10 +52,7 @@ export default function SummaryTab({ doc }: Props) {
           className={`rounded-xl px-4 py-3 text-center ${SCORE_COLORS[overall.color] ?? SCORE_COLORS.orange}`}
         >
           <p className="text-[10px] font-bold uppercase">{c.scoreLabel}</p>
-          <p className="text-2xl font-bold">{overall.overall_score}/100</p>
-          <p className="text-[11px] font-semibold">
-            {c.classificationLabels[overall.classification] ?? overall.classification}
-          </p>
+          <p className="text-2xl font-bold">{resultLabel}</p>
         </div>
         <div className="grid flex-1 grid-cols-3 gap-2 text-center text-[10px]">
           <div className="rounded-lg bg-surface-raised p-2 dark:bg-white/5">
